@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E6E5C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="재활 연수자 가이드">
+<title>재활치료실 외국인 연수자 응대 가이드</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230E6E5C'/%3E%3Cpath d='M15 60 Q30 60 35 45 T55 30 Q65 15 85 40' stroke='%23E3963E' stroke-width='7' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230E6E5C'/%3E%3Cpath d='M15 60 Q30 60 35 45 T55 30 Q65 15 85 40' stroke='%23E3963E' stroke-width='7' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --bg:#F1F4F1;
+  --ink:#16302B;
+  --ink-soft:#4A6058;
+  --primary:#0E6E5C;
+  --primary-dark:#0A5347;
+  --accent:#E3963E;
+  --accent-dark:#C97A22;
+  --card:#FFFFFF;
+  --card-alt:#E7EFEC;
+  --line:#D8E0DC;
+  --danger:#C1443C;
+  --radius:18px;
+  --font-size-scale:1;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--ink);
+  font-family:'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', 'Malgun Gothic', sans-serif;
+  overscroll-behavior:none;}
+body{font-size:calc(16px * var(--font-size-scale));}
+#app{max-width:560px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);position:relative;}
+.hidden{display:none !important;}
+
+/* ---------- Top bar ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:calc(14px + env(safe-area-inset-top)) 18px 10px;position:sticky;top:0;background:var(--bg);z-index:10;}
+.topbar h1{font-size:1.05rem;font-weight:800;margin:0;color:var(--primary-dark);letter-spacing:-0.01em;}
+.topbar .sub{font-size:0.72rem;color:var(--ink-soft);margin-top:1px;}
+.lang-chip{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:0.85rem;font-weight:700;color:var(--primary-dark);}
+.lang-chip .flag{font-size:1.05rem;}
+
+/* ---------- Screens ---------- */
+.screen{flex:1;padding:0 16px 96px;overflow-y:auto;}
+.section-title{font-size:0.78rem;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;margin:18px 2px 10px;}
+
+/* ---------- Language picker ---------- */
+.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+.lang-card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:transform .15s, border-color .15s;}
+.lang-card:active{transform:scale(.96);}
+.lang-card.selected{border-color:var(--primary);background:var(--card-alt);}
+.lang-card .flag{font-size:1.9rem;}
+.lang-card .name{font-weight:700;font-size:0.9rem;}
+.lang-card .native{font-size:0.75rem;color:var(--ink-soft);}
+.start-btn{margin-top:22px;width:100%;background:var(--primary);color:#fff;border:none;border-radius:16px;padding:16px;font-size:1.02rem;font-weight:800;cursor:pointer;}
+.start-btn:disabled{background:#B9C5C1;}
+
+/* ---------- Home / categories ---------- */
+.hero{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:20px;padding:20px 20px 22px;margin:8px 0 4px;position:relative;overflow:hidden;}
+.hero::after{content:"";position:absolute;right:-30px;bottom:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.08);}
+.hero h2{margin:0 0 4px;font-size:1.15rem;font-weight:800;}
+.hero p{margin:0;font-size:0.82rem;opacity:.9;line-height:1.5;}
+.cat-grid{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
+.cat-card{background:var(--card);border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;border:1px solid var(--line);}
+.cat-card:active{transform:scale(.98);}
+.cat-icon{width:46px;height:46px;border-radius:14px;background:var(--card-alt);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.cat-title{font-weight:800;font-size:0.98rem;}
+.cat-desc{font-size:0.78rem;color:var(--ink-soft);margin-top:2px;}
+.cat-arrow{margin-left:auto;color:var(--ink-soft);font-size:1.2rem;}
+
+/* ---------- Topic list ---------- */
+.back-row{display:flex;align-items:center;gap:8px;padding:14px 0 4px;}
+.back-btn{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-weight:700;font-size:0.85rem;cursor:pointer;color:var(--primary-dark);}
+.topic-item{background:var(--card);border-radius:16px;padding:14px 16px;margin-bottom:9px;display:flex;align-items:center;gap:12px;border:1px solid var(--line);cursor:pointer;}
+.topic-item .star{margin-left:auto;font-size:1.2rem;color:#C9D2CE;flex-shrink:0;}
+.topic-item .star.active{color:var(--accent);}
+.topic-title{font-weight:700;font-size:0.92rem;}
+
+/* ---------- Content detail ---------- */
+.content-card{background:var(--card);border-radius:20px;padding:18px;margin:10px 0;border:1px solid var(--line);}
+.content-card .lbl{font-size:0.72rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.content-card p{margin:0;line-height:1.65;font-size:1rem;}
+.content-card.rtl p, .content-card.rtl{direction:rtl;text-align:right;}
+.card-actions{display:flex;gap:8px;margin-top:12px;}
+.icon-btn{border:none;background:var(--card-alt);color:var(--primary-dark);border-radius:12px;padding:9px 13px;font-size:0.85rem;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.icon-btn:active{background:var(--line);}
+.icon-btn.speaking{background:var(--accent);color:#fff;}
+.loading-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ink-soft);animation:pulse 1s infinite ease-in-out;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ---------- Big display overlay ---------- */
+.bigview{position:fixed;inset:0;background:#fff;z-index:100;display:flex;flex-direction:column;padding:26px 24px;}
+.bigview .close{align-self:flex-end;background:var(--card-alt);border:none;border-radius:50%;width:42px;height:42px;font-size:1.3rem;cursor:pointer;}
+.bigview .big-text{flex:1;display:flex;flex-direction:column;justify-content:center;gap:26px;}
+.bigview .big-text .line1{font-size:2rem;font-weight:800;line-height:1.4;}
+.bigview .big-text .line2{font-size:1.3rem;color:var(--ink-soft);line-height:1.5;border-top:1px solid var(--line);padding-top:20px;}
+.bigview.rtl .big-text{direction:rtl;text-align:right;}
+
+/* ---------- Interpreter ---------- */
+.interp-toggle{display:flex;background:var(--card);border-radius:14px;padding:4px;border:1px solid var(--line);margin:8px 0 16px;}
+.interp-toggle button{flex:1;border:none;background:transparent;padding:10px;border-radius:10px;font-weight:800;font-size:0.85rem;color:var(--ink-soft);cursor:pointer;}
+.interp-toggle button.active{background:var(--primary);color:#fff;}
+.mic-wrap{display:flex;flex-direction:column;align-items:center;padding:26px 0 10px;}
+.mic-btn{width:96px;height:96px;border-radius:50%;border:none;background:var(--primary);color:#fff;font-size:2.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 18px rgba(14,110,92,.3);position:relative;}
+.mic-btn.listening{background:var(--danger);animation:micpulse 1.2s infinite;}
+@keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(193,68,60,.45)}70%{box-shadow:0 0 0 22px rgba(193,68,60,0)}100%{box-shadow:0 0 0 0 rgba(193,68,60,0)}}
+.mic-hint{margin-top:12px;font-size:0.82rem;color:var(--ink-soft);font-weight:600;}
+.type-fallback{display:flex;gap:8px;margin-top:14px;}
+.type-fallback input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-size:0.95rem;font-family:inherit;}
+.type-fallback button{background:var(--primary);color:#fff;border:none;border-radius:12px;padding:0 16px;font-weight:700;cursor:pointer;}
+.transcript{display:flex;flex-direction:column;gap:10px;margin-top:18px;}
+.bubble{padding:12px 14px;border-radius:14px;max-width:88%;font-size:0.92rem;line-height:1.5;}
+.bubble.me{align-self:flex-end;background:var(--primary);color:#fff;border-bottom-right-radius:4px;}
+.bubble.them{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px;}
+.bubble .orig{font-size:0.78rem;opacity:.75;margin-top:4px;}
+
+/* ---------- Checklist ---------- */
+.timer-card{background:var(--card);border-radius:18px;padding:16px;display:flex;align-items:center;justify-content:space-between;margin:8px 0 16px;border:1px solid var(--line);}
+.timer-card .time{font-size:1.5rem;font-weight:800;color:var(--primary-dark);font-variant-numeric:tabular-nums;}
+.timer-card button{border:none;border-radius:12px;padding:9px 14px;font-weight:700;cursor:pointer;}
+.timer-start{background:var(--primary);color:#fff;}
+.timer-reset{background:var(--card-alt);color:var(--ink);}
+.chk-item{background:var(--card);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:8px;border:1px solid var(--line);cursor:pointer;}
+.chk-item.done{opacity:.55;}
+.chk-item .box{width:22px;height:22px;border-radius:7px;border:2px solid var(--primary);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#fff;}
+.chk-item.done .box{background:var(--primary);}
+.chk-item .txt{font-weight:700;font-size:0.9rem;}
+.chk-item .txt.done{text-decoration:line-through;}
+
+/* ---------- Settings ---------- */
+.set-row{background:var(--card);border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;border:1px solid var(--line);}
+.set-row .lbl2{font-weight:700;font-size:0.9rem;}
+.fontctl{display:flex;gap:6px;}
+.fontctl button{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--card-alt);font-weight:800;cursor:pointer;}
+
+/* ---------- Bottom nav ---------- */
+.tabbar{position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;background:var(--card);border-top:1px solid var(--line);display:flex;padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:20;}
+.tab-btn{flex:1;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;color:var(--ink-soft);font-size:0.68rem;font-weight:700;cursor:pointer;}
+.tab-btn .ic{font-size:1.25rem;}
+.tab-btn.active{color:var(--primary);}
+.banner{background:#FDF1DE;border:1px solid #F0D6A6;color:#7A5417;font-size:0.78rem;padding:10px 12px;border-radius:12px;margin:8px 0;line-height:1.5;}
+
+/* =========================================================
+   반응형 · Responsive breakpoints
+   Mobile(기본) / Tablet(600px+) / Desktop(900px+)
+   ========================================================= */
+
+/* ---- Tablet: 600px 이상 (세로 태블릿, 큰 폰 가로모드) ---- */
+@media (min-width:600px){
+  #app{max-width:680px;}
+  .lang-grid{grid-template-columns:repeat(3,1fr);}
+  .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .topic-item{padding:16px 18px;}
+  body{font-size:calc(16.5px * var(--font-size-scale));}
+  .bigview .big-text{max-width:640px;margin:0 auto;width:100%;}
+}
+
+/* ---- Desktop / PC: 900px 이상 → 하단 탭바를 좌측 사이드 내비게이션으로 전환 ---- */
+@media (min-width:900px){
+  body{background:var(--card-alt);}
+  #app{max-width:960px;min-height:100vh;flex-direction:row;align-items:stretch;
+       box-shadow:0 0 0 1px var(--line);}
+  .tabbar{position:sticky;top:0;left:0;bottom:auto;order:1;
+          flex-direction:column;width:200px;height:100vh;max-width:none;margin:0;
+          border-top:none;border-right:1px solid var(--line);
+          padding:26px 12px calc(16px + env(safe-area-inset-bottom));gap:6px;}
+  .tab-btn{flex-direction:row;justify-content:flex-start;gap:10px;padding:12px 14px;
+           border-radius:12px;font-size:0.88rem;}
+  .tab-btn .ic{font-size:1.15rem;}
+  .tab-btn.active{background:var(--card-alt);}
+  .screen{order:2;flex:1;max-width:720px;width:100%;margin:0 auto;padding:0 28px 48px;}
+  .screen#screen-lang, .screen#screen-topics, .screen#screen-detail{order:2;flex:1;}
+  .bigview .big-text{max-width:760px;margin:0 auto;width:100%;}
+  .lang-grid{grid-template-columns:repeat(4,1fr);}
+  .cat-grid{grid-template-columns:1fr 1fr;}
+}
+@media (min-width:900px) and (hover:hover) and (pointer:fine){
+  .cat-card:hover,.topic-item:hover,.lang-card:hover,.chk-item:hover{
+    border-color:var(--primary);box-shadow:0 4px 16px rgba(14,110,92,.1);cursor:pointer;}
+  .tab-btn:hover{background:var(--card-alt);}
+  .icon-btn:hover{background:var(--line);}
+  .start-btn:hover:not(:disabled),.mic-btn:hover{filter:brightness(1.06);}
+}
+
+/* ---- 넓은 데스크톱: 여백을 더 확보 ---- */
+@media (min-width:1200px){
+  #app{max-width:1080px;}
+  .screen{max-width:800px;}
+}
+
+/* ---- 키보드 포커스 표시 (접근성) ---- */
+button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
+.topic-item:focus-visible, input:focus-visible{
+  outline:3px solid var(--accent);outline-offset:2px;
+}
+
+/* ---- 가로모드 폰 대응: 하단 탭바가 콘텐츠를 가리지 않도록 ---- */
+@media (max-width:899px) and (orientation:landscape) and (max-height:480px){
+  .tabbar{padding:4px 6px calc(4px + env(safe-area-inset-bottom));}
+  .tab-btn{padding:4px 0;font-size:0.62rem;}
+  .screen{padding-bottom:70px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ================= ROOM PICKER ================= -->
+  <section id="screen-room" class="screen" style="padding-top:8px;">
+    <div class="topbar" style="padding-left:2px;padding-right:2px;">
+      <div>
+        <h1>🌿 재활치료실 연수자 가이드</h1>
+        <div class="sub">Rehabilitation Center Visitor Guide</div>
+      </div>
+    </div>
+    <div class="section-title">지금 계신(또는 안내할) 치료실을 선택해주세요 · Select the room</div>
+    <div class="lang-grid" id="roomGrid"></div>
+    <button class="start-btn" id="roomStartBtn" disabled>다음 · Next</button>
+  </section>
+
+  <!-- ================= LANGUAGE PICKER ================= -->
+  <section id="screen-lang" class="screen hidden" style="padding-top:8px;">
+    <div class="topbar" style="padding-left:2px;padding-right:2px;">
+      <div>
+        <h1>🌿 재활치료실 연수자 가이드</h1>
+        <div class="sub">Rehabilitation Center Visitor Guide</div>
+      </div>
+    </div>
+    <div class="back-row" style="padding-top:0;">
+      <button class="back-btn" onclick="goTo('room')">← 치료실 다시 선택 · Room</button>
+    </div>
+    <div class="section-title">연수자의 언어를 선택해주세요 · Select visitor's language</div>
+    <div class="lang-grid" id="langGrid"></div>
+    <button class="start-btn" id="startBtn" disabled>선택 완료 · Continue</button>
+  </section>
+
+  <!-- ================= HOME ================= -->
+  <section id="screen-home" class="screen hidden">
+    <div class="topbar">
+      <div>
+        <h1>재활치료실 가이드</h1>
+        <div class="sub">Visitor Guide</div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <div class="lang-chip" id="roomChipHome" onclick="goTo('room')"></div>
+        <div class="lang-chip" id="langChipHome" onclick="goTo('lang')"></div>
+      </div>
+    </div>
+    <div class="hero">
+      <h2 id="heroTitleKo">환영합니다 👋</h2>
+      <p id="heroTitleEn">Welcome to our Rehabilitation Medicine Department.</p>
+    </div>
+    <div class="content-card" id="roomIntroCard"></div>
+    <div class="section-title">카테고리 · Categories</div>
+    <div class="cat-grid" id="catGrid"></div>
+  </section>
+
+  <!-- ================= TOPIC LIST ================= -->
+  <section id="screen-topics" class="screen hidden">
+    <div class="back-row">
+      <button class="back-btn" onclick="goTo('home')">← 홈 · Home</button>
+    </div>
+    <div class="section-title" id="topicCatTitle"></div>
+    <div id="topicList"></div>
+  </section>
+
+  <!-- ================= CONTENT DETAIL ================= -->
+  <section id="screen-detail" class="screen hidden">
+    <div class="back-row">
+      <button class="back-btn" id="detailBackBtn">← 목록 · List</button>
+    </div>
+    <div id="detailBody"></div>
+  </section>
+
+  <!-- ================= INTERPRETER ================= -->
+  <section id="screen-interp" class="screen hidden">
+    <div class="topbar" style="padding-left:2px;padding-right:2px;">
+      <div>
+        <h1>🎙️ 실시간 통역</h1>
+        <div class="sub">Live Two-way Interpreter</div>
+      </div>
+      <div class="lang-chip" id="langChipInterp" onclick="goTo('lang')"></div>
+    </div>
+    <div class="interp-toggle">
+      <button id="dirKoToTarget" class="active">🇰🇷 제가 말해요 → 상대 언어</button>
+      <button id="dirTargetToKo">🌍 상대방이 말해요 → 한국어</button>
+    </div>
+    <div class="mic-wrap">
+      <button class="mic-btn" id="micBtn">🎤</button>
+      <div class="mic-hint" id="micHint">버튼을 누르고 말씀하세요 · Tap and speak</div>
+    </div>
+    <div class="type-fallback">
+      <input id="typeInput" placeholder="음성인식이 안 될 때 직접 입력하세요">
+      <button id="typeSendBtn">번역</button>
+    </div>
+    <div id="voiceWarning"></div>
+    <div class="section-title">대화 기록 · Conversation log</div>
+    <div class="transcript" id="transcript"></div>
+  </section>
+
+  <!-- ================= CHECKLIST ================= -->
+  <section id="screen-checklist" class="screen hidden">
+    <div class="topbar" style="padding-left:2px;padding-right:2px;">
+      <div>
+        <h1>✅ 투어 진행 체크</h1>
+        <div class="sub">Tour Progress</div>
+      </div>
+    </div>
+    <div class="timer-card">
+      <div>
+        <div style="font-size:.75rem;color:var(--ink-soft);font-weight:700;">경과 시간 · Elapsed</div>
+        <div class="time" id="timerDisplay">00:00</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="timer-start" id="timerToggle">시작</button>
+        <button class="timer-reset" id="timerReset">리셋</button>
+      </div>
+    </div>
+    <div id="checklistItems"></div>
+  </section>
+
+  <!-- ================= SETTINGS ================= -->
+  <section id="screen-settings" class="screen hidden">
+    <div class="topbar" style="padding-left:2px;padding-right:2px;">
+      <div>
+        <h1>⚙️ 설정</h1>
+        <div class="sub">Settings</div>
+      </div>
+    </div>
+    <div class="set-row">
+      <div class="lbl2">글자 크기 · Text size</div>
+      <div class="fontctl">
+        <button id="fontMinus">A−</button>
+        <button id="fontPlus">A+</button>
+      </div>
+    </div>
+    <div class="set-row" onclick="goTo('room')" style="cursor:pointer;">
+      <div class="lbl2">치료실 변경 · Change room</div>
+      <div>▸</div>
+    </div>
+    <div class="set-row" onclick="goTo('lang')" style="cursor:pointer;">
+      <div class="lbl2">언어 변경 · Change language</div>
+      <div>▸</div>
+    </div>
+    <div class="set-row" id="clearCacheRow" style="cursor:pointer;">
+      <div class="lbl2">번역 캐시 초기화 · Clear translation cache</div>
+      <div>▸</div>
+    </div>
+    <div class="banner">
+      번역은 인터넷 연결이 필요합니다 (MyMemory API 사용). 음성 출력/인식은 기기에 설치된 언어팩에 따라 지원 여부가 다를 수 있습니다.<br>
+      Translation requires internet access. Voice input/output availability depends on language packs installed on your device.
+    </div>
+  </section>
+
+  <!-- ================= TAB BAR ================= -->
+  <nav class="tabbar" id="tabbar">
+    <button class="tab-btn active" data-tab="home"><span class="ic">🏠</span>홈</button>
+    <button class="tab-btn" data-tab="interp"><span class="ic">🎙️</span>통역</button>
+    <button class="tab-btn" data-tab="checklist"><span class="ic">✅</span>체크리스트</button>
+    <button class="tab-btn" data-tab="settings"><span class="ic">⚙️</span>설정</button>
+  </nav>
+
+  <!-- ================= BIG DISPLAY OVERLAY ================= -->
+  <div class="bigview hidden" id="bigview">
+    <button class="close" id="bigviewClose">✕</button>
+    <div class="big-text">
+      <div class="line1" id="bigLine1"></div>
+      <div class="line2" id="bigLine2"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   1. 언어 정의 · Language definitions
+   ========================================================= */
+const LANGS = [
+  {code:'en', flag:'🇺🇸', name:'English',   native:'English',      tts:'en-US', stt:'en-US', rtl:false},
+  {code:'fa', flag:'🇮🇷', name:'Persian',   native:'فارسی',        tts:'fa-IR', stt:'fa-IR', rtl:true },
+  {code:'ur', flag:'🇵🇰', name:'Urdu',      native:'اردو',         tts:'ur-PK', stt:'ur-PK', rtl:true },
+  {code:'ne', flag:'🇳🇵', name:'Nepali',    native:'नेपाली',       tts:'ne-NP', stt:'ne-NP', rtl:false},
+  {code:'ru', flag:'🇷🇺', name:'Russian',   native:'Русский',      tts:'ru-RU', stt:'ru-RU', rtl:false},
+  {code:'tl', flag:'🇵🇭', name:'Filipino',  native:'Filipino',     tts:'fil-PH',stt:'fil-PH',rtl:false},
+  {code:'th', flag:'🇹🇭', name:'Thai',      native:'ไทย',          tts:'th-TH', stt:'th-TH', rtl:false},
+  {code:'vi', flag:'🇻🇳', name:'Vietnamese',native:'Tiếng Việt',   tts:'vi-VN', stt:'vi-VN', rtl:false},
+  {code:'zh', flag:'🇨🇳', name:'Chinese',   native:'中文',          tts:'zh-CN', stt:'zh-CN', rtl:false},
+  {code:'ja', flag:'🇯🇵', name:'Japanese',  native:'日本語',        tts:'ja-JP', stt:'ja-JP', rtl:false},
+];
+function langObj(code){ return LANGS.find(l=>l.code===code) || LANGS[0]; }
+
+/* =========================================================
+   1-2. 치료실 정의 · Room definitions
+   ========================================================= */
+const ROOMS = [
+  {id:'exercise', icon:'🏃', ko:'운동치료실', en:'Physical Therapy / Exercise Room',
+   ko_desc:'근력 강화, 관절가동범위 훈련, 보행 훈련 등 운동 기반의 재활치료를 진행하는 공간입니다. 트레드밀, 평행봉, 저항운동 기구 등을 갖추고 있습니다.',
+   en_desc:'A space for exercise-based rehabilitation including strength training, range-of-motion exercises, and gait training, equipped with treadmills, parallel bars, and resistance equipment.'},
+  {id:'ot', icon:'🖐️', ko:'작업치료실', en:'Occupational Therapy Room',
+   ko_desc:'식사, 옷 입기, 씻기 등 일상생활동작 훈련과 인지재활, 상지 기능 훈련을 통해 환자의 독립적인 생활을 돕는 공간입니다.',
+   en_desc:'A space where patients train in daily living activities such as eating, dressing, and bathing, along with cognitive rehabilitation and upper-limb function training to support independent living.'},
+  {id:'speech', icon:'🗣️', ko:'언어치료실', en:'Speech-Language Therapy Room',
+   ko_desc:'실어증, 조음장애, 삼킴장애가 있는 환자를 대상으로 의사소통 능력과 삼킴 기능을 평가하고 훈련하는 공간입니다.',
+   en_desc:'A space for evaluating and training communication ability and swallowing function in patients with aphasia, articulation disorders, or dysphagia.'},
+  {id:'thermo', icon:'🔥', ko:'열전기치료실', en:'Thermal & Electrotherapy Room',
+   ko_desc:'온열치료, 냉치료, 경피신경전기자극(TENS), 초음파 치료 등 물리적 인자를 이용해 통증 완화와 조직 회복을 돕는 공간입니다.',
+   en_desc:'A space using physical agents such as heat, cold, TENS, and ultrasound therapy to relieve pain and promote tissue healing.'},
+  {id:'lymphedema', icon:'💧', ko:'림프부종치료실', en:'Lymphedema Therapy Room',
+   ko_desc:'수술이나 방사선 치료 등으로 발생한 림프부종 환자를 대상으로 도수림프배출법, 압박치료, 붕대법 등을 시행하는 공간입니다.',
+   en_desc:'A space for patients with lymphedema resulting from surgery or radiation therapy, providing manual lymphatic drainage, compression therapy, and bandaging.'},
+  {id:'neuro', icon:'🧠', ko:'뇌신경재활치료실', en:'Neurological Rehabilitation Room',
+   ko_desc:'뇌졸중, 외상성 뇌손상, 척수손상 등 신경계 질환 환자의 운동 기능과 일상생활 능력 회복을 위한 전문 재활치료를 진행하는 공간입니다.',
+   en_desc:'A space providing specialized rehabilitation for patients with neurological conditions such as stroke, traumatic brain injury, and spinal cord injury, focused on restoring motor function and daily living ability.'},
+  {id:'pulmonary', icon:'🫁', ko:'호흡재활치료실', en:'Pulmonary Rehabilitation Room',
+   ko_desc:'만성 폐질환이나 수술 후 환자를 대상으로 호흡 운동, 흉곽 가동술, 지구력 훈련을 통해 호흡 기능 회복을 돕는 공간입니다.',
+   en_desc:'A space helping patients with chronic lung disease or post-surgical patients recover respiratory function through breathing exercises, chest mobilization, and endurance training.'},
+  {id:'cardiac', icon:'❤️', ko:'심장재활치료실', en:'Cardiac Rehabilitation Room',
+   ko_desc:'심장 수술이나 심근경색 등을 겪은 환자를 대상으로 심전도 모니터링 하에 단계적 운동 훈련을 진행하는 공간입니다.',
+   en_desc:'A space providing stepwise, ECG-monitored exercise training for patients recovering from cardiac surgery or myocardial infarction.'},
+  {id:'pediatric', icon:'🧒', ko:'소아재활치료실', en:'Pediatric Rehabilitation Room',
+   ko_desc:'뇌성마비 등 발달 지연이나 신경계 질환이 있는 소아 환자를 대상으로 놀이 중심의 발달 재활치료를 진행하는 공간입니다.',
+   en_desc:'A space providing play-based developmental rehabilitation for pediatric patients with conditions such as cerebral palsy or other neurodevelopmental delays.'},
+  {id:'function_test', icon:'📊', ko:'임상재활기능검사실', en:'Clinical Rehabilitation Function Test Room',
+   ko_desc:'보행 분석, 균형 능력 평가, 근전도 검사 등 정량적 기능 평가를 통해 치료 계획 수립과 경과 판정에 활용되는 검사 공간입니다.',
+   en_desc:'A testing space using quantitative function assessments such as gait analysis, balance evaluation, and electromyography to guide treatment planning and track progress.'},
+  {id:'ultrasound', icon:'🩻', ko:'초음파실', en:'Ultrasound Room',
+   ko_desc:'근골격계 구조를 실시간으로 확인하며 정확한 진단과 초음파 유도 주사 시술을 시행하는 공간입니다.',
+   en_desc:'A space for real-time visualization of musculoskeletal structures used for accurate diagnosis and ultrasound-guided injection procedures.'},
+];
+function roomObj(id){ return ROOMS.find(r=>r.id===id) || ROOMS[0]; }
+
+/* =========================================================
+   2. 소개 콘텐츠 (한/영 원문, 초안) · Content master (KO/EN draft)
+   ========================================================= */
+const CATEGORIES = [
+  { id:'facility', icon:'🏥', title_ko:'치료실 소개', title_en:'Facility Introduction',
+    desc_ko:'재활치료실 구성과 운영', desc_en:'Layout & daily operation',
+    topics:[
+      {title_ko:'환영 인사', title_en:'Welcome',
+       ko:'재활의학과 치료실에 오신 것을 환영합니다. 오늘 투어에서는 치료실 구성, 장비, 치료법, 그리고 저희 재활 시스템을 소개해 드리겠습니다.',
+       en:'Welcome to our Rehabilitation Medicine treatment center. During today\'s tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.'},
+      {title_ko:'치료실 구성', title_en:'Facility Layout',
+       ko:'치료실은 물리치료 운동치료실, 작업치료실, 언어치료실, 개별 치료실, 그리고 감염 격리가 필요한 환자를 위한 별도 공간으로 구성되어 있습니다.',
+       en:'The center consists of a physical therapy exercise gym, occupational therapy room, speech therapy room, individual treatment rooms, and a separate space for patients requiring infection isolation.'},
+      {title_ko:'하루 운영 흐름', title_en:'Daily Operation Flow',
+       ko:'환자는 오전과 오후 세션으로 나누어 치료를 받으며, 각 세션은 담당 치료사가 평가한 계획에 따라 30분에서 1시간 단위로 진행됩니다.',
+       en:'Patients receive treatment in morning and afternoon sessions, each lasting 30 minutes to 1 hour according to a plan established by the assigned therapist.'},
+      {title_ko:'다학제팀 구성', title_en:'Multidisciplinary Team',
+       ko:'재활의학과 전문의, 물리치료사, 작업치료사, 언어치료사, 간호사가 하나의 팀으로 협력하여 환자의 회복을 돕습니다.',
+       en:'A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.'},
+    ]},
+  { id:'equipment', icon:'🦾', title_ko:'치료장비 소개', title_en:'Equipment Introduction',
+    desc_ko:'주요 재활 장비 소개', desc_en:'Key rehabilitation devices',
+    topics:[
+      {title_ko:'보행 훈련 장비', title_en:'Gait Training Equipment',
+       ko:'트레드밀과 체중지지 보행 훈련기기를 이용해 환자의 안전을 확보하면서 걷기 능력을 회복시킵니다.',
+       en:'Treadmills and body-weight-support gait trainers are used to safely restore a patient\'s walking ability.'},
+      {title_ko:'근력 및 관절가동범위 기구', title_en:'Strength & ROM Equipment',
+       ko:'저항 밴드, 도르래, 관절가동범위 측정 및 훈련 기구를 사용해 근력과 유연성을 회복시킵니다.',
+       en:'Resistance bands, pulley systems, and range-of-motion devices are used to restore strength and flexibility.'},
+      {title_ko:'전기 및 온열 치료기기', title_en:'Electrotherapy & Thermotherapy',
+       ko:'경피신경전기자극(TENS), 초음파 치료기, 온·냉 치료기를 이용해 통증을 완화하고 조직 회복을 촉진합니다.',
+       en:'TENS units, ultrasound therapy devices, and heat/cold therapy equipment relieve pain and promote tissue healing.'},
+      {title_ko:'균형 및 자세 훈련 장비', title_en:'Balance & Posture Training',
+       ko:'밸런스 보드와 생체되먹임(biofeedback) 장비를 통해 낙상 위험이 있는 환자의 균형 능력을 향상시킵니다.',
+       en:'Balance boards and biofeedback devices help improve balance in patients at risk of falling.'},
+      {title_ko:'작업치료 및 인지재활 장비', title_en:'OT & Cognitive Rehab Tools',
+       ko:'일상생활동작 훈련 도구와 인지재활 프로그램을 통해 환자가 독립적으로 생활할 수 있도록 돕습니다.',
+       en:'Activities-of-daily-living training tools and cognitive rehabilitation programs help patients regain independence.'},
+    ]},
+  { id:'treatment', icon:'💪', title_ko:'치료법 소개', title_en:'Treatment Methods',
+    desc_ko:'주요 재활치료 기법', desc_en:'Core therapeutic techniques',
+    topics:[
+      {title_ko:'신경계 재활치료', title_en:'Neurological Rehabilitation',
+       ko:'뇌졸중, 뇌손상, 척수손상 환자를 대상으로 운동 기능과 일상생활 능력 회복을 위한 치료를 제공합니다.',
+       en:'Treatment for stroke, brain injury, and spinal cord injury patients focuses on restoring motor function and daily living abilities.'},
+      {title_ko:'근골격계 재활치료', title_en:'Musculoskeletal Rehabilitation',
+       ko:'수술 후 환자나 정형외과적 손상 환자를 대상으로 통증 감소와 기능 회복을 위한 치료를 진행합니다.',
+       en:'Treatment for post-surgical or orthopedic injury patients focuses on pain reduction and functional recovery.'},
+      {title_ko:'도수치료 및 운동치료', title_en:'Manual & Exercise Therapy',
+       ko:'치료사가 직접 손으로 관절과 근육을 다루는 도수치료와 맞춤형 운동 프로그램을 병행합니다.',
+       en:'Hands-on manual therapy performed directly by the therapist is combined with individualized exercise programs.'},
+      {title_ko:'보행 및 이동 훈련', title_en:'Gait & Mobility Training',
+       ko:'환자의 상태에 맞춰 보조기, 지팡이, 휠체어 등을 활용한 단계별 이동 훈련을 제공합니다.',
+       en:'Stepwise mobility training using orthoses, canes, or wheelchairs is provided according to the patient\'s condition.'},
+      {title_ko:'작업치료 및 인지재활', title_en:'Occupational & Cognitive Therapy',
+       ko:'식사, 옷 입기 등 일상생활동작 훈련과 기억력, 주의력 등 인지 기능 향상 훈련을 함께 진행합니다.',
+       en:'Training in daily activities such as eating and dressing is combined with cognitive training for memory and attention.'},
+      {title_ko:'언어치료', title_en:'Speech-Language Therapy',
+       ko:'실어증, 조음장애, 삼킴장애가 있는 환자를 대상으로 의사소통과 삼킴 기능 회복을 돕습니다.',
+       en:'Speech-language therapy helps patients with aphasia, articulation disorders, or dysphagia recover communication and swallowing function.'},
+    ]},
+  { id:'system', icon:'🗂️', title_ko:'재활치료 시스템 소개', title_en:'Rehabilitation System',
+    desc_ko:'진료 체계 및 협진 시스템', desc_en:'Clinical workflow & collaboration',
+    topics:[
+      {title_ko:'재활의학과 진료 체계', title_en:'Rehab Medicine Clinical System',
+       ko:'한국의 재활의학과는 급성기 병원 치료 이후 기능 회복을 위한 전문 진료과로, 전문의의 처방 아래 다학제 치료가 이루어집니다.',
+       en:'In Korea, rehabilitation medicine is a specialty focused on functional recovery after acute hospital care, with multidisciplinary treatment provided under a physician\'s prescription.'},
+      {title_ko:'처방-평가-치료 흐름', title_en:'Order → Evaluation → Treatment Flow',
+       ko:'전문의의 처방 후 치료사가 초기 평가를 시행하고 치료 계획을 수립하며, 이후 정기적인 재평가를 통해 계획을 조정합니다.',
+       en:'After a physician\'s order, the therapist performs an initial evaluation and establishes a treatment plan, which is adjusted through regular reassessment.'},
+      {title_ko:'건강보험 및 치료 횟수 기준', title_en:'Insurance & Session Limits',
+       ko:'국민건강보험 제도 하에서 재활치료는 진단명과 상태에 따라 인정되는 치료 횟수와 급여 기준이 정해져 있습니다.',
+       en:'Under the National Health Insurance system, the number of covered rehabilitation sessions and reimbursement criteria are determined by diagnosis and patient condition.'},
+      {title_ko:'전자의무기록(EMR) 시스템', title_en:'Electronic Medical Record (EMR)',
+       ko:'모든 평가와 치료 기록은 전자의무기록 시스템에 실시간으로 입력되어 의료진 간 정보가 공유됩니다.',
+       en:'All evaluation and treatment records are entered in real time into the electronic medical record system and shared among the care team.'},
+      {title_ko:'다학제 협진 시스템', title_en:'Multidisciplinary Collaboration',
+       ko:'정기적인 사례 회의를 통해 의사, 치료사, 간호사가 환자의 진행 상황을 공유하고 치료 방향을 함께 논의합니다.',
+       en:'Through regular case conferences, physicians, therapists, and nurses share patient progress and jointly discuss the direction of treatment.'},
+      {title_ko:'감염관리 원칙 개요', title_en:'Infection Control Principles',
+       ko:'공기주의, 비말주의, 접촉주의 등 격리 유형에 따라 개인보호구 착용과 장비 소독 절차가 다르게 적용됩니다.',
+       en:'Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.'},
+    ]},
+];
+
+/* =========================================================
+   3. 상태 · State
+   ========================================================= */
+let state = {
+  lang: localStorage.getItem('guide_lang') || null,
+  room: localStorage.getItem('guide_room') || null,
+  favorites: JSON.parse(localStorage.getItem('guide_favs') || '[]'),
+  currentCat: null,
+  currentTopicIdx: null,
+  interpDir: 'ko2target',
+  fontScale: parseFloat(localStorage.getItem('guide_font') || '1'),
+};
+document.documentElement.style.setProperty('--font-size-scale', state.fontScale);
+
+/* =========================================================
+   4. 번역 캐시 & API · Translation cache & API
+   ========================================================= */
+async function translateText(text, targetCode, sourceCode='en'){
+  if(targetCode===sourceCode) return text;
+  const cacheKey = 'tr_'+sourceCode+'_'+targetCode+'_'+text;
+  const cached = localStorage.getItem(cacheKey);
+  if(cached) return cached;
+  try{
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceCode}|${targetCode}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const out = (data && data.responseData && data.responseData.translatedText) ? data.responseData.translatedText : text;
+    localStorage.setItem(cacheKey, out);
+    return out;
+  }catch(e){
+    return text + '  [번역 실패: 오프라인이거나 서버 오류입니다]';
+  }
+}
+
+/* =========================================================
+   5. 화면 전환 · View navigation
+   ========================================================= */
+function goTo(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('screen-'+screen).classList.remove('hidden');
+  document.getElementById('tabbar').classList.toggle('hidden', screen==='room' || screen==='lang' || screen==='topics' || screen==='detail');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===screen));
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.tab-btn').forEach(b=>{
+  b.addEventListener('click', ()=>goTo(b.dataset.tab));
+});
+
+/* ---------- Room picker ---------- */
+const roomGrid = document.getElementById('roomGrid');
+ROOMS.forEach(r=>{
+  const div = document.createElement('div');
+  div.className = 'lang-card'+(state.room===r.id?' selected':'');
+  div.innerHTML = `<div class="flag">${r.icon}</div><div class="name">${r.ko}</div><div class="native">${r.en}</div>`;
+  div.onclick = ()=>{
+    document.querySelectorAll('#roomGrid .lang-card').forEach(c=>c.classList.remove('selected'));
+    div.classList.add('selected');
+    state.room = r.id;
+    document.getElementById('roomStartBtn').disabled = false;
+  };
+  roomGrid.appendChild(div);
+});
+if(state.room) document.getElementById('roomStartBtn').disabled = false;
+document.getElementById('roomStartBtn').addEventListener('click', ()=>{
+  if(!state.room) return;
+  localStorage.setItem('guide_room', state.room);
+  renderRoomChip();
+  goTo('lang');
+});
+function renderRoomChip(){
+  const r = roomObj(state.room);
+  document.getElementById('roomChipHome').innerHTML = `<span class="flag">${r.icon}</span>`;
+  document.getElementById('roomChipHome').title = r.ko + ' · ' + r.en;
+}
+async function renderRoomIntroCard(){
+  const r = roomObj(state.room);
+  const l = langObj(state.lang);
+  document.getElementById('heroTitleKo').textContent = `환영합니다 👋 · ${r.ko}`;
+  document.getElementById('heroTitleEn').textContent = `Welcome · ${r.en}`;
+  const card = document.getElementById('roomIntroCard');
+  card.className = 'content-card'+(l.rtl?' rtl':'');
+  card.innerHTML = `
+    <div class="lbl">${l.flag} ${l.name}</div>
+    <p id="roomTargetText"><span class="loading-dot"></span> <span class="loading-dot"></span> <span class="loading-dot"></span></p>
+    <div class="card-actions">
+      <button class="icon-btn" id="roomPlayTarget">🔊 재생</button>
+      <button class="icon-btn" id="roomBigBtn">🔍 크게 보기</button>
+    </div>
+    <p style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line);color:var(--ink-soft);font-size:0.88rem;">
+      🇺🇸 ${r.en_desc}
+    </p>`;
+  let targetText = r.en_desc;
+  if(l.code!=='en'){ targetText = await translateText(r.en_desc, l.code, 'en'); }
+  document.getElementById('roomTargetText').textContent = targetText;
+  document.getElementById('roomPlayTarget').onclick = (e)=>speak(targetText, l.tts, e.target);
+  document.getElementById('roomBigBtn').onclick = ()=>showBigView(targetText, r.en_desc, l.rtl);
+}
+
+/* ---------- Language picker ---------- */
+const langGrid = document.getElementById('langGrid');
+LANGS.forEach(l=>{
+  const div = document.createElement('div');
+  div.className = 'lang-card'+(state.lang===l.code?' selected':'');
+  div.innerHTML = `<div class="flag">${l.flag}</div><div class="name">${l.name}</div><div class="native">${l.native}</div>`;
+  div.onclick = ()=>{
+    document.querySelectorAll('.lang-card').forEach(c=>c.classList.remove('selected'));
+    div.classList.add('selected');
+    state.lang = l.code;
+    document.getElementById('startBtn').disabled = false;
+  };
+  langGrid.appendChild(div);
+});
+if(state.lang) document.getElementById('startBtn').disabled = false;
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  if(!state.lang) return;
+  localStorage.setItem('guide_lang', state.lang);
+  renderLangChips();
+  renderRoomIntroCard();
+  goTo('home');
+});
+function renderLangChips(){
+  const l = langObj(state.lang);
+  const html = `<span class="flag">${l.flag}</span><span>${l.name}</span>`;
+  document.getElementById('langChipHome').innerHTML = html;
+  document.getElementById('langChipInterp').innerHTML = html;
+}
+
+/* ---------- Home / category grid ---------- */
+const catGrid = document.getElementById('catGrid');
+CATEGORIES.forEach(cat=>{
+  const div = document.createElement('div');
+  div.className = 'cat-card';
+  div.innerHTML = `<div class="cat-icon">${cat.icon}</div>
+    <div><div class="cat-title">${cat.title_ko}</div><div class="cat-desc">${cat.title_en} · ${cat.desc_en}</div></div>
+    <div class="cat-arrow">›</div>`;
+  div.onclick = ()=>openCategory(cat.id);
+  catGrid.appendChild(div);
+});
+
+function openCategory(catId){
+  state.currentCat = catId;
+  const cat = CATEGORIES.find(c=>c.id===catId);
+  document.getElementById('topicCatTitle').textContent = `${cat.title_ko} · ${cat.title_en}`;
+  const list = document.getElementById('topicList');
+  list.innerHTML = '';
+  cat.topics.forEach((t, idx)=>{
+    const key = catId+'_'+idx;
+    const isFav = state.favorites.includes(key);
+    const div = document.createElement('div');
+    div.className = 'topic-item';
+    div.innerHTML = `<div><div class="topic-title">${t.title_ko}</div><div style="font-size:.78rem;color:var(--ink-soft);">${t.title_en}</div></div>
+      <div class="star ${isFav?'active':''}" data-key="${key}">${isFav?'★':'☆'}</div>`;
+    div.querySelector('.topic-title').parentElement.onclick = (e)=>{ if(e.target.classList.contains('star')) return; openDetail(catId, idx); };
+    div.querySelector('.star').onclick = (e)=>{
+      e.stopPropagation();
+      toggleFav(key);
+      e.target.textContent = state.favorites.includes(key)?'★':'☆';
+      e.target.classList.toggle('active');
+    };
+    list.appendChild(div);
+  });
+  goTo('topics');
+}
+function toggleFav(key){
+  const i = state.favorites.indexOf(key);
+  if(i>-1) state.favorites.splice(i,1); else state.favorites.push(key);
+  localStorage.setItem('guide_favs', JSON.stringify(state.favorites));
+}
+document.getElementById('detailBackBtn').onclick = ()=>openCategory(state.currentCat);
+
+/* ---------- Detail view ---------- */
+async function openDetail(catId, idx){
+  state.currentCat = catId;
+  state.currentTopicIdx = idx;
+  const cat = CATEGORIES.find(c=>c.id===catId);
+  const topic = cat.topics[idx];
+  const l = langObj(state.lang);
+  const body = document.getElementById('detailBody');
+  body.innerHTML = `
+    <div class="content-card ${l.rtl?'rtl':''}">
+      <div class="lbl">${l.flag} ${l.name}</div>
+      <p id="targetText"><span class="loading-dot"></span> <span class="loading-dot"></span> <span class="loading-dot"></span></p>
+      <div class="card-actions">
+        <button class="icon-btn" id="playTarget">🔊 재생</button>
+        <button class="icon-btn" id="bigBtn">🔍 크게 보기</button>
+        <button class="icon-btn" id="copyBtn">📋 복사</button>
+      </div>
+    </div>
+    <div class="content-card">
+      <div class="lbl">🇺🇸 English</div>
+      <p>${topic.en}</p>
+      <div class="card-actions">
+        <button class="icon-btn" id="playEn">🔊 Play</button>
+      </div>
+    </div>
+    <div class="content-card">
+      <div class="lbl">🇰🇷 한국어 (참고)</div>
+      <p style="color:var(--ink-soft);">${topic.ko}</p>
+    </div>
+  `;
+  goTo('detail');
+
+  let targetText = topic.en;
+  if(l.code!=='en'){
+    targetText = await translateText(topic.en, l.code, 'en');
+  }
+  document.getElementById('targetText').textContent = targetText;
+
+  document.getElementById('playTarget').onclick = (e)=>speak(targetText, l.tts, e.target);
+  document.getElementById('playEn').onclick = (e)=>speak(topic.en, 'en-US', e.target);
+  document.getElementById('copyBtn').onclick = ()=>{
+    navigator.clipboard && navigator.clipboard.writeText(targetText);
+    document.getElementById('copyBtn').textContent = '✅ 복사됨';
+    setTimeout(()=>document.getElementById('copyBtn').textContent='📋 복사', 1500);
+  };
+  document.getElementById('bigBtn').onclick = ()=>showBigView(targetText, topic.en, l.rtl);
+}
+
+/* ---------- Big display overlay ---------- */
+function showBigView(line1, line2, rtl){
+  document.getElementById('bigLine1').textContent = line1;
+  document.getElementById('bigLine2').textContent = line2;
+  const bv = document.getElementById('bigview');
+  bv.classList.toggle('rtl', !!rtl);
+  bv.classList.remove('hidden');
+}
+document.getElementById('bigviewClose').onclick = ()=>document.getElementById('bigview').classList.add('hidden');
+
+/* =========================================================
+   6. 음성 출력 (TTS) · Text-to-speech
+   ========================================================= */
+let voiceWarned = {};
+function speak(text, langCode, btnEl){
+  if(!('speechSynthesis' in window)){
+    alert('이 기기/브라우저는 음성 출력을 지원하지 않습니다.');
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = langCode;
+  if(btnEl){
+    btnEl.classList.add('speaking');
+    u.onend = ()=>btnEl.classList.remove('speaking');
+    u.onerror = ()=>btnEl.classList.remove('speaking');
+  }
+  const voices = window.speechSynthesis.getVoices();
+  const hasVoice = voices.some(v=>v.lang && v.lang.toLowerCase().startsWith(langCode.split('-')[0]));
+  if(!hasVoice && !voiceWarned[langCode]){
+    voiceWarned[langCode] = true;
+    const warn = document.getElementById('voiceWarning');
+    if(warn) warn.innerHTML = `<div class="banner">⚠️ 이 언어(${langCode})의 음성이 기기에 설치되어 있지 않을 수 있습니다. 화면의 텍스트로 안내해주세요.<br>Voice for this language may not be installed on this device — please use the on-screen text instead.</div>`;
+  }
+  window.speechSynthesis.speak(u);
+}
+if('speechSynthesis' in window){ window.speechSynthesis.onvoiceschanged = ()=>{}; }
+
+/* =========================================================
+   7. 실시간 통역 (STT + 번역 + TTS) · Live interpreter
+   ========================================================= */
+const dirKoBtn = document.getElementById('dirKoToTarget');
+const dirTgBtn = document.getElementById('dirTargetToKo');
+dirKoBtn.onclick = ()=>{ state.interpDir='ko2target'; dirKoBtn.classList.add('active'); dirTgBtn.classList.remove('active'); updateMicHint(); };
+dirTgBtn.onclick = ()=>{ state.interpDir='target2ko'; dirTgBtn.classList.add('active'); dirKoBtn.classList.remove('active'); updateMicHint(); };
+function updateMicHint(){
+  const l = langObj(state.lang);
+  document.getElementById('micHint').textContent = state.interpDir==='ko2target'
+    ? `한국어로 말씀하세요 → ${l.name}로 통역됩니다`
+    : `${l.name}로 말씀해 주세요 → 한국어로 통역됩니다`;
+}
+
+const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognizing = false;
+let recognizer = null;
+const micBtn = document.getElementById('micBtn');
+
+micBtn.addEventListener('click', ()=>{
+  if(!SpeechRecognitionAPI){
+    alert('이 브라우저는 음성 인식을 지원하지 않습니다. Chrome 브라우저 사용을 권장합니다.\\nSpeech recognition is not supported — please try Chrome.');
+    return;
+  }
+  if(recognizing){ recognizer && recognizer.stop(); return; }
+  const l = langObj(state.lang);
+  recognizer = new SpeechRecognitionAPI();
+  recognizer.lang = state.interpDir==='ko2target' ? 'ko-KR' : l.stt;
+  recognizer.interimResults = false;
+  recognizer.maxAlternatives = 1;
+  recognizer.onstart = ()=>{ recognizing=true; micBtn.classList.add('listening'); };
+  recognizer.onend = ()=>{ recognizing=false; micBtn.classList.remove('listening'); };
+  recognizer.onerror = (e)=>{
+    recognizing=false; micBtn.classList.remove('listening');
+    if(e.error==='not-allowed'){ alert('마이크 권한을 허용해주세요. Please allow microphone access.'); }
+  };
+  recognizer.onresult = (e)=>{
+    const said = e.results[0][0].transcript;
+    handleInterpretation(said);
+  };
+  recognizer.start();
+});
+
+async function handleInterpretation(saidText){
+  const l = langObj(state.lang);
+  if(state.interpDir==='ko2target'){
+    addBubble('me', saidText, true);
+    const translated = await translateText(saidText, l.code, 'ko');
+    addBubble('them', translated, false);
+    speak(translated, l.tts);
+  }else{
+    addBubble('them', saidText, true);
+    const translated = await translateText(saidText, 'ko', l.code);
+    addBubble('me', translated, false);
+  }
+}
+
+document.getElementById('typeSendBtn').onclick = ()=>{
+  const val = document.getElementById('typeInput').value.trim();
+  if(!val) return;
+  handleInterpretation(val);
+  document.getElementById('typeInput').value='';
+};
+document.getElementById('typeInput').addEventListener('keydown', (e)=>{
+  if(e.key==='Enter') document.getElementById('typeSendBtn').click();
+});
+
+function addBubble(who, text, isOriginal){
+  const wrap = document.getElementById('transcript');
+  const div = document.createElement('div');
+  div.className = 'bubble '+who;
+  div.textContent = text;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+/* =========================================================
+   8. 투어 체크리스트 & 타이머 · Checklist & timer
+   ========================================================= */
+const CHECK_ITEMS = [
+  {ko:'환영 및 소개', en:'Welcome & Introduction'},
+  {ko:'치료실 시설 투어', en:'Facility Tour'},
+  {ko:'치료 장비 소개', en:'Equipment Overview'},
+  {ko:'치료법 소개', en:'Treatment Methods'},
+  {ko:'재활 시스템 소개', en:'Rehab System Overview'},
+  {ko:'질의응답', en:'Q&A'},
+  {ko:'마무리 인사', en:'Closing'},
+];
+let checkedState = JSON.parse(localStorage.getItem('guide_checks') || '[]');
+function renderChecklist(){
+  const wrap = document.getElementById('checklistItems');
+  wrap.innerHTML = '';
+  CHECK_ITEMS.forEach((item, i)=>{
+    const done = checkedState.includes(i);
+    const div = document.createElement('div');
+    div.className = 'chk-item'+(done?' done':'');
+    div.innerHTML = `<div class="box">${done?'✓':''}</div><div class="txt ${done?'done':''}">${item.ko} · ${item.en}</div>`;
+    div.onclick = ()=>{
+      const idx = checkedState.indexOf(i);
+      if(idx>-1) checkedState.splice(idx,1); else checkedState.push(i);
+      localStorage.setItem('guide_checks', JSON.stringify(checkedState));
+      renderChecklist();
+    };
+    wrap.appendChild(div);
+  });
+}
+renderChecklist();
+
+let timerSeconds = 0, timerRunning=false, timerInterval=null;
+function fmt(s){ const m=Math.floor(s/60).toString().padStart(2,'0'); const sec=(s%60).toString().padStart(2,'0'); return m+':'+sec; }
+document.getElementById('timerToggle').onclick = (e)=>{
+  timerRunning = !timerRunning;
+  e.target.textContent = timerRunning ? '일시정지' : '시작';
+  if(timerRunning){
+    timerInterval = setInterval(()=>{ timerSeconds++; document.getElementById('timerDisplay').textContent = fmt(timerSeconds); }, 1000);
+  }else{ clearInterval(timerInterval); }
+};
+document.getElementById('timerReset').onclick = ()=>{
+  timerRunning=false; clearInterval(timerInterval); timerSeconds=0;
+  document.getElementById('timerDisplay').textContent='00:00';
+  document.getElementById('timerToggle').textContent='시작';
+};
+
+/* =========================================================
+   9. 설정 · Settings
+   ========================================================= */
+document.getElementById('fontPlus').onclick = ()=>{
+  state.fontScale = Math.min(1.4, state.fontScale + 0.1);
+  document.documentElement.style.setProperty('--font-size-scale', state.fontScale);
+  localStorage.setItem('guide_font', state.fontScale);
+};
+document.getElementById('fontMinus').onclick = ()=>{
+  state.fontScale = Math.max(0.85, state.fontScale - 0.1);
+  document.documentElement.style.setProperty('--font-size-scale', state.fontScale);
+  localStorage.setItem('guide_font', state.fontScale);
+};
+document.getElementById('clearCacheRow').onclick = ()=>{
+  Object.keys(localStorage).filter(k=>k.startsWith('tr_')).forEach(k=>localStorage.removeItem(k));
+  alert('번역 캐시가 초기화되었습니다. Translation cache cleared.');
+};
+
+/* =========================================================
+   10. 초기 실행 · Init
+   ========================================================= */
+(function init(){
+  // installable PWA manifest via blob (works without a separate file)
+  const manifest = {
+    name: '재활치료실 연수자 가이드', short_name: '재활가이드',
+    start_url: '.', display: 'standalone', background_color: '#F1F4F1', theme_color:'#0E6E5C',
+    icons: [{ src: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' rx=\'22\' fill=\'%230E6E5C\'/%3E%3C/svg%3E', sizes:'100x100', type:'image/svg+xml'}]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+  const link = document.createElement('link');
+  link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
+  document.head.appendChild(link);
+
+  updateMicHint();
+  if(state.room && state.lang){
+    renderRoomChip();
+    renderLangChips();
+    renderRoomIntroCard();
+    goTo('home');
+  }else if(state.room){
+    renderRoomChip();
+    goTo('lang');
+  }else{
+    goTo('room');
+  }
+})();
+</script>
+</body>
+</html>
