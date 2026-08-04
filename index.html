@@ -154,9 +154,11 @@ body{font-size:calc(16px * var(--font-size-scale));}
    Mobile(기본) / Tablet(600px+) / Desktop(900px+)
    ========================================================= */
 
-/* ---- Tablet: 600px 이상 (세로 태블릿, 큰 폰 가로모드) ---- */
+/* ---- Tablet 이상(600px+): 화면 크기와 무관하게 동일한 폼팩터(하단 탭바) 유지, 그리드 열 수만 조정 ---- */
 @media (min-width:600px){
   #app{max-width:680px;}
+  .tabbar{max-width:680px;}
+  #floatingBackBtn{left:calc(50% - 340px + 16px);}
   .lang-grid{grid-template-columns:repeat(3,1fr);}
   .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .topic-item{padding:16px 18px;}
@@ -164,28 +166,12 @@ body{font-size:calc(16px * var(--font-size-scale));}
   .bigview .big-text{max-width:640px;margin:0 auto;width:100%;}
 }
 
-/* ---- Desktop / PC: 900px 이상 → 하단 탭바를 좌측 사이드 내비게이션으로 전환 ---- */
+/* ---- 넓은 화면(태블릿/PC 공통): 배경을 살짝 구분해 중앙의 앱 영역이 도드라지도록만 처리, 레이아웃 구조(하단 탭바)는 모바일과 동일 ---- */
 @media (min-width:900px){
   body{background:var(--card-alt);}
-  #app{max-width:960px;min-height:100vh;flex-direction:row;align-items:stretch;
-       box-shadow:0 0 0 1px var(--line);}
-  .tabbar{position:sticky;top:0;left:0;bottom:auto;order:1;
-          flex-direction:column;width:200px;height:100vh;max-width:none;margin:0;
-          border-top:none;border-right:1px solid var(--line);
-          padding:26px 12px calc(16px + env(safe-area-inset-bottom));gap:6px;}
-  .tab-btn{flex-direction:row;justify-content:flex-start;gap:10px;padding:12px 14px;
-           border-radius:12px;font-size:0.88rem;}
-  .tab-btn .ic{font-size:1.15rem;}
-  .tab-btn.active{background:var(--card-alt);}
-  .screen{order:2;flex:1;max-width:720px;width:100%;margin:0 auto;padding:0 28px 48px;}
-  .screen#screen-lang, .screen#screen-topics, .screen#screen-detail{order:2;flex:1;}
-  .bigview .big-text{max-width:760px;margin:0 auto;width:100%;}
-  .lang-grid{grid-template-columns:repeat(4,1fr);}
-  .cat-grid{grid-template-columns:1fr 1fr;}
-  #floatingBackBtn{position:absolute;left:216px;bottom:24px;}
-  #floatingBackBtn.raised{bottom:24px;}
+  #app{box-shadow:0 0 0 1px var(--line);}
 }
-@media (min-width:900px) and (hover:hover) and (pointer:fine){
+@media (hover:hover) and (pointer:fine){
   .cat-card:hover,.topic-item:hover,.lang-card:hover,.chk-item:hover{
     border-color:var(--primary);box-shadow:0 4px 16px rgba(14,110,92,.1);cursor:pointer;}
   .tab-btn:hover{background:var(--card-alt);}
@@ -193,11 +179,6 @@ body{font-size:calc(16px * var(--font-size-scale));}
   .start-btn:hover:not(:disabled),.mic-btn:hover{filter:brightness(1.06);}
 }
 
-/* ---- 넓은 데스크톱: 여백을 더 확보 ---- */
-@media (min-width:1200px){
-  #app{max-width:1080px;}
-  .screen{max-width:800px;}
-}
 
 /* ---- 키보드 포커스 표시 (접근성) ---- */
 button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
@@ -226,7 +207,6 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     </div>
     <div class="section-title">지금 계신(또는 안내할) 치료실을 선택해주세요 · Select the room</div>
     <div class="lang-grid" id="roomGrid"></div>
-    <button class="start-btn" id="roomStartBtn" disabled>다음 · Next</button>
   </section>
 
   <!-- ================= LANGUAGE PICKER ================= -->
@@ -242,7 +222,6 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     </div>
     <div class="section-title">연수자의 언어를 선택해주세요 · Select visitor's language</div>
     <div class="lang-grid" id="langGrid"></div>
-    <button class="start-btn" id="startBtn" disabled>선택 완료 · Continue</button>
   </section>
 
   <!-- ================= HOME ================= -->
@@ -368,7 +347,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 
   <!-- ================= TAB BAR ================= -->
   <nav class="tabbar" id="tabbar">
-    <button class="tab-btn active" data-tab="home"><span class="ic">🏠</span>홈</button>
+    <button class="tab-btn active" data-tab="room"><span class="ic">🏠</span>홈</button>
     <button class="tab-btn" data-tab="interp"><span class="ic">🎙️</span>통역</button>
     <button class="tab-btn" data-tab="checklist"><span class="ic">✅</span>체크리스트</button>
     <button class="tab-btn" data-tab="settings"><span class="ic">⚙️</span>설정</button>
@@ -601,6 +580,7 @@ document.getElementById('floatingBackBtn').addEventListener('click', goBack);
 document.querySelectorAll('.tab-btn').forEach(b=>{
   b.addEventListener('click', ()=>{
     const target = b.dataset.tab;
+    if(target==='room'){ goTo('room'); return; }
     if(!state.room){
       alert('치료실을 먼저 선택해주세요.\nPlease select a room first.');
       goTo('room');
@@ -625,16 +605,11 @@ ROOMS.forEach(r=>{
     document.querySelectorAll('#roomGrid .lang-card').forEach(c=>c.classList.remove('selected'));
     div.classList.add('selected');
     state.room = r.id;
-    document.getElementById('roomStartBtn').disabled = false;
+    localStorage.setItem('guide_room', state.room);
+    renderRoomChip();
+    goTo('lang');
   };
   roomGrid.appendChild(div);
-});
-if(state.room) document.getElementById('roomStartBtn').disabled = false;
-document.getElementById('roomStartBtn').addEventListener('click', ()=>{
-  if(!state.room) return;
-  localStorage.setItem('guide_room', state.room);
-  renderRoomChip();
-  goTo('lang');
 });
 function renderRoomChip(){
   const r = roomObj(state.room);
@@ -676,17 +651,12 @@ LANGS.forEach(l=>{
     document.querySelectorAll('.lang-card').forEach(c=>c.classList.remove('selected'));
     div.classList.add('selected');
     state.lang = l.code;
-    document.getElementById('startBtn').disabled = false;
+    localStorage.setItem('guide_lang', state.lang);
+    renderLangChips();
+    renderRoomIntroCard();
+    goTo('home');
   };
   langGrid.appendChild(div);
-});
-if(state.lang) document.getElementById('startBtn').disabled = false;
-document.getElementById('startBtn').addEventListener('click', ()=>{
-  if(!state.lang) return;
-  localStorage.setItem('guide_lang', state.lang);
-  renderLangChips();
-  renderRoomIntroCard();
-  goTo('home');
 });
 function renderLangChips(){
   const l = langObj(state.lang);
@@ -720,7 +690,7 @@ function openCategory(catId){
     div.className = 'topic-item';
     div.innerHTML = `<div><div class="topic-title">${t.title_ko}</div><div style="font-size:.78rem;color:var(--ink-soft);">${t.title_en}</div></div>
       <div class="star ${isFav?'active':''}" data-key="${key}">${isFav?'★':'☆'}</div>`;
-    div.querySelector('.topic-title').parentElement.onclick = (e)=>{ if(e.target.classList.contains('star')) return; openDetail(catId, idx); };
+    div.onclick = ()=>openDetail(catId, idx);
     div.querySelector('.star').onclick = (e)=>{
       e.stopPropagation();
       toggleFav(key);
