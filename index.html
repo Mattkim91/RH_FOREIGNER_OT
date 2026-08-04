@@ -37,7 +37,7 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .hidden{display:none !important;}
 
 /* ---------- Top bar ---------- */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:calc(14px + env(safe-area-inset-top)) 18px 10px;position:sticky;top:0;background:var(--bg);z-index:10;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:calc(14px + env(safe-area-inset-top)) 54px 10px 18px;position:sticky;top:0;background:var(--bg);z-index:10;}
 .topbar h1{font-size:1.05rem;font-weight:800;margin:0;color:var(--primary-dark);letter-spacing:-0.01em;}
 .topbar .sub{font-size:0.72rem;color:var(--ink-soft);margin-top:1px;}
 .lang-chip{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:0.85rem;font-weight:700;color:var(--primary-dark);}
@@ -139,14 +139,14 @@ body{font-size:calc(16px * var(--font-size-scale));}
 
 /* ---------- Bottom nav ---------- */
 .tabbar{position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;background:var(--card);border-top:1px solid var(--line);display:flex;padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:20;}
-#floatingBackBtn{position:fixed;left:16px;bottom:calc(20px + env(safe-area-inset-bottom));width:50px;height:50px;border-radius:50%;
-  border:none;background:var(--primary);color:#fff;font-size:1.3rem;font-weight:800;display:none;align-items:center;justify-content:center;
-  box-shadow:0 6px 16px rgba(14,110,92,.28);z-index:30;cursor:pointer;transition:bottom .15s;}
-#floatingBackBtn.raised{bottom:calc(84px + env(safe-area-inset-bottom));}
-#floatingBackBtn:active{transform:scale(.92);}
+#settingsFab{position:fixed;top:calc(12px + env(safe-area-inset-top));right:16px;width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--line);background:var(--card);color:var(--primary-dark);font-size:1.05rem;display:flex;
+  align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.08);z-index:25;cursor:pointer;}
+#settingsFab:active{transform:scale(.92);}
 .tab-btn{flex:1;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;color:var(--ink-soft);font-size:0.68rem;font-weight:700;cursor:pointer;}
 .tab-btn .ic{font-size:1.25rem;}
 .tab-btn.active{color:var(--primary);}
+.tab-btn.disabled{opacity:.35;pointer-events:none;}
 .banner{background:#FDF1DE;border:1px solid #F0D6A6;color:#7A5417;font-size:0.78rem;padding:10px 12px;border-radius:12px;margin:8px 0;line-height:1.5;}
 
 /* =========================================================
@@ -158,7 +158,7 @@ body{font-size:calc(16px * var(--font-size-scale));}
 @media (min-width:600px){
   #app{max-width:680px;}
   .tabbar{max-width:680px;}
-  #floatingBackBtn{left:calc(50% - 340px + 16px);}
+  #settingsFab{right:calc(50% - 340px + 16px);}
   .lang-grid{grid-template-columns:repeat(3,1fr);}
   .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .topic-item{padding:16px 18px;}
@@ -342,15 +342,15 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     </div>
   </section>
 
-  <!-- ================= FLOATING BACK BUTTON ================= -->
-  <button id="floatingBackBtn" aria-label="뒤로가기 · Back">←</button>
+  <!-- ================= TOP-RIGHT SETTINGS ICON ================= -->
+  <button id="settingsFab" aria-label="설정 · Settings">⚙️</button>
 
   <!-- ================= TAB BAR ================= -->
   <nav class="tabbar" id="tabbar">
     <button class="tab-btn active" data-tab="room"><span class="ic">🏠</span>홈</button>
     <button class="tab-btn" data-tab="interp"><span class="ic">🎙️</span>통역</button>
     <button class="tab-btn" data-tab="checklist"><span class="ic">✅</span>체크리스트</button>
-    <button class="tab-btn" data-tab="settings"><span class="ic">⚙️</span>설정</button>
+    <button class="tab-btn" id="tabBackBtn"><span class="ic">←</span>뒤로가기</button>
   </nav>
 
   <!-- ================= BIG DISPLAY OVERLAY ================= -->
@@ -557,9 +557,9 @@ function goTo(screen, opts){
   document.getElementById('screen-'+screen).classList.remove('hidden');
   const tabbarVisible = !(screen==='topics' || screen==='detail');
   document.getElementById('tabbar').classList.toggle('hidden', !tabbarVisible);
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===screen));
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(b=>b.classList.toggle('active', b.dataset.tab===screen));
   currentScreen = screen;
-  updateFloatingBackBtn(tabbarVisible);
+  updateBackTabState();
   window.scrollTo(0,0);
 }
 
@@ -569,15 +569,27 @@ function goBack(){
   goTo(prev, {isBack:true});
 }
 
-function updateFloatingBackBtn(tabbarVisible){
-  const btn = document.getElementById('floatingBackBtn');
-  btn.style.display = navStack.length>0 ? 'flex' : 'none';
-  btn.classList.toggle('raised', !!tabbarVisible);
+function updateBackTabState(){
+  document.getElementById('tabBackBtn').classList.toggle('disabled', navStack.length===0);
 }
 
-document.getElementById('floatingBackBtn').addEventListener('click', goBack);
+document.getElementById('tabBackBtn').addEventListener('click', goBack);
 
-document.querySelectorAll('.tab-btn').forEach(b=>{
+document.getElementById('settingsFab').addEventListener('click', ()=>{
+  if(!state.room){
+    alert('치료실을 먼저 선택해주세요.\nPlease select a room first.');
+    goTo('room');
+    return;
+  }
+  if(!state.lang){
+    alert('언어를 먼저 선택해주세요.\nPlease select a language first.');
+    goTo('lang');
+    return;
+  }
+  goTo('settings');
+});
+
+document.querySelectorAll('.tab-btn[data-tab]').forEach(b=>{
   b.addEventListener('click', ()=>{
     const target = b.dataset.tab;
     if(target==='room'){ goTo('room'); return; }
