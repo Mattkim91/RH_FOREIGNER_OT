@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0E6E5C">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="재활 연수자 가이드">
@@ -82,8 +83,13 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .content-card{background:var(--card);border-radius:20px;padding:18px;margin:10px 0;border:1px solid var(--line);}
 .content-card .lbl{font-size:0.72rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
 .tr-badge{margin-inline-start:auto;flex-shrink:0;font-size:0.62rem;font-weight:800;letter-spacing:0;text-transform:none;line-height:1.3;padding:2px 7px;border-radius:999px;background:var(--card-alt);color:var(--ink-soft);}
-.tr-badge.manual{background:#E5F3EE;color:var(--primary-dark);}
+.tr-badge.verified{background:#E5F3EE;color:var(--primary-dark);}
+.tr-badge.draft{background:#FDF1DE;color:#7A5417;}
 .tr-badge[hidden]{display:none !important;}
+.tr-notice{margin-top:8px;font-size:0.78rem;color:#7A5417;line-height:1.45;}
+.tr-notice[hidden]{display:none !important;}
+.draft-tag{display:inline-block;margin-inline-start:6px;font-size:0.62rem;font-weight:800;letter-spacing:0;text-transform:none;color:#7A5417;background:#FDF1DE;border-radius:999px;padding:1px 6px;vertical-align:middle;}
+.voice-note{font-size:0.68rem;font-weight:700;color:#7A5417;}
 .content-card p{margin:0;line-height:1.65;font-size:1rem;}
 .content-card.rtl p, .content-card.rtl{direction:rtl;text-align:right;}
 .card-actions{display:flex;gap:8px;margin-top:12px;}
@@ -107,6 +113,7 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .interp-toggle button.active{background:var(--primary);color:#fff;}
 .mic-wrap{display:flex;flex-direction:column;align-items:center;padding:26px 0 10px;}
 .mic-btn{width:96px;height:96px;border-radius:50%;border:none;background:var(--primary);color:#fff;font-size:2.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 18px rgba(14,110,92,.3);position:relative;}
+.mic-btn:disabled{background:#B9C5C1;box-shadow:none;cursor:not-allowed;filter:none;}
 .mic-btn.listening{background:var(--danger);animation:micpulse 1.2s infinite;}
 @keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(193,68,60,.45)}70%{box-shadow:0 0 0 22px rgba(193,68,60,0)}100%{box-shadow:0 0 0 0 rgba(193,68,60,0)}}
 .mic-hint{margin-top:12px;font-size:0.82rem;color:var(--ink-soft);font-weight:600;}
@@ -179,7 +186,7 @@ body{font-size:calc(16px * var(--font-size-scale));}
     border-color:var(--primary);box-shadow:0 4px 16px rgba(14,110,92,.1);cursor:pointer;}
   .tab-btn:hover{background:var(--card-alt);}
   .icon-btn:hover{background:var(--line);}
-  .mic-btn:hover{filter:brightness(1.06);}
+  .mic-btn:hover:not(:disabled){filter:brightness(1.06);}
 }
 
 
@@ -224,6 +231,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
       <button class="back-btn" onclick="goTo('room')">← 치료실 다시 선택 · Room</button>
     </div>
     <div class="section-title">연수자의 언어를 선택해주세요 · Select visitor's language</div>
+    <div id="langVoiceBanner" class="banner hidden"></div>
     <div class="lang-grid" id="langGrid"></div>
   </section>
 
@@ -287,6 +295,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
       <button id="typeSendBtn">번역</button>
     </div>
     <div id="voiceWarning"></div>
+    <div id="trFailBanner"></div>
     <div id="transcriptWrap">
       <div class="section-title">대화 기록 · Conversation log</div>
       <div class="transcript" id="transcript"></div>
@@ -337,13 +346,19 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
       <div class="lbl2">언어 변경 · Change language</div>
       <div>▸</div>
     </div>
+    <div class="set-row" id="prefetchRow" style="cursor:pointer;">
+      <div>
+        <div class="lbl2">선택한 언어 번역 미리 받기</div>
+        <div class="sub" id="prefetchStatus" style="font-size:.75rem;color:var(--ink-soft);margin-top:3px;"></div>
+      </div>
+      <div>▸</div>
+    </div>
     <div class="set-row" id="clearCacheRow" style="cursor:pointer;">
       <div class="lbl2">번역 캐시 초기화 · Clear translation cache</div>
       <div>▸</div>
     </div>
     <div class="banner">
-      번역은 인터넷 연결이 필요합니다 (MyMemory API 사용). 음성 출력/인식은 기기에 설치된 언어팩에 따라 지원 여부가 다를 수 있습니다.<br>
-      Translation requires internet access. Voice input/output availability depends on language packs installed on your device.
+      직접 넣은 번역과 미리 받아 둔 번역은 인터넷 없이 보입니다. 아직 없는 문장의 자동 번역만 MyMemory 연결이 필요합니다. 음성은 기기에 설치된 언어에 따라 다릅니다.
     </div>
   </section>
 
@@ -514,6 +529,69 @@ const CATEGORIES = [
 ];
 
 /* =========================================================
+   2-2. 치료실별 주제 · Room-specific topics
+   ---------------------------------------------------------
+   장비 소개(equipment)와 치료법 소개(treatment)만 방마다 다르게 넣을 수 있습니다.
+   치료실 소개(facility)와 재활 시스템(system)은 모든 방이 위의 공통 주제를 씁니다.
+
+   넣는 방법
+   1) 아래 id 중 치료실을 고릅니다.
+      exercise 운동치료실 · ot 작업치료실 · speech 언어치료실 · thermo 열전기치료실
+      lymphedema 림프부종치료실 · neuro 뇌신경재활치료실 · pulmonary 호흡재활치료실
+      cardiac 심장재활치료실 · pediatric 소아재활치료실 · function_test 임상재활기능검사실
+      ultrasound 초음파실
+   2) equipment 또는 treatment 배열에 주제를 추가합니다.
+      한 주제는 title_ko, title_en, ko, en 입니다.
+   3) 그 배열에 주제가 하나라도 있으면 그 방의 그 항목은 이 목록만 보여 줍니다.
+      배열이 없거나 비어 있으면 위 CATEGORIES의 공통 주제로 돌아갑니다.
+      공통 주제를 앞에 두고 싶으면 그 문장도 이 배열에 복사해 넣으세요.
+   4) 아직 병원 내용이 아니면 draft:true 를 붙이세요. 목록에 '초안'이 표시됩니다.
+      실제 내용으로 바꾼 뒤 draft 줄을 지우세요.
+
+   아래 exercise, speech 항목은 예시 초안입니다. 이 병원 사실이 아니니 바꿔 주세요.
+   ========================================================= */
+const ROOM_TOPICS = {
+  exercise: {
+    equipment: [
+      {draft:true, title_ko:'평행봉과 보행 연습', title_en:'Parallel bars and gait practice',
+       ko:'평행봉을 잡고 서기와 걷기를 연습할 수 있습니다. 균형과 안전에 맞춰 돕는 정도를 조절합니다. (초안: 병원 장비 설명으로 바꾸세요.)',
+       en:'Standing and walking can be practiced while holding parallel bars. The amount of help is adjusted to balance and safety. (Draft: replace with this hospital\'s equipment description.)'},
+      {draft:true, title_ko:'근력 운동', title_en:'Strength exercise',
+       ko:'밴드나 체중을 이용한 저항 운동으로 근력을 연습합니다. 통증과 피로를 보며 강도를 조절합니다. (초안: 병원 장비 설명으로 바꾸세요.)',
+       en:'Strength is practiced with resistance from bands or body weight. Intensity is adjusted while watching pain and fatigue. (Draft: replace with this hospital\'s equipment description.)'},
+    ],
+    treatment: [
+      {draft:true, title_ko:'관절가동범위 운동', title_en:'Range-of-motion exercise',
+       ko:'관절이 굳지 않도록 치료사가 움직임을 돕거나, 환자가 스스로 움직이는 연습을 합니다. (초안: 실제 치료 설명으로 바꾸세요.)',
+       en:'To limit joint stiffness, the therapist assists the movement or the patient practices moving independently. (Draft: replace with the real treatment description.)'},
+    ],
+  },
+  speech: {
+    treatment: [
+      {draft:true, title_ko:'삼킴과 식사 안전', title_en:'Swallowing and meal safety',
+       ko:'삼킴을 살펴보고, 자세나 음식 농도를 조정하는 연습을 할 수 있습니다. 사레들림을 줄이는 것이 목적입니다. (초안: 실제 치료 설명으로 바꾸세요.)',
+       en:'Swallowing can be assessed, and posture or food texture may be adjusted in practice. The aim is to reduce aspiration. (Draft: replace with the real treatment description.)'},
+      {draft:true, title_ko:'의사소통 연습', title_en:'Communication practice',
+       ko:'말하기, 이해하기, 다른 방법으로 의사를 전하는 연습을 합니다. (초안: 실제 치료 설명으로 바꾸세요.)',
+       en:'Practice can include speaking, understanding, and other ways of conveying meaning. (Draft: replace with the real treatment description.)'},
+    ],
+  },
+};
+
+function escHtml(s){
+  return String(s==null?'':s).replace(/[&<>]/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]));
+}
+function topicsFor(roomId, catId){
+  if(catId==='equipment' || catId==='treatment'){
+    const pack = ROOM_TOPICS[roomId];
+    const list = pack && pack[catId];
+    if(Array.isArray(list) && list.length) return list;
+  }
+  const cat = CATEGORIES.find(c=>c.id===catId);
+  return cat ? cat.topics : [];
+}
+
+/* =========================================================
    3. 상태 · State
    ========================================================= */
 let state = {
@@ -525,81 +603,305 @@ let state = {
   interpDir: 'ko2target',
   fontScale: parseFloat(localStorage.getItem('guide_font') || '1'),
 };
+const sttUnsupported = {};
 document.documentElement.style.setProperty('--font-size-scale', state.fontScale);
 
 /* =========================================================
    4. 직접 번역 우선, 없으면 자동 번역 · Manual translation first
    ---------------------------------------------------------
-   쓰는 방법 (이 블록만 고치면 됩니다. 다른 코드는 건드리지 마세요.)
+   이 블록만 고치면 됩니다. 다른 코드는 건드리지 마세요.
 
-   1) 아래 언어 코드 중 번역을 넣을 언어를 고릅니다.
-      ja 일본어 · zh 중국어 · vi 베트남어 · th 태국어 · id 인도네시아어
-      tl 필리핀어 · ru 러시아어 · ne 네팔어 · ur 우르두어 · fa 페르시아어
-      (필리핀어 음성 코드는 fil-PH 이지만, 번역 키는 반드시 tl 입니다.)
-   2) 앱 데이터에 있는 영어 문장을 글자 그대로 복사해 왼쪽("키")에 넣습니다.
-      치료실 영어 설명(en_desc)과 주제 본문(en)이 자동 번역되는 문장입니다.
-      문장 안의 띄어쓰기, 쉼표, 마침표, 따옴표까지 같아야 합니다.
-      키 앞뒤의 공백만 무시합니다.
-   3) 콜론(:) 오른쪽에 그 언어로 직접 확인한 번역을 붙여 넣습니다.
-   4) 각 줄 끝의 쉼표(,)를 유지합니다. 영어에 큰따옴표(")가 있으면 \" 로 씁니다.
-      작은따옴표(')는 그대로 둡니다. (예: today's)
-   5) 파일을 저장하고 새로고침합니다.
-      여기에 있는 문장은 MyMemory를 호출하지 않고 바로 표시됩니다.
-      없는 문장만 기존처럼 자동 번역 후 localStorage(tr_…)에 캐시합니다.
-      캐시에 옛 자동 번역이 남아 있어도 이 표가 우선이라, 캐시를 지울 필요 없습니다.
-      번역 칸을 비우면("") 그 문장은 자동 번역으로 넘어갑니다.
+   언어 코드: ja 일본어 · zh 중국어 · vi 베트남어 · th 태국어 · id 인도네시아어
+   tl 필리핀어 · ru 러시아어 · ne 네팔어 · ur 우르두어 · fa 페르시아어
+   (필리핀어 음성은 fil-PH 이지만 번역 키는 tl 입니다.)
 
-   키를 문장 번호(id)가 아니라 영어 원문으로 둔 이유:
-   번호를 찾아 맞출 필요가 없습니다. 화면에 같이 나오는 영어를 복사해 붙이면 연결됩니다.
-   영어 원문을 고치면 키가 어긋나 자동 번역으로 돌아가므로, 예전 번역이 다른 문장에 붙지 않습니다.
+   키는 영어 원문입니다. 화면에 같이 나오는 영어를 글자 그대로 복사하세요.
+   문장 부호까지 같아야 하고, 키 앞뒤 공백만 무시됩니다.
+   영어를 고치면 키가 어긋나 자동 번역으로 돌아가므로, 옛 번역이 다른 문장에 붙지 않습니다.
+   통역 화면의 즉석 말은 이 표를 쓰지 않습니다.
 
-   적용 범위: 영어 → 선택 언어 카드(치료실 소개 문장, 주제 본문).
-   통역 화면의 즉석 말(한국어↔선택 언어)은 이 표에 넣지 않으며 계속 자동 번역입니다.
+   검수 표시를 바꾸는 방법 (이 한 가지면 됩니다)
+   - 언어 전체: 그 언어의 status 를 "draft" 에서 "verified" 로 바꿉니다.
+     draft  = 초안 배지 (아직 원어민 확인 전)
+     verified = 검수 배지
+   - 문장 하나만: 그 줄을 ["번역문", "verified"] 로 바꿉니다.
+     예) "영어 원문": ["확인한 번역", "verified"],
+   - 문자열만 적어도 됩니다. 그때는 그 언어의 status 를 따릅니다.
+     status 를 빼먹으면 초안으로 봅니다. 검수는 verified 라고 적은 것만입니다.
 
-   의학 용어 용어집은 넣지 않았습니다.
-   문장 중간의 physical therapy, ROM, ICU 같은 단어만 미리 바꿔 끼우면
-   자동 번역기가 자리표시를 번역·분리·삭제하는 경우가 있고, 띄어쓰기가 없는
-   중국어·일본어·태국어와 오른쪽에서 왼쪽으로 쓰는 페르시아어·우르두어에서는
-   되돌리기도 불안정합니다. 깨진 기호가 의료 문장에 남는 것보다,
-   그 용어가 들어 있는 문장 전체를 아래에 직접 번역으로 넣는 쪽이 안전합니다.
-
-   예시 두 줄(ja, zh의 환영 인사)은 형식 안내용입니다.
-   임상에서 쓰기 전에 원어민 확인을 받거나, 줄을 지우고 실제 문장으로 바꾸세요.
+   지금 들어 있는 번역은 AI 초안입니다. 임상에서 쓰기 전에 verified 로 바꾸거나 고치세요.
+   비어 있는 문장만 MyMemory 로 번역해 localStorage(tr_…)에 캐시합니다.
    ========================================================= */
 const MANUAL_TR = {
-  fa: {
-    // "영어 원문 전체": "직접 확인한 번역",
-  },
-  ur: {
-    // "영어 원문 전체": "직접 확인한 번역",
-  },
-  ne: {
-    // "영어 원문 전체": "직접 확인한 번역",
-  },
-  ru: {
-    // "영어 원문 전체": "직접 확인한 번역",
-  },
-  tl: {
-    // "영어 원문 전체": "직접 확인한 번역",
-  },
-  id: {
-    // "영어 원문 전체": "직접 확인한 번역",
-  },
-  th: {
-    // "영어 원문 전체": "직접 확인한 번역",
-  },
-  vi: {
-    // "영어 원문 전체": "직접 확인한 번역",
+  ja: {
+    status: "draft",
+    "A space for exercise-based rehabilitation including strength training, range-of-motion exercises, and gait training, equipped with treadmills, parallel bars, and resistance equipment.": "筋力強化、関節可動域訓練、歩行訓練などの運動を中心としたリハビリテーションを行う場所です。トレッドミル、平行棒、抵抗運動の機器を備えています。",
+    "A space where patients train in daily living activities such as eating, dressing, and bathing, along with cognitive rehabilitation and upper-limb function training to support independent living.": "食事、更衣、入浴などの日常生活動作の練習に加え、認知リハビリテーションと上肢機能訓練を行い、患者さんが自分で生活できるよう支援する場所です。",
+    "A space for evaluating and training communication ability and swallowing function in patients with aphasia, articulation disorders, or dysphagia.": "失語症、構音障害、嚥下障害のある患者さんのコミュニケーション能力と嚥下機能を評価し、訓練する場所です。",
+    "A space using physical agents such as heat, cold, TENS, and ultrasound therapy to relieve pain and promote tissue healing.": "温熱、寒冷、TENS（経皮的電気神経刺激）、超音波療法などの物理的手段を用いて、痛みを和らげ組織の回復を促す場所です。",
+    "A space for patients with lymphedema resulting from surgery or radiation therapy, providing manual lymphatic drainage, compression therapy, and bandaging.": "手術や放射線治療などの後に生じたリンパ浮腫の患者さんに、徒手リンパドレナージ、圧迫療法、バンデージを行う場所です。",
+    "A space providing specialized rehabilitation for patients with neurological conditions such as stroke, traumatic brain injury, and spinal cord injury, focused on restoring motor function and daily living ability.": "脳卒中、外傷性脳損傷、脊髄損傷などの神経疾患の患者さんに対し、運動機能と日常生活動作の回復を目指す専門的なリハビリテーションを行う場所です。",
+    "A space helping patients with chronic lung disease or post-surgical patients recover respiratory function through breathing exercises, chest mobilization, and endurance training.": "慢性肺疾患の患者さんや手術後の患者さんが、呼吸練習、胸郭モビライゼーション、持久力訓練によって呼吸機能を取り戻すのを支援する場所です。",
+    "A space providing stepwise, ECG-monitored exercise training for patients recovering from cardiac surgery or myocardial infarction.": "心臓手術後や心筋梗塞後の患者さんに、心電図を監視しながら段階的な運動訓練を行う場所です。",
+    "A space providing play-based developmental rehabilitation for pediatric patients with conditions such as cerebral palsy or other neurodevelopmental delays.": "脳性麻痺などの発達の遅れや神経疾患のある子どもに、遊びを中心とした発達リハビリテーションを行う場所です。",
+    "A testing space using quantitative function assessments such as gait analysis, balance evaluation, and electromyography to guide treatment planning and track progress.": "歩行分析、バランス評価、筋電図などの定量的な機能評価を行い、治療計画と経過の判断に用いる検査の場所です。",
+    "A space for real-time visualization of musculoskeletal structures used for accurate diagnosis and ultrasound-guided injection procedures.": "筋骨格系の構造をリアルタイムで確認し、正確な診断と超音波ガイド下注射を行う場所です。",
+    "Facility Introduction": "治療室の紹介",
+    "Equipment Introduction": "治療機器の紹介",
+    "Treatment Methods": "治療法の紹介",
+    "Rehabilitation System": "リハビリテーション体制",
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.": "リハビリテーション医学の治療室へようこそ。本日の見学では、治療室の配置、機器、治療法、そして当院のリハビリテーション体制をご紹介します。",
+    "The center consists of a physical therapy exercise gym, occupational therapy room, speech therapy room, individual treatment rooms, and a separate space for patients requiring infection isolation.": "当センターは、理学療法の運動室、作業療法室、言語聴覚療法室、個別治療室、そして感染隔離が必要な患者さんのための別室で構成されています。",
+    "Patients receive treatment in morning and afternoon sessions, each lasting 30 minutes to 1 hour according to a plan established by the assigned therapist.": "患者さんは午前と午後のセッションに分かれて治療を受けます。各セッションは担当療法士が評価して立てた計画に沿い、30分から1時間です。",
+    "A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.": "リハビリテーション科医師、理学療法士、作業療法士、言語聴覚士、看護師が一つのチームとして協力し、患者さんの回復を支えます。",
+    "Treadmills and body-weight-support gait trainers are used to safely restore a patient's walking ability.": "トレッドミルと体重免荷式の歩行訓練機器を使い、安全を確保しながら歩く力を回復します。",
+    "Treatment for stroke, brain injury, and spinal cord injury patients focuses on restoring motor function and daily living abilities.": "脳卒中、脳損傷、脊髄損傷の患者さんに対する治療は、運動機能と日常生活動作の回復を目指します。",
+    "Speech-language therapy helps patients with aphasia, articulation disorders, or dysphagia recover communication and swallowing function.": "言語聴覚療法は、失語症、構音障害、嚥下障害のある患者さんのコミュニケーションと嚥下機能の回復を助けます。",
+    "Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.": "空気予防策、飛沫予防策、接触予防策など、隔離の種類によって個人防護具の使い方と機器の消毒手順が異なります。",
+    "After a physician's order, the therapist performs an initial evaluation and establishes a treatment plan, which is adjusted through regular reassessment.": "医師の処方の後、療法士が初期評価を行い治療計画を立てます。その後は定期的な再評価で計画を調整します。",
   },
   zh: {
-    // 예시 EXAMPLE — 주제 「환영 인사」 영어 본문. 원어민 검수 전 형식 예시입니다. 확인 후 고치거나 지우세요.
-    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.":
-      "欢迎来到我们的康复医学治疗中心。在今天的参观中，我们将介绍设施布局、设备、治疗方法以及我们的康复系统。",
+    status: "draft",
+    "A space for exercise-based rehabilitation including strength training, range-of-motion exercises, and gait training, equipped with treadmills, parallel bars, and resistance equipment.": "这里进行以运动为主的康复，包括肌力训练、关节活动度训练和步态训练，配有跑步机、平行杠和抗阻器械。",
+    "A space where patients train in daily living activities such as eating, dressing, and bathing, along with cognitive rehabilitation and upper-limb function training to support independent living.": "患者在这里练习进食、穿衣、洗浴等日常生活活动，并进行认知康复和上肢功能训练，以帮助其独立生活。",
+    "A space for evaluating and training communication ability and swallowing function in patients with aphasia, articulation disorders, or dysphagia.": "这里为失语症、构音障碍或吞咽障碍的患者评估并训练沟通能力和吞咽功能。",
+    "A space using physical agents such as heat, cold, TENS, and ultrasound therapy to relieve pain and promote tissue healing.": "这里使用热疗、冷疗、TENS（经皮神经电刺激）和超声治疗等物理因子，以缓解疼痛并促进组织修复。",
+    "A space for patients with lymphedema resulting from surgery or radiation therapy, providing manual lymphatic drainage, compression therapy, and bandaging.": "这里为手术或放射治疗等引起的淋巴水肿患者进行手法淋巴引流、压迫治疗和包扎。",
+    "A space providing specialized rehabilitation for patients with neurological conditions such as stroke, traumatic brain injury, and spinal cord injury, focused on restoring motor function and daily living ability.": "这里为脑卒中、创伤性脑损伤、脊髓损伤等神经系统疾病患者提供专科康复，重点恢复运动功能和日常生活能力。",
+    "A space helping patients with chronic lung disease or post-surgical patients recover respiratory function through breathing exercises, chest mobilization, and endurance training.": "这里帮助慢性肺病患者或手术后患者，通过呼吸训练、胸廓活动和耐力训练恢复呼吸功能。",
+    "A space providing stepwise, ECG-monitored exercise training for patients recovering from cardiac surgery or myocardial infarction.": "这里为心脏手术后或心肌梗死后的患者，在心电图监测下进行循序渐进的运动训练。",
+    "A space providing play-based developmental rehabilitation for pediatric patients with conditions such as cerebral palsy or other neurodevelopmental delays.": "这里为脑性瘫痪或其他神经发育迟缓的儿童提供以游戏为主的发育康复。",
+    "A testing space using quantitative function assessments such as gait analysis, balance evaluation, and electromyography to guide treatment planning and track progress.": "这里通过步态分析、平衡评估和肌电图等定量功能评估，为制定治疗计划和判断病程提供依据。",
+    "A space for real-time visualization of musculoskeletal structures used for accurate diagnosis and ultrasound-guided injection procedures.": "这里实时观察肌肉骨骼结构，用于准确诊断和超声引导下注射。",
+    "Facility Introduction": "治疗室介绍",
+    "Equipment Introduction": "治疗设备介绍",
+    "Treatment Methods": "治疗方法介绍",
+    "Rehabilitation System": "康复治疗体系",
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.": "欢迎来到康复医学治疗中心。在今天的参观中，我们将介绍治疗室的布局、设备、治疗方法以及本院的康复体系。",
+    "The center consists of a physical therapy exercise gym, occupational therapy room, speech therapy room, individual treatment rooms, and a separate space for patients requiring infection isolation.": "本中心由物理治疗运动室、作业治疗室、言语治疗室、个别治疗室，以及需要感染隔离的患者专用空间组成。",
+    "Patients receive treatment in morning and afternoon sessions, each lasting 30 minutes to 1 hour according to a plan established by the assigned therapist.": "患者分上午和下午接受治疗。每次治疗由负责治疗师评估后制定的计划决定，时间为30分钟到1小时。",
+    "A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.": "康复医师、物理治疗师、作业治疗师、言语治疗师和护士作为一个团队共同协作，支持患者恢复。",
+    "Treadmills and body-weight-support gait trainers are used to safely restore a patient's walking ability.": "使用跑步机和减重步态训练设备，在保证安全的同时恢复患者的步行能力。",
+    "Treatment for stroke, brain injury, and spinal cord injury patients focuses on restoring motor function and daily living abilities.": "针对脑卒中、脑损伤和脊髓损伤患者的治疗，重点是恢复运动功能和日常生活能力。",
+    "Speech-language therapy helps patients with aphasia, articulation disorders, or dysphagia recover communication and swallowing function.": "言语治疗帮助失语症、构音障碍或吞咽障碍的患者恢复沟通和吞咽功能。",
+    "Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.": "根据隔离类型（空气隔离、飞沫隔离或接触隔离），个人防护用品的使用和设备消毒流程有所不同。",
+    "After a physician's order, the therapist performs an initial evaluation and establishes a treatment plan, which is adjusted through regular reassessment.": "医师开立处方后，治疗师进行初期评估并制定治疗计划，之后通过定期再评估调整计划。",
   },
-  ja: {
-    // 예시 EXAMPLE — 위와 같은 영어 문장. 원어민 검수 전 형식 예시입니다. 확인 후 고치거나 지우세요.
-    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.":
-      "リハビリテーション医学治療センターへようこそ。本日の見学では、施設の配置、機器、治療法、そして当院のリハビリテーションシステムをご紹介します。",
+  vi: {
+    status: "draft",
+    "A space for exercise-based rehabilitation including strength training, range-of-motion exercises, and gait training, equipped with treadmills, parallel bars, and resistance equipment.": "Đây là nơi phục hồi chức năng bằng vận động, gồm tập sức mạnh, tập tầm vận động khớp và tập đi, với máy chạy bộ, thanh song song và dụng cụ kháng trở.",
+    "A space where patients train in daily living activities such as eating, dressing, and bathing, along with cognitive rehabilitation and upper-limb function training to support independent living.": "Người bệnh tập các hoạt động sinh hoạt hàng ngày như ăn uống, mặc quần áo và tắm, cùng phục hồi nhận thức và tập chức năng chi trên, để sống độc lập hơn.",
+    "A space for evaluating and training communication ability and swallowing function in patients with aphasia, articulation disorders, or dysphagia.": "Nơi đánh giá và tập khả năng giao tiếp cùng chức năng nuốt cho người bệnh thất ngôn, rối loạn cấu âm hoặc rối loạn nuốt.",
+    "A space using physical agents such as heat, cold, TENS, and ultrasound therapy to relieve pain and promote tissue healing.": "Nơi dùng các tác nhân vật lý như nhiệt, lạnh, TENS (kích thích thần kinh qua da) và siêu âm trị liệu để giảm đau và hỗ trợ lành mô.",
+    "A space for patients with lymphedema resulting from surgery or radiation therapy, providing manual lymphatic drainage, compression therapy, and bandaging.": "Nơi điều trị cho người bệnh phù bạch huyết sau phẫu thuật hoặc xạ trị, bằng dẫn lưu bạch huyết bằng tay, trị liệu băng ép và băng bó.",
+    "A space providing specialized rehabilitation for patients with neurological conditions such as stroke, traumatic brain injury, and spinal cord injury, focused on restoring motor function and daily living ability.": "Nơi phục hồi chức năng chuyên sâu cho người bệnh thần kinh như đột quỵ, chấn thương sọ não và tổn thương tủy sống, nhằm phục hồi vận động và sinh hoạt hàng ngày.",
+    "A space helping patients with chronic lung disease or post-surgical patients recover respiratory function through breathing exercises, chest mobilization, and endurance training.": "Nơi giúp người bệnh phổi mạn hoặc sau phẫu thuật phục hồi hô hấp bằng tập thở, vận động lồng ngực và tập sức bền.",
+    "A space providing stepwise, ECG-monitored exercise training for patients recovering from cardiac surgery or myocardial infarction.": "Nơi tập luyện theo từng bước, có theo dõi điện tâm đồ, cho người bệnh sau phẫu thuật tim hoặc nhồi máu cơ tim.",
+    "A space providing play-based developmental rehabilitation for pediatric patients with conditions such as cerebral palsy or other neurodevelopmental delays.": "Nơi phục hồi phát triển bằng trò chơi cho trẻ bại não hoặc chậm phát triển thần kinh khác.",
+    "A testing space using quantitative function assessments such as gait analysis, balance evaluation, and electromyography to guide treatment planning and track progress.": "Nơi đánh giá chức năng định lượng như phân tích dáng đi, đánh giá thăng bằng và điện cơ, để lập kế hoạch điều trị và theo dõi tiến triển.",
+    "A space for real-time visualization of musculoskeletal structures used for accurate diagnosis and ultrasound-guided injection procedures.": "Nơi quan sát cấu trúc cơ xương khớp theo thời gian thực để chẩn đoán chính xác và tiêm dưới hướng dẫn siêu âm.",
+    "Facility Introduction": "Giới thiệu phòng điều trị",
+    "Equipment Introduction": "Giới thiệu thiết bị điều trị",
+    "Treatment Methods": "Phương pháp điều trị",
+    "Rehabilitation System": "Hệ thống phục hồi chức năng",
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.": "Chào mừng đến trung tâm điều trị Phục hồi chức năng. Trong buổi tham quan hôm nay, chúng tôi giới thiệu bố trí phòng, thiết bị, phương pháp điều trị và hệ thống phục hồi chức năng của bệnh viện.",
+    "The center consists of a physical therapy exercise gym, occupational therapy room, speech therapy room, individual treatment rooms, and a separate space for patients requiring infection isolation.": "Trung tâm gồm phòng tập vật lý trị liệu, phòng hoạt động trị liệu, phòng ngôn ngữ trị liệu, phòng điều trị cá nhân, và khu riêng cho người bệnh cần cách ly nhiễm trùng.",
+    "Patients receive treatment in morning and afternoon sessions, each lasting 30 minutes to 1 hour according to a plan established by the assigned therapist.": "Người bệnh được điều trị vào buổi sáng và buổi chiều. Mỗi buổi kéo dài 30 phút đến 1 giờ theo kế hoạch do kỹ thuật viên phụ trách đánh giá và lập ra.",
+    "A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.": "Bác sĩ phục hồi chức năng, kỹ thuật viên vật lý trị liệu, kỹ thuật viên hoạt động trị liệu, nhà trị liệu ngôn ngữ và điều dưỡng cùng làm việc trong một nhóm để hỗ trợ người bệnh hồi phục.",
+    "Treadmills and body-weight-support gait trainers are used to safely restore a patient's walking ability.": "Máy chạy bộ và thiết bị tập đi có nâng đỡ một phần trọng lượng được dùng để phục hồi khả năng đi lại một cách an toàn.",
+    "Treatment for stroke, brain injury, and spinal cord injury patients focuses on restoring motor function and daily living abilities.": "Điều trị cho người bệnh đột quỵ, tổn thương não và tổn thương tủy sống tập trung vào phục hồi vận động và sinh hoạt hàng ngày.",
+    "Speech-language therapy helps patients with aphasia, articulation disorders, or dysphagia recover communication and swallowing function.": "Ngôn ngữ trị liệu giúp người bệnh thất ngôn, rối loạn cấu âm hoặc rối loạn nuốt phục hồi giao tiếp và chức năng nuốt.",
+    "Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.": "Tùy loại cách ly — phòng ngừa qua đường không khí, qua giọt bắn hoặc qua tiếp xúc — việc dùng phương tiện phòng hộ và quy trình khử khuẩn thiết bị sẽ khác nhau.",
+    "After a physician's order, the therapist performs an initial evaluation and establishes a treatment plan, which is adjusted through regular reassessment.": "Sau y lệnh của bác sĩ, kỹ thuật viên đánh giá ban đầu và lập kế hoạch điều trị. Kế hoạch được điều chỉnh qua các lần đánh giá lại định kỳ.",
+  },
+  th: {
+    status: "draft",
+    "A space for exercise-based rehabilitation including strength training, range-of-motion exercises, and gait training, equipped with treadmills, parallel bars, and resistance equipment.": "เป็นพื้นที่ฟื้นฟูด้วยการออกกำลังกาย ได้แก่ ฝึกกำลังกล้ามเนื้อ ฝึกพิสัยการเคลื่อนไหวของข้อ และฝึกร่างเดิน มีลู่วิ่ง บาร์คู่ และอุปกรณ์ต้านทาน",
+    "A space where patients train in daily living activities such as eating, dressing, and bathing, along with cognitive rehabilitation and upper-limb function training to support independent living.": "เป็นที่ฝึกกิจวัตรประจำวัน เช่น การรับประทานอาหาร การแต่งตัว และการอาบน้ำ รวมถึงฟื้นฟูการรู้คิดและฝึกการทำงานของแขน เพื่อให้ผู้ป่วยช่วยเหลือตนเองได้มากขึ้น",
+    "A space for evaluating and training communication ability and swallowing function in patients with aphasia, articulation disorders, or dysphagia.": "เป็นที่ประเมินและฝึกความสามารถในการสื่อสารและการกลืน ในผู้ป่วยภาวะเสียการสื่อภาษา ความผิดปกติของการออกเสียง หรือภาวะกลืนลำบาก",
+    "A space using physical agents such as heat, cold, TENS, and ultrasound therapy to relieve pain and promote tissue healing.": "เป็นที่ใช้ความร้อน ความเย็น TENS (กระตุ้นไฟฟ้าประสาทผ่านผิวหนัง) และอัลตราซาวด์บำบัด เพื่อบรรเทาปวดและช่วยให้เนื้อเยื่อฟื้นตัว",
+    "A space for patients with lymphedema resulting from surgery or radiation therapy, providing manual lymphatic drainage, compression therapy, and bandaging.": "เป็นที่ดูแลผู้ป่วยภาวะบวมน้ำเหลืองหลังผ่าตัดหรือฉายรังสี ด้วยการระบายน้ำเหลืองด้วยมือ การบำบัดด้วยแรงกด และการพันผ้ายืด",
+    "A space providing specialized rehabilitation for patients with neurological conditions such as stroke, traumatic brain injury, and spinal cord injury, focused on restoring motor function and daily living ability.": "เป็นที่ฟื้นฟูเฉพาะทางสำหรับผู้ป่วยโรคระบบประสาท เช่น โรคหลอดเลือดสมอง การบาดเจ็บของสมอง และการบาดเจ็บของไขสันหลัง โดยมุ่งฟื้นการเคลื่อนไหวและความสามารถในชีวิตประจำวัน",
+    "A space helping patients with chronic lung disease or post-surgical patients recover respiratory function through breathing exercises, chest mobilization, and endurance training.": "เป็นที่ช่วยผู้ป่วยโรคปอดเรื้อรังหรือหลังผ่าตัดให้การหายใจดีขึ้น ด้วยการฝึกหายใจ การขยับทรวงอก และการฝึกความทนทาน",
+    "A space providing stepwise, ECG-monitored exercise training for patients recovering from cardiac surgery or myocardial infarction.": "เป็นที่ฝึกออกกำลังเป็นขั้นตอนภายใต้การเฝ้าคลื่นไฟฟ้าหัวใจ สำหรับผู้ป่วยหลังผ่าตัดหัวใจหรือกล้ามเนื้อหัวใจตาย",
+    "A space providing play-based developmental rehabilitation for pediatric patients with conditions such as cerebral palsy or other neurodevelopmental delays.": "เป็นที่ฟื้นฟูพัฒนาการโดยใช้การเล่น สำหรับเด็กสมองพิการหรือพัฒนาการทางระบบประสาทช้า",
+    "A testing space using quantitative function assessments such as gait analysis, balance evaluation, and electromyography to guide treatment planning and track progress.": "เป็นที่ตรวจประเมินเชิงปริมาณ เช่น วิเคราะห์ร่างเดิน ประเมินการทรงตัว และคลื่นไฟฟ้ากล้ามเนื้อ เพื่อวางแผนการรักษาและติดตามผล",
+    "A space for real-time visualization of musculoskeletal structures used for accurate diagnosis and ultrasound-guided injection procedures.": "เป็นที่ดูโครงสร้างกล้ามเนื้อและกระดูกแบบเรียลไทม์ เพื่อการวินิจฉัยที่แม่นยำและการฉีดยาโดยใช้อัลตราซาวด์นำทาง",
+    "Facility Introduction": "แนะนำห้องบำบัด",
+    "Equipment Introduction": "แนะนำอุปกรณ์บำบัด",
+    "Treatment Methods": "วิธีการบำบัด",
+    "Rehabilitation System": "ระบบเวชศาสตร์ฟื้นฟู",
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.": "ยินดีต้อนรับสู่ศูนย์บำบัดเวชศาสตร์ฟื้นฟู ในการเยี่ยมชมวันนี้ เราจะแนะนำผังห้อง อุปกรณ์ วิธีการบำบัด และระบบฟื้นฟูของเรา",
+    "The center consists of a physical therapy exercise gym, occupational therapy room, speech therapy room, individual treatment rooms, and a separate space for patients requiring infection isolation.": "ศูนย์นี้ประกอบด้วยห้องออกกำลังกายกายภาพบำบัด ห้องกิจกรรมบำบัด ห้องแก้ไขการพูด ห้องบำบัดเดี่ยว และพื้นที่แยกสำหรับผู้ป่วยที่ต้องแยกเนื่องจากการติดเชื้อ",
+    "Patients receive treatment in morning and afternoon sessions, each lasting 30 minutes to 1 hour according to a plan established by the assigned therapist.": "ผู้ป่วยรับการบำบัดในภาคเช้าและภาคบ่าย แต่ละครั้งใช้เวลา 30 นาทีถึง 1 ชั่วโมง ตามแผนที่นักบำบัดผู้รับผิดชอบประเมินและกำหนดไว้",
+    "A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.": "แพทย์เวชศาสตร์ฟื้นฟู นักกายภาพบำบัด นักกิจกรรมบำบัด นักแก้ไขการพูด และพยาบาลทำงานร่วมกันเป็นทีมเดียวเพื่อช่วยให้ผู้ป่วยฟื้นตัว",
+    "Treadmills and body-weight-support gait trainers are used to safely restore a patient's walking ability.": "ใช้ลู่วิ่งและเครื่องฝึกร่างเดินแบบพยุงน้ำหนักตัวบางส่วน เพื่อฟื้นความสามารถในการเดินอย่างปลอดภัย",
+    "Treatment for stroke, brain injury, and spinal cord injury patients focuses on restoring motor function and daily living abilities.": "การบำบัดผู้ป่วยโรคหลอดเลือดสมอง สมองบาดเจ็บ และไขสันหลังบาดเจ็บ มุ่งฟื้นการเคลื่อนไหวและความสามารถในชีวิตประจำวัน",
+    "Speech-language therapy helps patients with aphasia, articulation disorders, or dysphagia recover communication and swallowing function.": "การแก้ไขการพูดช่วยผู้ป่วยภาวะเสียการสื่อภาษา ความผิดปกติของการออกเสียง หรือภาวะกลืนลำบาก ให้สื่อสารและกลืนได้ดีขึ้น",
+    "Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.": "ตามประเภทการแยก — ป้องกันทางอากาศ ทางละอองฝอย หรือทางการสัมผัส — การใช้อุปกรณ์ป้องกันส่วนบุคคลและขั้นตอนทำลายเชื้ออุปกรณ์จะแตกต่างกัน",
+    "After a physician's order, the therapist performs an initial evaluation and establishes a treatment plan, which is adjusted through regular reassessment.": "หลังแพทย์สั่งการรักษา นักบำบัดประเมินครั้งแรกและจัดทำแผนการบำบัด จากนั้นปรับแผนด้วยการประเมินซ้ำเป็นระยะ",
+  },
+  id: {
+    status: "draft",
+    "A space for exercise-based rehabilitation including strength training, range-of-motion exercises, and gait training, equipped with treadmills, parallel bars, and resistance equipment.": "Ruang untuk rehabilitasi berbasis latihan, termasuk latihan kekuatan, latihan lingkup gerak sendi, dan latihan berjalan, dengan treadmill, parallel bar, dan alat resistensi.",
+    "A space where patients train in daily living activities such as eating, dressing, and bathing, along with cognitive rehabilitation and upper-limb function training to support independent living.": "Pasien berlatih aktivitas kehidupan sehari-hari seperti makan, berpakaian, dan mandi, serta rehabilitasi kognitif dan latihan fungsi ekstremitas atas, agar dapat hidup lebih mandiri.",
+    "A space for evaluating and training communication ability and swallowing function in patients with aphasia, articulation disorders, or dysphagia.": "Ruang untuk menilai dan melatih kemampuan komunikasi serta fungsi menelan pada pasien afasia, gangguan artikulasi, atau disfagia.",
+    "A space using physical agents such as heat, cold, TENS, and ultrasound therapy to relieve pain and promote tissue healing.": "Ruang yang memakai modalitas fisik seperti panas, dingin, TENS (stimulasi saraf elektrik transkutan), dan terapi ultrasonografi untuk meredakan nyeri dan membantu pemulihan jaringan.",
+    "A space for patients with lymphedema resulting from surgery or radiation therapy, providing manual lymphatic drainage, compression therapy, and bandaging.": "Ruang untuk pasien limfedema akibat pembedahan atau radioterapi, dengan drainase limfatik manual, terapi kompresi, dan pembalutan.",
+    "A space providing specialized rehabilitation for patients with neurological conditions such as stroke, traumatic brain injury, and spinal cord injury, focused on restoring motor function and daily living ability.": "Ruang rehabilitasi khusus bagi pasien kondisi neurologis seperti stroke, cedera otak traumatik, dan cedera medula spinalis, untuk memulihkan fungsi motorik dan kemampuan aktivitas sehari-hari.",
+    "A space helping patients with chronic lung disease or post-surgical patients recover respiratory function through breathing exercises, chest mobilization, and endurance training.": "Ruang yang membantu pasien penyakit paru kronik atau pascaoperasi memulihkan fungsi napas melalui latihan pernapasan, mobilisasi dinding dada, dan latihan daya tahan.",
+    "A space providing stepwise, ECG-monitored exercise training for patients recovering from cardiac surgery or myocardial infarction.": "Ruang latihan bertahap dengan pemantauan EKG bagi pasien setelah operasi jantung atau infark miokard.",
+    "A space providing play-based developmental rehabilitation for pediatric patients with conditions such as cerebral palsy or other neurodevelopmental delays.": "Ruang rehabilitasi perkembangan berbasis bermain bagi anak dengan palsi serebral atau keterlambatan perkembangan saraf lain.",
+    "A testing space using quantitative function assessments such as gait analysis, balance evaluation, and electromyography to guide treatment planning and track progress.": "Ruang pemeriksaan dengan penilaian fungsi kuantitatif seperti analisis gait, evaluasi keseimbangan, dan elektromiografi untuk menyusun rencana terapi dan memantau kemajuan.",
+    "A space for real-time visualization of musculoskeletal structures used for accurate diagnosis and ultrasound-guided injection procedures.": "Ruang untuk melihat struktur muskuloskeletal secara waktu nyata, untuk diagnosis yang tepat dan injeksi terpandu ultrasonografi.",
+    "Facility Introduction": "Pengenalan ruang terapi",
+    "Equipment Introduction": "Pengenalan alat terapi",
+    "Treatment Methods": "Metode terapi",
+    "Rehabilitation System": "Sistem rehabilitasi",
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.": "Selamat datang di pusat terapi kedokteran rehabilitasi. Dalam tur hari ini, kami memperkenalkan tata ruang, peralatan, metode terapi, dan sistem rehabilitasi kami.",
+    "The center consists of a physical therapy exercise gym, occupational therapy room, speech therapy room, individual treatment rooms, and a separate space for patients requiring infection isolation.": "Pusat ini terdiri dari gym latihan terapi fisik, ruang terapi okupasi, ruang terapi wicara, ruang terapi individual, dan ruang terpisah bagi pasien yang memerlukan isolasi infeksi.",
+    "Patients receive treatment in morning and afternoon sessions, each lasting 30 minutes to 1 hour according to a plan established by the assigned therapist.": "Pasien menjalani terapi pada sesi pagi dan sore. Setiap sesi berlangsung 30 menit sampai 1 jam sesuai rencana yang disusun terapis penanggung jawab setelah evaluasi.",
+    "A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.": "Dokter rehabilitasi medik, fisioterapis, terapis okupasi, terapis wicara, dan perawat bekerja sebagai satu tim untuk mendukung pemulihan pasien.",
+    "Treadmills and body-weight-support gait trainers are used to safely restore a patient's walking ability.": "Treadmill dan alat latihan berjalan dengan penopang sebagian berat badan dipakai untuk memulihkan kemampuan berjalan secara aman.",
+    "Treatment for stroke, brain injury, and spinal cord injury patients focuses on restoring motor function and daily living abilities.": "Terapi bagi pasien stroke, cedera otak, dan cedera medula spinalis berfokus pada pemulihan fungsi motorik dan aktivitas sehari-hari.",
+    "Speech-language therapy helps patients with aphasia, articulation disorders, or dysphagia recover communication and swallowing function.": "Terapi wicara membantu pasien afasia, gangguan artikulasi, atau disfagia memulihkan komunikasi dan fungsi menelan.",
+    "Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.": "Menurut jenis isolasi — kewaspadaan airborne, droplet, atau kontak — penggunaan alat pelindung diri dan prosedur disinfeksi alat berbeda.",
+    "After a physician's order, the therapist performs an initial evaluation and establishes a treatment plan, which is adjusted through regular reassessment.": "Setelah instruksi dokter, terapis melakukan evaluasi awal dan menyusun rencana terapi, lalu menyesuaikan rencana melalui evaluasi ulang berkala.",
+  },
+  tl: {
+    status: "draft",
+    "A space for exercise-based rehabilitation including strength training, range-of-motion exercises, and gait training, equipped with treadmills, parallel bars, and resistance equipment.": "Lugar ito para sa rehabilitasyong nakabatay sa ehersisyo, kabilang ang pagsasanay sa lakas, ehersisyo ng range of motion ng kasukasuan, at gait training. May treadmill, parallel bars, at kagamitang may resistens.",
+    "A space where patients train in daily living activities such as eating, dressing, and bathing, along with cognitive rehabilitation and upper-limb function training to support independent living.": "Dito nagsasanay ang pasyente sa pang-araw-araw na gawain tulad ng pagkain, pagbibihis, at pagliligo, kasama ang cognitive rehabilitation at pagsasanay ng upper limb, upang makakilos nang mas mag-isa.",
+    "A space for evaluating and training communication ability and swallowing function in patients with aphasia, articulation disorders, or dysphagia.": "Lugar para suriin at sanayin ang komunikasyon at paglunok ng pasyenteng may aphasia, articulation disorder, o dysphagia.",
+    "A space using physical agents such as heat, cold, TENS, and ultrasound therapy to relieve pain and promote tissue healing.": "Lugar na gumagamit ng init, lamig, TENS (transcutaneous electrical nerve stimulation), at ultrasound therapy upang bawasan ang sakit at tulungan ang paggaling ng tissue.",
+    "A space for patients with lymphedema resulting from surgery or radiation therapy, providing manual lymphatic drainage, compression therapy, and bandaging.": "Lugar para sa pasyenteng may lymphedema mula sa operasyon o radiation therapy, gamit ang manual lymphatic drainage, compression therapy, at pagbabenda.",
+    "A space providing specialized rehabilitation for patients with neurological conditions such as stroke, traumatic brain injury, and spinal cord injury, focused on restoring motor function and daily living ability.": "Lugar ng espesyalisadong rehabilitasyon para sa pasyenteng may kondisyong neurological tulad ng stroke, traumatic brain injury, at spinal cord injury, upang maibalik ang galaw at kakayahan sa pang-araw-araw na buhay.",
+    "A space helping patients with chronic lung disease or post-surgical patients recover respiratory function through breathing exercises, chest mobilization, and endurance training.": "Lugar na tumutulong sa pasyenteng may chronic lung disease o pagkatapos ng operasyon na maibalik ang paghinga sa pamamagitan ng breathing exercise, chest mobilization, at endurance training.",
+    "A space providing stepwise, ECG-monitored exercise training for patients recovering from cardiac surgery or myocardial infarction.": "Lugar ng unti-unting ehersisyo na may ECG monitoring para sa pasyenteng gumagaling mula sa operasyon sa puso o myocardial infarction.",
+    "A space providing play-based developmental rehabilitation for pediatric patients with conditions such as cerebral palsy or other neurodevelopmental delays.": "Lugar ng developmental rehabilitation na nakabatay sa laro para sa batang may cerebral palsy o ibang neurodevelopmental delay.",
+    "A testing space using quantitative function assessments such as gait analysis, balance evaluation, and electromyography to guide treatment planning and track progress.": "Lugar ng pagsusuri gamit ang quantitative assessment tulad ng gait analysis, balance evaluation, at electromyography upang gabayan ang plano ng paggamot at subaybayan ang pag-unlad.",
+    "A space for real-time visualization of musculoskeletal structures used for accurate diagnosis and ultrasound-guided injection procedures.": "Lugar para makita nang real time ang musculoskeletal na istruktura, para sa tamang diagnosis at ultrasound-guided injection.",
+    "Facility Introduction": "Pagpapakilala sa silid-paggamot",
+    "Equipment Introduction": "Pagpapakilala sa mga kagamitan",
+    "Treatment Methods": "Mga paraan ng paggamot",
+    "Rehabilitation System": "Sistema ng rehabilitasyon",
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.": "Maligayang pagdating sa treatment center ng Rehabilitation Medicine. Sa paglilibot ngayong araw, ipakikilala namin ang ayos ng pasilidad, mga kagamitan, paraan ng paggamot, at ang aming sistema ng rehabilitasyon.",
+    "The center consists of a physical therapy exercise gym, occupational therapy room, speech therapy room, individual treatment rooms, and a separate space for patients requiring infection isolation.": "Binubuo ang center ng exercise gym ng physical therapy, occupational therapy room, speech therapy room, indibidwal na treatment room, at hiwalay na lugar para sa pasyenteng nangangailangan ng infection isolation.",
+    "Patients receive treatment in morning and afternoon sessions, each lasting 30 minutes to 1 hour according to a plan established by the assigned therapist.": "Tumatanggap ng paggamot ang pasyente sa sesyon sa umaga at hapon. Bawat sesyon ay 30 minuto hanggang 1 oras ayon sa planong ginawa ng nakatalagang therapist pagkatapos ng evaluation.",
+    "A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.": "Ang rehabilitation physician, physical therapist, occupational therapist, speech-language therapist, at nurse ay nagtutulungan bilang isang team upang suportahan ang paggaling ng pasyente.",
+    "Treadmills and body-weight-support gait trainers are used to safely restore a patient's walking ability.": "Ginagamit ang treadmill at body-weight-support gait trainer upang ligtas na maibalik ang kakayahang maglakad ng pasyente.",
+    "Treatment for stroke, brain injury, and spinal cord injury patients focuses on restoring motor function and daily living abilities.": "Ang paggamot sa pasyenteng may stroke, brain injury, at spinal cord injury ay nakatuon sa pagbabalik ng galaw at kakayahan sa pang-araw-araw na buhay.",
+    "Speech-language therapy helps patients with aphasia, articulation disorders, or dysphagia recover communication and swallowing function.": "Tinutulungan ng speech-language therapy ang pasyenteng may aphasia, articulation disorder, o dysphagia na maibalik ang komunikasyon at paglunok.",
+    "Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.": "Depende sa uri ng isolation — airborne, droplet, o contact precautions — naiiba ang paggamit ng personal protective equipment at ang paraan ng pagdidisimpekta ng kagamitan.",
+    "After a physician's order, the therapist performs an initial evaluation and establishes a treatment plan, which is adjusted through regular reassessment.": "Pagkatapos ng order ng physician, gumagawa ng initial evaluation at treatment plan ang therapist. Inaayos ang plano sa pamamagitan ng regular na reassessment.",
+  },
+  ru: {
+    status: "draft",
+    "A space for exercise-based rehabilitation including strength training, range-of-motion exercises, and gait training, equipped with treadmills, parallel bars, and resistance equipment.": "Пространство для реабилитации на основе упражнений: силовые тренировки, упражнения на объём движений и тренировка ходьбы. Есть тредмил, брусья и оборудование для упражнений с сопротивлением.",
+    "A space where patients train in daily living activities such as eating, dressing, and bathing, along with cognitive rehabilitation and upper-limb function training to support independent living.": "Здесь пациенты тренируют повседневные действия — приём пищи, одевание и умывание, — а также проходят когнитивную реабилитацию и тренировку функции верхней конечности, чтобы жить более самостоятельно.",
+    "A space for evaluating and training communication ability and swallowing function in patients with aphasia, articulation disorders, or dysphagia.": "Пространство для оценки и тренировки общения и глотания у пациентов с афазией, нарушениями артикуляции или дисфагией.",
+    "A space using physical agents such as heat, cold, TENS, and ultrasound therapy to relieve pain and promote tissue healing.": "Пространство, где тепло, холод, ЧЭНС (TENS) и ультразвуковая терапия применяются, чтобы уменьшить боль и способствовать заживлению тканей.",
+    "A space for patients with lymphedema resulting from surgery or radiation therapy, providing manual lymphatic drainage, compression therapy, and bandaging.": "Пространство для пациентов с лимфедемой после операции или лучевой терапии: ручной лимфодренаж, компрессионная терапия и бинтование.",
+    "A space providing specialized rehabilitation for patients with neurological conditions such as stroke, traumatic brain injury, and spinal cord injury, focused on restoring motor function and daily living ability.": "Пространство специализированной реабилитации пациентов с неврологическими заболеваниями, такими как инсульт, черепно-мозговая травма и повреждение спинного мозга, с акцентом на восстановление движений и повседневной активности.",
+    "A space helping patients with chronic lung disease or post-surgical patients recover respiratory function through breathing exercises, chest mobilization, and endurance training.": "Пространство, где пациентам с хроническими заболеваниями лёгких или после операции помогают восстановить дыхание с помощью дыхательных упражнений, мобилизации грудной клетки и тренировки выносливости.",
+    "A space providing stepwise, ECG-monitored exercise training for patients recovering from cardiac surgery or myocardial infarction.": "Пространство ступенчатых тренировок под контролем ЭКГ для пациентов после операции на сердце или инфаркта миокарда.",
+    "A space providing play-based developmental rehabilitation for pediatric patients with conditions such as cerebral palsy or other neurodevelopmental delays.": "Пространство игровой развивающей реабилитации для детей с детским церебральным параличом и другими нарушениями неврологического развития.",
+    "A testing space using quantitative function assessments such as gait analysis, balance evaluation, and electromyography to guide treatment planning and track progress.": "Пространство количественной оценки функций — анализ походки, оценка равновесия и электромиография — для планирования лечения и наблюдения за динамикой.",
+    "A space for real-time visualization of musculoskeletal structures used for accurate diagnosis and ultrasound-guided injection procedures.": "Пространство для осмотра опорно-двигательного аппарата в реальном времени, точной диагностики и инъекций под ультразвуковым контролем.",
+    "Facility Introduction": "Знакомство с кабинетом",
+    "Equipment Introduction": "Знакомство с оборудованием",
+    "Treatment Methods": "Методы лечения",
+    "Rehabilitation System": "Система реабилитации",
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.": "Добро пожаловать в лечебное отделение реабилитационной медицины. Во время сегодняшней экскурсии мы расскажем о планировке, оборудовании, методах лечения и нашей системе реабилитации.",
+    "The center consists of a physical therapy exercise gym, occupational therapy room, speech therapy room, individual treatment rooms, and a separate space for patients requiring infection isolation.": "Центр включает зал лечебной физкультуры, кабинет эрготерапии, кабинет логопедии, индивидуальные кабинеты и отдельное помещение для пациентов, которым нужна инфекционная изоляция.",
+    "Patients receive treatment in morning and afternoon sessions, each lasting 30 minutes to 1 hour according to a plan established by the assigned therapist.": "Пациенты занимаются утром и днём. Каждое занятие длится от 30 минут до 1 часа по плану, который составляет ответственный специалист после оценки.",
+    "A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.": "Врач реабилитационной медицины, физические терапевты, эрготерапевты, логопеды и медсёстры работают одной командой, чтобы помочь пациенту восстановиться.",
+    "Treadmills and body-weight-support gait trainers are used to safely restore a patient's walking ability.": "Тредмил и тренажёры ходьбы с частичной разгрузкой веса тела помогают безопасно восстанавливать способность ходить.",
+    "Treatment for stroke, brain injury, and spinal cord injury patients focuses on restoring motor function and daily living abilities.": "Лечение пациентов после инсульта, травмы мозга и повреждения спинного мозга направлено на восстановление движений и повседневной активности.",
+    "Speech-language therapy helps patients with aphasia, articulation disorders, or dysphagia recover communication and swallowing function.": "Логопедическая терапия помогает пациентам с афазией, нарушениями артикуляции или дисфагией восстанавливать общение и глотание.",
+    "Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.": "В зависимости от вида изоляции — воздушной, капельной или контактной — различаются применение средств индивидуальной защиты и порядок дезинфекции оборудования.",
+    "After a physician's order, the therapist performs an initial evaluation and establishes a treatment plan, which is adjusted through regular reassessment.": "После назначения врача специалист проводит первичную оценку и составляет план лечения, а затем корректирует его при регулярной повторной оценке.",
+  },
+  ne: {
+    status: "draft",
+    "A space for exercise-based rehabilitation including strength training, range-of-motion exercises, and gait training, equipped with treadmills, parallel bars, and resistance equipment.": "यो व्यायाममा आधारित पुनर्स्थापनाको ठाउँ हो। यहाँ शक्ति अभ्यास, जोर्नीको चाल दायराको अभ्यास र हिँडाइ अभ्यास हुन्छ। ट्रेडमिल, प्यारालल बार र रेसिस्टेन्स उपकरण छन्।",
+    "A space where patients train in daily living activities such as eating, dressing, and bathing, along with cognitive rehabilitation and upper-limb function training to support independent living.": "बिरामीले खाने, लुगा लगाउने, नुहाउने जस्ता दैनिक जीवनका क्रिया सिक्छन्। साथै संज्ञानात्मक पुनर्स्थापना र माथिल्लो हातको अभ्यासबाट स्वतन्त्र जीवनलाई सहयोग गरिन्छ।",
+    "A space for evaluating and training communication ability and swallowing function in patients with aphasia, articulation disorders, or dysphagia.": "अफेजिया, उच्चारण विकार वा निल्ने समस्या भएका बिरामीको सञ्चार र निल्ने क्षमता मूल्याङ्कन गरी अभ्यास गराइने ठाउँ हो।",
+    "A space using physical agents such as heat, cold, TENS, and ultrasound therapy to relieve pain and promote tissue healing.": "ताप, चिसो, TENS र अल्ट्रासाउन्ड थेरापीले दुखाइ घटाउन र तन्तुको निको हुन मद्दत गर्ने ठाउँ हो।",
+    "A space for patients with lymphedema resulting from surgery or radiation therapy, providing manual lymphatic drainage, compression therapy, and bandaging.": "शल्यक्रिया वा विकिरण उपचारपछि लिम्फेडेमा भएका बिरामीलाई म्यानुअल लिम्फेटिक ड्रेनेज, कम्प्रेसन थेरापी र ब्यान्डेज गरिने ठाउँ हो।",
+    "A space providing specialized rehabilitation for patients with neurological conditions such as stroke, traumatic brain injury, and spinal cord injury, focused on restoring motor function and daily living ability.": "स्ट्रोक, मस्तिष्क चोट, स्पाइनल कर्ड चोट जस्ता स्नायु रोगका बिरामीको चाल र दैनिक जीवन क्षमता फर्काउन विशेष पुनर्स्थापना गरिने ठाउँ हो।",
+    "A space helping patients with chronic lung disease or post-surgical patients recover respiratory function through breathing exercises, chest mobilization, and endurance training.": "दीर्घ फोक्सो रोग वा शल्यक्रियापछिका बिरामीलाई श्वास अभ्यास, छातीको चाल र सहनशीलता अभ्यासबाट श्वास फर्काउन मद्दत गर्ने ठाउँ हो।",
+    "A space providing stepwise, ECG-monitored exercise training for patients recovering from cardiac surgery or myocardial infarction.": "मुटुको शल्यक्रिया वा मायोकार्डियल इन्फार्क्सनपछि बिरामीलाई ECG हेर्दै चरणबद्ध व्यायाम गराइने ठाउँ हो।",
+    "A space providing play-based developmental rehabilitation for pediatric patients with conditions such as cerebral palsy or other neurodevelopmental delays.": "सेरेब्रल पाल्सी वा अन्य स्नायु विकास ढिलाइ भएका बालबालिकालाई खेलमार्फत विकास पुनर्स्थापना गरिने ठाउँ हो।",
+    "A testing space using quantitative function assessments such as gait analysis, balance evaluation, and electromyography to guide treatment planning and track progress.": "हिँडाइ विश्लेषण, सन्तुलन मूल्याङ्कन र इलेक्ट्रोमायोग्राफी जस्ता मापनबाट उपचार योजना र प्रगति हेर्ने जाँच ठाउँ हो।",
+    "A space for real-time visualization of musculoskeletal structures used for accurate diagnosis and ultrasound-guided injection procedures.": "मस्कुलोस्केलेटल बनोट वास्तविक समयमा हेरी निदान र अल्ट्रासाउन्ड मार्गदर्शनमा सुई दिइने ठाउँ हो।",
+    "Facility Introduction": "उपचार कक्षको परिचय",
+    "Equipment Introduction": "उपचार उपकरणको परिचय",
+    "Treatment Methods": "उपचार विधि",
+    "Rehabilitation System": "पुनर्स्थापना प्रणाली",
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.": "पुनर्स्थापना चिकित्सा उपचार केन्द्रमा स्वागत छ। आजको भ्रमणमा हामी कक्षको बनोट, उपकरण, उपचार विधि र हाम्रो पुनर्स्थापना प्रणाली देखाउनेछौं।",
+    "The center consists of a physical therapy exercise gym, occupational therapy room, speech therapy room, individual treatment rooms, and a separate space for patients requiring infection isolation.": "केन्द्रमा फिजियोथेरापी व्यायाम कक्ष, अकुपेशनल थेरापी कक्ष, स्पीच थेरापी कक्ष, छुट्टै उपचार कक्ष, र संक्रमण आइसोलेसन चाहिने बिरामीको अलग ठाउँ छ।",
+    "Patients receive treatment in morning and afternoon sessions, each lasting 30 minutes to 1 hour according to a plan established by the assigned therapist.": "बिरामीले बिहान र दिउँसो उपचार पाउँछन्। प्रत्येक सत्र जिम्मेवार थेरापिस्टले मूल्याङ्कन गरी बनाएको योजनाअनुसार ३० मिनेटदेखि १ घण्टासम्म हुन्छ।",
+    "A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.": "पुनर्स्थापना चिकित्सक, फिजियोथेरापिस्ट, अकुपेशनल थेरापिस्ट, स्पीच थेरापिस्ट र नर्स एउटै टोली भएर बिरामीको निको हुन सहयोग गर्छन्।",
+    "Treadmills and body-weight-support gait trainers are used to safely restore a patient's walking ability.": "ट्रेडमिल र शरीरको तौल केही थाम्ने हिँडाइ उपकरणले सुरक्षित रूपमा हिँड्ने क्षमता फर्काउन मद्दत गर्छ।",
+    "Treatment for stroke, brain injury, and spinal cord injury patients focuses on restoring motor function and daily living abilities.": "स्ट्रोक, मस्तिष्क चोट र स्पाइनल कर्ड चोटका बिरामीको उपचार चाल र दैनिक जीवनका क्रिया फर्काउन केन्द्रित हुन्छ।",
+    "Speech-language therapy helps patients with aphasia, articulation disorders, or dysphagia recover communication and swallowing function.": "स्पीच थेरापीले अफेजिया, उच्चारण विकार वा डिस्फेजिया भएका बिरामीलाई सञ्चार र निल्ने क्षमता फर्काउन मद्दत गर्छ।",
+    "Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.": "आइसोलेसनको प्रकार — हावा, थोपा वा सम्पर्क सावधानी — अनुसार व्यक्तिगत सुरक्षा उपकरण र उपकरणको कीटाणु नाश फरक हुन्छ।",
+    "After a physician's order, the therapist performs an initial evaluation and establishes a treatment plan, which is adjusted through regular reassessment.": "चिकित्सकको आदेशपछि थेरापिस्टले सुरुको मूल्याङ्कन गरी उपचार योजना बनाउँछन्। त्यसपछि नियमित पुनःमूल्याङ्कनले योजना मिलाइन्छ।",
+  },
+  ur: {
+    status: "draft",
+    "A space for exercise-based rehabilitation including strength training, range-of-motion exercises, and gait training, equipped with treadmills, parallel bars, and resistance equipment.": "یہ ورزش پر مبنی بحالی کی جگہ ہے، جس میں طاقت کی مشق، جوڑ کی حرکت کی حد کی مشق اور چلنے کی مشق شامل ہے۔ یہاں ٹریڈمل، متوازی بار اور مزاحمتی آلات ہیں۔",
+    "A space where patients train in daily living activities such as eating, dressing, and bathing, along with cognitive rehabilitation and upper-limb function training to support independent living.": "مریض کھانے، کپڑے پہننے اور نہانے جیسے روزمرہ کے کام سیکھتے ہیں، ساتھ ادراکی بحالی اور بالائی اعضا کی مشق ہوتی ہے تاکہ وہ زیادہ خودمختار رہ سکیں۔",
+    "A space for evaluating and training communication ability and swallowing function in patients with aphasia, articulation disorders, or dysphagia.": "افیزیا، تلفظ کی خرابی یا نگلنے کی خرابی والے مریضوں کی بات چیت اور نگلنے کی صلاحیت جانچنے اور سکھانے کی جگہ ہے۔",
+    "A space using physical agents such as heat, cold, TENS, and ultrasound therapy to relieve pain and promote tissue healing.": "گرمی، سردی، TENS (جلد کے ذریعے اعصاب کی برقی تحریک) اور الٹراساؤنڈ تھراپی سے درد کم کرنے اور بافتوں کی بحالی میں مدد دینے کی جگہ ہے۔",
+    "A space for patients with lymphedema resulting from surgery or radiation therapy, providing manual lymphatic drainage, compression therapy, and bandaging.": "سرجری یا تابکاری کے بعد لمفیڈیما والے مریضوں کے لیے دستی لمفیٹک نکاسی، دباؤ والی تھراپی اور پٹی کی جگہ ہے۔",
+    "A space providing specialized rehabilitation for patients with neurological conditions such as stroke, traumatic brain injury, and spinal cord injury, focused on restoring motor function and daily living ability.": "فالج، دماغی چوٹ اور ریڑھ کی ہڈی کی چوٹ جیسے اعصابی مریضوں کی حرکت اور روزمرہ صلاحیت بحال کرنے کی خصوصی بحالی کی جگہ ہے۔",
+    "A space helping patients with chronic lung disease or post-surgical patients recover respiratory function through breathing exercises, chest mobilization, and endurance training.": "دائمی پھیپھڑوں کی بیماری یا سرجری کے بعد مریضوں کو سانس کی مشق، سینے کی حرکت اور برداشت کی مشق سے سانس بحال کرنے میں مدد دینے کی جگہ ہے۔",
+    "A space providing stepwise, ECG-monitored exercise training for patients recovering from cardiac surgery or myocardial infarction.": "دل کی سرجری یا مایوکارڈیل انفارکشن کے بعد مریضوں کو ای سی جی کی نگرانی میں بتدریج ورزش کروانے کی جگہ ہے۔",
+    "A space providing play-based developmental rehabilitation for pediatric patients with conditions such as cerebral palsy or other neurodevelopmental delays.": "سیریبرل پالسی یا اعصابی نشوونما میں تاخیر والے بچوں کے لیے کھیل پر مبنی نشوونما کی بحالی کی جگہ ہے۔",
+    "A testing space using quantitative function assessments such as gait analysis, balance evaluation, and electromyography to guide treatment planning and track progress.": "چال کا تجزیہ، توازن کا جائزہ اور الیکٹرمائیوگرافی جیسی پیمائش سے علاج کا منصوبہ بنانے اور پیش رفت دیکھنے کی جانچ کی جگہ ہے۔",
+    "A space for real-time visualization of musculoskeletal structures used for accurate diagnosis and ultrasound-guided injection procedures.": "عضلاتی ڈھانچے کو فوری دیکھ کر درست تشخیص اور الٹراساؤنڈ کی رہنمائی میں انجیکشن دینے کی جگہ ہے۔",
+    "Facility Introduction": "علاج کے کمرے کا تعارف",
+    "Equipment Introduction": "علاج کے آلات کا تعارف",
+    "Treatment Methods": "علاج کے طریقے",
+    "Rehabilitation System": "بحالی کا نظام",
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.": "بحالی طب کے علاج مرکز میں خوش آمدید۔ آج کے دورے میں ہم کمرے کی ترتیب، آلات، علاج کے طریقے اور اپنا بحالی نظام متعارف کرائیں گے۔",
+    "The center consists of a physical therapy exercise gym, occupational therapy room, speech therapy room, individual treatment rooms, and a separate space for patients requiring infection isolation.": "مرکز میں فزیکل تھراپی کا ورزش ہال، آکیوپیشنل تھراپی کا کمرہ، اسپیچ تھراپی کا کمرہ، انفرادی علاج کے کمرے، اور انفیکشن آئسولیشن والے مریضوں کی الگ جگہ شامل ہے۔",
+    "Patients receive treatment in morning and afternoon sessions, each lasting 30 minutes to 1 hour according to a plan established by the assigned therapist.": "مریض صبح اور دوپہر کے سیشن میں علاج لیتے ہیں۔ ہر سیشن ذمہ دار تھراپسٹ کے جائزے کے بعد بنے منصوبے کے مطابق 30 منٹ سے 1 گھنٹہ ہوتا ہے۔",
+    "A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.": "بحالی معالج، فزیکل تھراپسٹ، آکیوپیشنل تھراپسٹ، اسپیچ تھراپسٹ اور نرس ایک ٹیم بن کر مریض کی بحالی میں مدد کرتے ہیں۔",
+    "Treadmills and body-weight-support gait trainers are used to safely restore a patient's walking ability.": "ٹریڈمل اور جسم کا کچھ وزن سہارا دینے والے چلنے کے آلات سے محفوظ طریقے سے چلنے کی صلاحیت بحال کی جاتی ہے۔",
+    "Treatment for stroke, brain injury, and spinal cord injury patients focuses on restoring motor function and daily living abilities.": "فالج، دماغی چوٹ اور ریڑھ کی ہڈی کی چوٹ والے مریضوں کا علاج حرکت اور روزمرہ کے کام بحال کرنے پر مرکوز ہوتا ہے۔",
+    "Speech-language therapy helps patients with aphasia, articulation disorders, or dysphagia recover communication and swallowing function.": "اسپیچ تھراپی افیزیا، تلفظ کی خرابی یا نگلنے کی خرابی والے مریضوں کی بات چیت اور نگلنے کی صلاحیت بحال کرنے میں مدد دیتی ہے۔",
+    "Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.": "آئسولیشن کی قسم — ہوا، قطرات یا رابطہ احتیاط — کے مطابق ذاتی حفاظتی سامان اور آلات کی جراثیم کشی مختلف ہوتی ہے۔",
+    "After a physician's order, the therapist performs an initial evaluation and establishes a treatment plan, which is adjusted through regular reassessment.": "معالج کے حکم کے بعد تھراپسٹ ابتدائی جائزہ لے کر علاج کا منصوبہ بناتا ہے۔ پھر باقاعدہ دوبارہ جائزے سے منصوبہ درست ہوتا ہے۔",
+  },
+  fa: {
+    status: "draft",
+    "A space for exercise-based rehabilitation including strength training, range-of-motion exercises, and gait training, equipped with treadmills, parallel bars, and resistance equipment.": "اینجا فضای توانبخشی مبتنی بر تمرین است و شامل تمرین قدرتی، تمرین دامنه حرکتی مفصل و تمرین راه رفتن می‌شود. تردمیل، پارالل بار و تجهیزات مقاومتی دارد.",
+    "A space where patients train in daily living activities such as eating, dressing, and bathing, along with cognitive rehabilitation and upper-limb function training to support independent living.": "بیماران فعالیت‌های روزمره مانند غذا خوردن، لباس پوشیدن و حمام کردن را تمرین می‌کنند و همراه آن توانبخشی شناختی و تمرین اندام فوقانی انجام می‌شود تا زندگی مستقل‌تری داشته باشند.",
+    "A space for evaluating and training communication ability and swallowing function in patients with aphasia, articulation disorders, or dysphagia.": "فضایی برای ارزیابی و تمرین توانایی ارتباط و بلع در بیماران مبتلا به زبان‌پریشی، اختلال تولید گفتار یا اختلال بلع.",
+    "A space using physical agents such as heat, cold, TENS, and ultrasound therapy to relieve pain and promote tissue healing.": "فضایی که از گرما، سرما، TENS (تحریک الکتریکی عصب از راه پوست) و درمان با امواج فراصوت برای کاهش درد و کمک به ترمیم بافت استفاده می‌کند.",
+    "A space for patients with lymphedema resulting from surgery or radiation therapy, providing manual lymphatic drainage, compression therapy, and bandaging.": "فضایی برای بیماران مبتلا به لنف‌ادم پس از جراحی یا پرتودرمانی، با تخلیه دستی لنف، درمان فشاری و بانداژ.",
+    "A space providing specialized rehabilitation for patients with neurological conditions such as stroke, traumatic brain injury, and spinal cord injury, focused on restoring motor function and daily living ability.": "فضایی برای توانبخشی تخصصی بیماران مبتلا به بیماری‌های عصبی مانند سکته مغزی، آسیب تروماتیک مغز و آسیب نخاع، با تمرکز بر بازگرداندن حرکت و توانایی زندگی روزمره.",
+    "A space helping patients with chronic lung disease or post-surgical patients recover respiratory function through breathing exercises, chest mobilization, and endurance training.": "فضایی که به بیماران مبتلا به بیماری مزمن ریه یا پس از جراحی کمک می‌کند با تمرین تنفسی، تحرک قفسه سینه و تمرین استقامت عملکرد تنفس را بازیابند.",
+    "A space providing stepwise, ECG-monitored exercise training for patients recovering from cardiac surgery or myocardial infarction.": "فضایی برای تمرین ورزشی مرحله‌ای زیر پایش نوار قلب، برای بیماران پس از جراحی قلب یا سکته قلبی.",
+    "A space providing play-based developmental rehabilitation for pediatric patients with conditions such as cerebral palsy or other neurodevelopmental delays.": "فضایی برای توانبخشی رشدی مبتنی بر بازی برای کودکان مبتلا به فلج مغزی یا سایر تأخیرهای عصبی‌رشدی.",
+    "A testing space using quantitative function assessments such as gait analysis, balance evaluation, and electromyography to guide treatment planning and track progress.": "فضایی برای ارزیابی کمی عملکرد مانند تحلیل راه رفتن، ارزیابی تعادل و الکترومیوگرافی، تا برنامه درمان تنظیم و روند پیگیری شود.",
+    "A space for real-time visualization of musculoskeletal structures used for accurate diagnosis and ultrasound-guided injection procedures.": "فضایی برای دیدن ساختارهای اسکلتی‌عضلانی به‌صورت هم‌زمان، برای تشخیص دقیق و تزریق با هدایت سونوگرافی.",
+    "Facility Introduction": "معرفی اتاق درمان",
+    "Equipment Introduction": "معرفی تجهیزات درمان",
+    "Treatment Methods": "روش‌های درمان",
+    "Rehabilitation System": "نظام توانبخشی",
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.": "به مرکز درمان طب توانبخشی خوش آمدید. در بازدید امروز، چیدمان اتاق‌ها، تجهیزات، روش‌های درمان و نظام توانبخشی ما را معرفی می‌کنیم.",
+    "The center consists of a physical therapy exercise gym, occupational therapy room, speech therapy room, individual treatment rooms, and a separate space for patients requiring infection isolation.": "این مرکز شامل سالن تمرین فیزیوتراپی، اتاق کاردرمانی، اتاق گفتاردرمانی، اتاق‌های درمان انفرادی، و فضای جدا برای بیمارانی است که به جداسازی عفونی نیاز دارند.",
+    "Patients receive treatment in morning and afternoon sessions, each lasting 30 minutes to 1 hour according to a plan established by the assigned therapist.": "بیماران در نوبت صبح و بعدازظهر درمان می‌شوند. هر نوبت طبق برنامه درمانگری که ارزیابی را انجام داده ۳۰ دقیقه تا ۱ ساعت است.",
+    "A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.": "پزشک طب توانبخشی، فیزیوتراپیست، کاردرمانگر، گفتاردرمانگر و پرستار به عنوان یک تیم برای بهبود بیمار همکاری می‌کنند.",
+    "Treadmills and body-weight-support gait trainers are used to safely restore a patient's walking ability.": "از تردمیل و دستگاه تمرین راه رفتن با تحمل بخشی از وزن بدن استفاده می‌شود تا توانایی راه رفتن با ایمنی بازگردد.",
+    "Treatment for stroke, brain injury, and spinal cord injury patients focuses on restoring motor function and daily living abilities.": "درمان بیماران سکته مغزی، آسیب مغز و آسیب نخاع بر بازگرداندن حرکت و فعالیت‌های روزمره متمرکز است.",
+    "Speech-language therapy helps patients with aphasia, articulation disorders, or dysphagia recover communication and swallowing function.": "گفتاردرمانی به بیماران مبتلا به زبان‌پریشی، اختلال تولید گفتار یا اختلال بلع کمک می‌کند ارتباط و بلع را بازیابند.",
+    "Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.": "بسته به نوع جداسازی — احتیاط هوایی، قطره‌ای یا تماسی — استفاده از تجهیزات حفاظت فردی و روش ضدعفونی وسایل متفاوت است.",
+    "After a physician's order, the therapist performs an initial evaluation and establishes a treatment plan, which is adjusted through regular reassessment.": "پس از دستور پزشک، درمانگر ارزیابی اولیه انجام می‌دهد و برنامه درمان را تنظیم می‌کند. سپس با ارزیابی مجدد منظم برنامه را اصلاح می‌کند.",
   },
 };
 
@@ -608,27 +910,41 @@ function lookupManual(text, targetCode, sourceCode){
   const bucket = MANUAL_TR[targetCode];
   if(!bucket || typeof bucket!=='object') return null;
   const wanted = String(text).trim();
+  const block = bucket.status==='verified' ? 'verified' : 'draft';
   const keys = Object.keys(bucket);
   for(let i=0;i<keys.length;i++){
-    if(keys[i].trim()!==wanted) continue;
+    if(keys[i]==='status' || keys[i].trim()!==wanted) continue;
     const value = bucket[keys[i]];
-    if(typeof value==='string' && value.trim()) return value.trim();
+    let out = null;
+    if(typeof value==='string') out = {text:value.trim(), status:block};
+    else if(Array.isArray(value) && typeof value[0]==='string'){
+      out = {text:value[0].trim(), status: value[1]==='verified' ? 'verified' : 'draft'};
+    }else if(value && typeof value.text==='string'){
+      const st = value.status==='verified' ? 'verified' : (value.status==='draft' ? 'draft' : block);
+      out = {text:value.text.trim(), status:st};
+    }
+    if(out && out.text) return out;
   }
   return null;
 }
 
 function applyTrBadge(el, origin){
   if(!el) return;
-  if(origin==='manual'){
+  if(origin==='verified'){
     el.hidden = false;
-    el.className = 'tr-badge manual';
+    el.className = 'tr-badge verified';
     el.textContent = '검수';
     el.title = '직접 확인한 번역';
+  }else if(origin==='draft'){
+    el.hidden = false;
+    el.className = 'tr-badge draft';
+    el.textContent = '초안';
+    el.title = '검토 전 초안. 확인 후 status를 verified로 바꾸세요.';
   }else if(origin==='auto' || origin==='cache'){
     el.hidden = false;
     el.className = 'tr-badge';
     el.textContent = '자동';
-    el.title = '자동 번역 (검수 전)';
+    el.title = '자동 번역';
   }else{
     el.hidden = true;
     el.className = 'tr-badge';
@@ -637,23 +953,76 @@ function applyTrBadge(el, origin){
   }
 }
 
-/* 자동 번역 + localStorage 캐시. 직접 번역이 있으면 API를 호출하지 않습니다. */
-async function translateDetailed(text, targetCode, sourceCode='en'){
-  if(targetCode===sourceCode) return {text:text, origin:'original'};
+const TR_NOTICES = {
+  en:{
+    quota:'오늘 자동 번역 한도에 도달했습니다. 영어 원문을 표시합니다. 나중에 다시 시도해 주세요.',
+    network:'인터넷에 연결되지 않았습니다. 영어 원문을 표시합니다. 연결 후 다시 시도해 주세요.',
+    bad:'자동 번역을 가져오지 못했습니다. 영어 원문을 표시합니다. 다시 시도해 주세요.'
+  },
+  other:{
+    quota:'오늘 자동 번역 한도에 도달했습니다. 원문을 그대로 표시합니다. 나중에 다시 입력해 주세요.',
+    network:'인터넷에 연결되지 않았습니다. 원문을 그대로 표시합니다. 연결 후 다시 번역해 주세요.',
+    bad:'자동 번역을 가져오지 못했습니다. 원문을 그대로 표시합니다. 다시 번역해 주세요.'
+  }
+};
+let quotaBlocked = false;
+let lastTrAt = 0;
+let trQueue = Promise.resolve();
+const TR_GAP_MS = 1000;
+
+function looksLikeTrError(s){
+  const u = String(s||'').toUpperCase();
+  return u.includes('MYMEMORY WARNING') || u.includes('QUERY LENGTH LIMIT EXCEEDED') || u.includes('INVALID LANGUAGE PAIR') || u.includes('USAGELIMITS');
+}
+function classifyMyMemory(data, httpOk){
+  const translated = data && data.responseData && data.responseData.translatedText;
+  const blob = ((translated||'')+' '+(data&&data.responseDetails||'')+' '+(data&&data.responseStatus||'')).toUpperCase();
+  if((data && data.quotaFinished===true) || blob.includes('MYMEMORY WARNING') || blob.includes('USAGELIMITS') || blob.includes('TOO MANY REQUESTS')) return 'quota';
+  if(!httpOk) return 'network';
+  if(!translated || looksLikeTrError(translated)) return 'bad';
+  if(data && data.responseStatus && Number(data.responseStatus)!==200) return 'bad';
+  return null;
+}
+function fallbackResult(text, sourceCode, reason){
+  const pack = sourceCode==='en' ? TR_NOTICES.en : TR_NOTICES.other;
+  return {text:text, origin:'fallback', reason:reason, notice:pack[reason] || pack.bad};
+}
+function throttleTr(){
+  const run = trQueue.then(async ()=>{
+    const wait = Math.max(0, TR_GAP_MS - (Date.now()-lastTrAt));
+    if(wait) await new Promise(r=>setTimeout(r, wait));
+    lastTrAt = Date.now();
+  });
+  trQueue = run.then(()=>{}, ()=>{});
+  return run;
+}
+
+/* 직접 번역이 있으면 API를 호출하지 않습니다. 오류 문장은 캐시하지 않습니다. */
+async function translateDetailed(text, targetCode, sourceCode='en', opts){
+  opts = opts || {};
+  if(targetCode===sourceCode) return {text:text, origin:'original', reason:'', notice:''};
   const manual = lookupManual(text, targetCode, sourceCode);
-  if(manual!=null) return {text:manual, origin:'manual'};
+  if(manual) return {text:manual.text, origin:manual.status==='verified'?'verified':'draft', reason:'', notice:''};
   const cacheKey = 'tr_'+sourceCode+'_'+targetCode+'_'+text;
   const cached = localStorage.getItem(cacheKey);
-  if(cached) return {text:cached, origin:'cache'};
+  if(cached && looksLikeTrError(cached)) localStorage.removeItem(cacheKey);
+  else if(cached) return {text:cached, origin:'cache', reason:'', notice:''};
+  if(quotaBlocked && !opts.force) return fallbackResult(text, sourceCode, 'quota');
   try{
+    await throttleTr();
     const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceCode}|${targetCode}`;
     const res = await fetch(url);
-    const data = await res.json();
-    const out = (data && data.responseData && data.responseData.translatedText) ? data.responseData.translatedText : text;
+    let data = null;
+    try{ data = await res.json(); }catch(e){ data = null; }
+    const kind = classifyMyMemory(data, !!(res && res.ok));
+    if(kind==='quota'){ quotaBlocked = true; return fallbackResult(text, sourceCode, 'quota'); }
+    if(kind) return fallbackResult(text, sourceCode, kind);
+    const out = data.responseData.translatedText;
+    quotaBlocked = false;
     localStorage.setItem(cacheKey, out);
-    return {text:out, origin:'auto'};
+    return {text:out, origin:'auto', reason:'', notice:''};
   }catch(e){
-    return {text: text + '  [번역 실패: 오프라인이거나 서버 오류입니다]', origin:'error'};
+    return fallbackResult(text, sourceCode, 'network');
   }
 }
 async function translateText(text, targetCode, sourceCode='en'){
@@ -680,6 +1049,7 @@ function goTo(screen, opts){
   currentScreen = screen;
   updateBackTabState();
   window.scrollTo(0,0);
+  if(screen==='interp' || screen==='lang') updateVoiceUI();
 }
 
 function goBack(){
@@ -757,23 +1127,32 @@ async function renderRoomIntroCard(){
   card.innerHTML = `
     <div class="lbl">${l.flag} ${l.name}<span class="tr-badge" id="roomTrBadge" hidden></span></div>
     <p id="roomTargetText"><span class="loading-dot"></span> <span class="loading-dot"></span> <span class="loading-dot"></span></p>
+    <p class="tr-notice" id="roomNotice" hidden></p>
     <div class="card-actions">
       <button class="icon-btn" id="roomPlayTarget">🔊 재생</button>
       <button class="icon-btn" id="roomBigBtn">🔍 크게 보기</button>
+      <button class="icon-btn" id="roomRetry" hidden>다시 시도</button>
     </div>
     ${l.code==='en' ? '' : `
     <p style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line);color:var(--ink-soft);font-size:0.88rem;">
-      🇺🇸 ${r.en_desc}
+      🇺🇸 ${escHtml(r.en_desc)}
     </p>`}`;
-  let targetText = r.en_desc;
-  let origin = 'original';
-  if(l.code!=='en'){
-    const tr = await translateDetailed(r.en_desc, l.code, 'en');
-    targetText = tr.text;
-    origin = tr.origin;
-  }
+  let tr = {text:r.en_desc, origin:'original', notice:'', reason:''};
+  if(l.code!=='en') tr = await translateDetailed(r.en_desc, l.code, 'en');
+  const targetText = tr.text;
   document.getElementById('roomTargetText').textContent = targetText;
-  applyTrBadge(document.getElementById('roomTrBadge'), origin);
+  applyTrBadge(document.getElementById('roomTrBadge'), tr.origin);
+  const roomNotice = document.getElementById('roomNotice');
+  const roomRetry = document.getElementById('roomRetry');
+  if(tr.origin==='fallback'){
+    roomNotice.hidden = false;
+    roomNotice.textContent = tr.notice;
+    roomRetry.hidden = false;
+    roomRetry.onclick = ()=>{ quotaBlocked = false; renderRoomIntroCard(); };
+  }else{
+    roomNotice.hidden = true;
+    roomRetry.hidden = true;
+  }
   document.getElementById('roomPlayTarget').onclick = (e)=>speak(targetText, l.tts, e.target);
   document.getElementById('roomBigBtn').onclick = ()=>showBigView(targetText, r.en_desc, l.rtl);
 }
@@ -783,7 +1162,7 @@ const langGrid = document.getElementById('langGrid');
 LANGS.forEach(l=>{
   const div = document.createElement('div');
   div.className = 'lang-card'+(state.lang===l.code?' selected':'');
-  div.innerHTML = `<div class="flag">${l.flag}</div><div class="name">${l.name}</div><div class="native">${l.native}</div><div class="region">${l.region}</div>`;
+  div.innerHTML = `<div class="flag">${l.flag}</div><div class="name">${l.name}</div><div class="native">${l.native}</div><div class="region">${l.region}</div><div class="voice-note" data-tts="${l.tts}" hidden></div>`;
   div.onclick = ()=>{
     document.querySelectorAll('.lang-card').forEach(c=>c.classList.remove('selected'));
     div.classList.add('selected');
@@ -814,18 +1193,34 @@ CATEGORIES.forEach(cat=>{
   catGrid.appendChild(div);
 });
 
+function categoryTitleEn(cat){
+  if(!state.lang || state.lang==='en') return {text:cat.title_en, status:''};
+  const hit = lookupManual(cat.title_en, state.lang, 'en');
+  return hit || {text:cat.title_en, status:''};
+}
 function openCategory(catId){
   state.currentCat = catId;
   const cat = CATEGORIES.find(c=>c.id===catId);
-  document.getElementById('topicCatTitle').textContent = `${cat.title_ko} · ${cat.title_en}`;
+  const shown = categoryTitleEn(cat);
+  const titleEl = document.getElementById('topicCatTitle');
+  titleEl.textContent = '';
+  titleEl.append(document.createTextNode(`${cat.title_ko} · ${shown.text}`));
+  if(shown.status==='draft' || shown.status==='verified'){
+    const b = document.createElement('span');
+    b.className = 'tr-badge '+(shown.status==='verified'?'verified':'draft');
+    b.textContent = shown.status==='verified' ? '검수' : '초안';
+    b.style.marginInlineStart = '8px';
+    titleEl.append(b);
+  }
   const list = document.getElementById('topicList');
   list.innerHTML = '';
-  cat.topics.forEach((t, idx)=>{
-    const key = catId+'_'+idx;
+  const topics = topicsFor(state.room, catId);
+  topics.forEach((t, idx)=>{
+    const key = (state.room||'')+'_'+catId+'_'+idx;
     const isFav = state.favorites.includes(key);
     const div = document.createElement('div');
     div.className = 'topic-item';
-    div.innerHTML = `<div><div class="topic-title">${t.title_ko}</div><div style="font-size:.78rem;color:var(--ink-soft);">${t.title_en}</div></div>
+    div.innerHTML = `<div><div class="topic-title">${escHtml(t.title_ko)}${t.draft?' <span class="draft-tag">초안</span>':''}</div><div style="font-size:.78rem;color:var(--ink-soft);">${escHtml(t.title_en)}</div></div>
       <div class="star ${isFav?'active':''}" data-key="${key}">${isFav?'★':'☆'}</div>`;
     div.onclick = ()=>openDetail(catId, idx);
     div.querySelector('.star').onclick = (e)=>{
@@ -849,44 +1244,53 @@ document.getElementById('detailBackBtn').onclick = ()=>openCategory(state.curren
 async function openDetail(catId, idx){
   state.currentCat = catId;
   state.currentTopicIdx = idx;
-  const cat = CATEGORIES.find(c=>c.id===catId);
-  const topic = cat.topics[idx];
+  const topic = topicsFor(state.room, catId)[idx];
   const l = langObj(state.lang);
   const body = document.getElementById('detailBody');
   body.innerHTML = `
+    ${topic.draft?'<div class="banner">초안입니다. 이 병원 내용으로 바꾼 뒤 draft 표시를 지우세요.</div>':''}
     <div class="content-card ${l.rtl?'rtl':''}">
       <div class="lbl">${l.flag} ${l.name}<span class="tr-badge" id="targetTrBadge" hidden></span></div>
       <p id="targetText"><span class="loading-dot"></span> <span class="loading-dot"></span> <span class="loading-dot"></span></p>
+      <p class="tr-notice" id="targetNotice" hidden></p>
       <div class="card-actions">
         <button class="icon-btn" id="playTarget">🔊 재생</button>
         <button class="icon-btn" id="bigBtn">🔍 크게 보기</button>
         <button class="icon-btn" id="copyBtn">📋 복사</button>
+        <button class="icon-btn" id="targetRetry" hidden>다시 시도</button>
       </div>
     </div>
     ${l.code==='en' ? '' : `
     <div class="content-card">
       <div class="lbl">🇺🇸 English</div>
-      <p>${topic.en}</p>
+      <p>${escHtml(topic.en)}</p>
       <div class="card-actions">
         <button class="icon-btn" id="playEn">🔊 Play</button>
       </div>
     </div>`}
     <div class="content-card">
       <div class="lbl">🇰🇷 한국어 (참고)</div>
-      <p style="color:var(--ink-soft);">${topic.ko}</p>
+      <p style="color:var(--ink-soft);">${escHtml(topic.ko)}</p>
     </div>
   `;
   goTo('detail');
 
-  let targetText = topic.en;
-  let origin = 'original';
-  if(l.code!=='en'){
-    const tr = await translateDetailed(topic.en, l.code, 'en');
-    targetText = tr.text;
-    origin = tr.origin;
-  }
+  let tr = {text:topic.en, origin:'original', notice:'', reason:''};
+  if(l.code!=='en') tr = await translateDetailed(topic.en, l.code, 'en');
+  const targetText = tr.text;
   document.getElementById('targetText').textContent = targetText;
-  applyTrBadge(document.getElementById('targetTrBadge'), origin);
+  applyTrBadge(document.getElementById('targetTrBadge'), tr.origin);
+  const targetNotice = document.getElementById('targetNotice');
+  const targetRetry = document.getElementById('targetRetry');
+  if(tr.origin==='fallback'){
+    targetNotice.hidden = false;
+    targetNotice.textContent = tr.notice;
+    targetRetry.hidden = false;
+    targetRetry.onclick = ()=>{ quotaBlocked = false; openDetail(catId, idx); };
+  }else{
+    targetNotice.hidden = true;
+    targetRetry.hidden = true;
+  }
 
   document.getElementById('playTarget').onclick = (e)=>speak(targetText, l.tts, e.target);
   if(l.code!=='en'){
@@ -913,10 +1317,26 @@ document.getElementById('bigviewClose').onclick = ()=>document.getElementById('b
 /* =========================================================
    6. 음성 출력 (TTS) · Text-to-speech
    ========================================================= */
-let voiceWarned = {};
+let voicesReady = false;
+function voiceList(){
+  if(!('speechSynthesis' in window)) return [];
+  return window.speechSynthesis.getVoices() || [];
+}
+function hasTtsVoice(bcp47){
+  if(!voicesReady) return null;
+  if(!('speechSynthesis' in window)) return false;
+  const raw = String(bcp47||'').toLowerCase();
+  const prefix = raw.split('-')[0];
+  return voiceList().some(v=>{
+    const lang = String(v.lang||'').toLowerCase();
+    if(lang.startsWith(prefix)) return true;
+    if((prefix==='tl' || prefix==='fil') && (lang.startsWith('fil') || lang.startsWith('tl'))) return true;
+    return false;
+  });
+}
 function speak(text, langCode, btnEl){
   if(!('speechSynthesis' in window)){
-    alert('이 기기/브라우저는 음성 출력을 지원하지 않습니다.');
+    alert('이 기기/브라우저는 음성 출력을 지원하지 않습니다. 화면의 글을 보여 주세요.');
     return;
   }
   window.speechSynthesis.cancel();
@@ -927,30 +1347,84 @@ function speak(text, langCode, btnEl){
     u.onend = ()=>btnEl.classList.remove('speaking');
     u.onerror = ()=>btnEl.classList.remove('speaking');
   }
-  const voices = window.speechSynthesis.getVoices();
-  const hasVoice = voices.some(v=>v.lang && v.lang.toLowerCase().startsWith(langCode.split('-')[0]));
-  if(!hasVoice && !voiceWarned[langCode]){
-    voiceWarned[langCode] = true;
-    const warn = document.getElementById('voiceWarning');
-    if(warn) warn.innerHTML = `<div class="banner">⚠️ 이 언어(${langCode})의 음성이 기기에 설치되어 있지 않을 수 있습니다. 화면의 텍스트로 안내해주세요.<br>Voice for this language may not be installed on this device — please use the on-screen text instead.</div>`;
-  }
+  const matched = hasTtsVoice(langCode);
+  if(matched===false) updateVoiceUI();
   window.speechSynthesis.speak(u);
 }
-if('speechSynthesis' in window){ window.speechSynthesis.onvoiceschanged = ()=>{}; }
+if('speechSynthesis' in window){
+  window.speechSynthesis.onvoiceschanged = ()=>{
+    voicesReady = true;
+    updateVoiceUI();
+  };
+  if(voiceList().length) voicesReady = true;
+}
 
 /* =========================================================
    7. 실시간 통역 (STT + 번역 + TTS) · Live interpreter
    ========================================================= */
 const dirKoBtn = document.getElementById('dirKoToTarget');
 const dirTgBtn = document.getElementById('dirTargetToKo');
-dirKoBtn.onclick = ()=>{ state.interpDir='ko2target'; dirKoBtn.classList.add('active'); dirTgBtn.classList.remove('active'); updateMicHint(); };
-dirTgBtn.onclick = ()=>{ state.interpDir='target2ko'; dirTgBtn.classList.add('active'); dirKoBtn.classList.remove('active'); updateMicHint(); };
-function updateMicHint(){
+dirKoBtn.onclick = ()=>{ state.interpDir='ko2target'; dirKoBtn.classList.add('active'); dirTgBtn.classList.remove('active'); updateVoiceUI(); };
+dirTgBtn.onclick = ()=>{ state.interpDir='target2ko'; dirTgBtn.classList.add('active'); dirKoBtn.classList.remove('active'); updateVoiceUI(); };
+function currentSttLang(){
   const l = langObj(state.lang);
-  document.getElementById('micHint').textContent = state.interpDir==='ko2target'
-    ? `한국어로 말씀하세요 → ${l.name}로 통역됩니다`
-    : `${l.name}로 말씀해 주세요 → 한국어로 통역됩니다`;
+  return state.interpDir==='ko2target' ? 'ko-KR' : (l.stt || '');
 }
+function sttApi(){ return window.SpeechRecognition || window.webkitSpeechRecognition || null; }
+function sttAvailable(){
+  if(!sttApi()) return false;
+  if(sttUnsupported[currentSttLang()]) return false;
+  return true;
+}
+function updateVoiceUI(){
+  const l = langObj(state.lang);
+  const hint = document.getElementById('micHint');
+  const mic = document.getElementById('micBtn');
+  const micOk = sttAvailable();
+  if(mic){
+    mic.disabled = !micOk;
+    mic.classList.toggle('unavailable', !micOk);
+    mic.setAttribute('aria-disabled', micOk ? 'false' : 'true');
+  }
+  if(hint){
+    if(!micOk){
+      hint.textContent = '음성 인식을 쓸 수 없습니다. 아래 칸에 직접 입력하세요.';
+    }else if(state.interpDir==='ko2target'){
+      hint.textContent = `한국어로 말씀하세요 → ${l.name}로 통역됩니다`;
+    }else{
+      hint.textContent = `${l.name}로 말씀해 주세요 → 한국어로 통역됩니다`;
+    }
+  }
+  const lines = [];
+  const tts = hasTtsVoice(l.tts);
+  if(tts===false) lines.push('이 언어의 음성 출력이 기기에 없습니다. 화면의 글을 보여 주세요.');
+  if(!sttApi()) lines.push('이 브라우저는 음성 인식을 지원하지 않습니다. 아래 칸에 직접 입력한 뒤 번역을 누르세요.');
+  else if(sttUnsupported[currentSttLang()]) lines.push('이 언어의 음성 인식을 쓸 수 없습니다. 아래 칸에 직접 입력해 주세요.');
+  const warn = document.getElementById('voiceWarning');
+  if(warn) warn.innerHTML = lines.length ? `<div class="banner">⚠️ ${lines.join('<br>')}</div>` : '';
+  const langBanner = document.getElementById('langVoiceBanner');
+  if(langBanner){
+    const langLines = [];
+    if(!sttApi()) langLines.push('이 브라우저는 음성 인식을 지원하지 않습니다. 통역 화면에서 글을 직접 입력해 주세요.');
+    if(voicesReady){
+      const missing = LANGS.some(item=>hasTtsVoice(item.tts)===false);
+      if(missing) langLines.push('‘음성 없음’이 붙은 언어는 소리 대신 화면의 글을 보여 주세요.');
+    }
+    langBanner.classList.toggle('hidden', langLines.length===0);
+    langBanner.innerHTML = langLines.join('<br>');
+  }
+  document.querySelectorAll('#langGrid .voice-note').forEach(el=>{
+    const ok = hasTtsVoice(el.getAttribute('data-tts'));
+    if(ok===false){
+      el.hidden = false;
+      el.textContent = '음성 없음';
+    }else{
+      el.hidden = true;
+      el.textContent = '';
+    }
+  });
+}
+function updateMicHint(){ updateVoiceUI(); }
 
 const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognizing = false;
@@ -958,14 +1432,14 @@ let recognizer = null;
 const micBtn = document.getElementById('micBtn');
 
 micBtn.addEventListener('click', ()=>{
-  if(!SpeechRecognitionAPI){
-    alert('이 브라우저는 음성 인식을 지원하지 않습니다. Chrome 브라우저 사용을 권장합니다.\\nSpeech recognition is not supported — please try Chrome.');
+  if(!sttAvailable()){
+    updateVoiceUI();
     return;
   }
   if(recognizing){ recognizer && recognizer.stop(); return; }
   const l = langObj(state.lang);
   recognizer = new SpeechRecognitionAPI();
-  recognizer.lang = state.interpDir==='ko2target' ? 'ko-KR' : l.stt;
+  recognizer.lang = currentSttLang();
   recognizer.interimResults = false;
   recognizer.maxAlternatives = 1;
   recognizer.onstart = ()=>{ recognizing=true; micBtn.classList.add('listening'); };
@@ -973,6 +1447,10 @@ micBtn.addEventListener('click', ()=>{
   recognizer.onerror = (e)=>{
     recognizing=false; micBtn.classList.remove('listening');
     if(e.error==='not-allowed'){ alert('마이크 권한을 허용해주세요. Please allow microphone access.'); }
+    if(e.error==='language-not-supported' || e.error==='service-not-allowed'){
+      sttUnsupported[recognizer.lang] = true;
+      updateVoiceUI();
+    }
   };
   recognizer.onresult = (e)=>{
     const said = e.results[0][0].transcript;
@@ -981,17 +1459,25 @@ micBtn.addEventListener('click', ()=>{
   recognizer.start();
 });
 
+function showTrFail(notice){
+  const el = document.getElementById('trFailBanner');
+  if(!el) return;
+  el.innerHTML = notice ? `<div class="banner">${notice}</div>` : '';
+}
 async function handleInterpretation(saidText){
   const l = langObj(state.lang);
   if(state.interpDir==='ko2target'){
     addBubble('me', saidText, true);
-    const translated = await translateText(saidText, l.code, 'ko');
-    addBubble('them', translated, false);
-    speak(translated, l.tts);
+    const tr = await translateDetailed(saidText, l.code, 'ko');
+    addBubble('them', tr.text, false);
+    if(tr.origin==='fallback') showTrFail(tr.notice);
+    else { showTrFail(''); speak(tr.text, l.tts); }
   }else{
     addBubble('them', saidText, true);
-    const translated = await translateText(saidText, 'ko', l.code);
-    addBubble('me', translated, false);
+    const tr = await translateDetailed(saidText, 'ko', l.code);
+    addBubble('me', tr.text, false);
+    if(tr.origin==='fallback') showTrFail(tr.notice);
+    else showTrFail('');
   }
 }
 
@@ -1080,22 +1566,86 @@ document.getElementById('clearCacheRow').onclick = ()=>{
   alert('번역 캐시가 초기화되었습니다. Translation cache cleared.');
 };
 
+function allEnglishContent(){
+  const list = [];
+  ROOMS.forEach(r=>list.push(r.en_desc));
+  const seen = new Set(list);
+  CATEGORIES.forEach(cat=>{
+    ROOMS.forEach(room=>{
+      topicsFor(room.id, cat.id).forEach(t=>{
+        if(t && t.en && !seen.has(t.en)){ seen.add(t.en); list.push(t.en); }
+      });
+    });
+  });
+  return list;
+}
+let prefetching = false;
+async function prefetchCurrentLang(){
+  if(prefetching) return;
+  const status = document.getElementById('prefetchStatus');
+  if(!state.lang || state.lang==='en'){
+    alert('영어는 원문이라 미리 받기가 필요 없습니다.\n다른 언어를 선택한 뒤 다시 눌러 주세요.');
+    return;
+  }
+  prefetching = true;
+  const lang = state.lang;
+  const items = allEnglishContent();
+  let saved = 0, skipped = 0, index = 0;
+  const paint = (msg)=>{ if(status) status.textContent = msg; };
+  try{
+    for(const text of items){
+      index++;
+      if(lookupManual(text, lang, 'en') || localStorage.getItem('tr_en_'+lang+'_'+text)){
+        skipped++;
+        paint('확인 중 '+index+'/'+items.length+' · 이미 있음 '+skipped);
+        continue;
+      }
+      paint('받는 중 '+index+'/'+items.length+' · 저장 '+saved);
+      const tr = await translateDetailed(text, lang, 'en');
+      if(tr.origin==='fallback'){
+        if(tr.reason==='quota'){
+          paint('오늘 자동 번역 한도에 도달했습니다. 저장 '+saved+'개에서 멈췄습니다. 나중에 다시 눌러 주세요.');
+          return;
+        }
+        if(tr.reason==='network'){
+          paint('인터넷에 연결되지 않아 멈췄습니다. 저장 '+saved+'개는 남아 있습니다.');
+          return;
+        }
+        paint('일부 문장은 받지 못했습니다. 저장 '+saved+'개. 나중에 다시 눌러 주세요.');
+        continue;
+      }
+      if(tr.origin==='auto' || tr.origin==='cache') saved++;
+    }
+    paint('완료. 새로 저장 '+saved+'개, 이미 있던 것 '+skipped+'개.');
+  }finally{
+    prefetching = false;
+  }
+}
+document.getElementById('prefetchRow').onclick = ()=>{ prefetchCurrentLang(); };
+
+function attachManifest(){
+  if(document.querySelector('link[rel="manifest"]')) return;
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = 'manifest.webmanifest';
+  document.head.appendChild(link);
+}
+function registerAppWorker(){
+  if(!('serviceWorker' in navigator)) return;
+  if(location.protocol==='file:') return;
+  navigator.serviceWorker.register('./sw.js').then(reg=>{
+    if(navigator.serviceWorker.controller) attachManifest();
+    reg.update();
+  }).catch(()=>{});
+  navigator.serviceWorker.addEventListener('controllerchange', attachManifest);
+}
+
 /* =========================================================
    10. 초기 실행 · Init
    ========================================================= */
 (function init(){
-  // installable PWA manifest via blob (works without a separate file)
-  const manifest = {
-    name: '재활치료실 연수자 가이드', short_name: '재활가이드',
-    start_url: '.', display: 'standalone', background_color: '#F1F4F1', theme_color:'#0E6E5C',
-    icons: [{ src: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' rx=\'22\' fill=\'%230E6E5C\'/%3E%3C/svg%3E', sizes:'100x100', type:'image/svg+xml'}]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-  const link = document.createElement('link');
-  link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
-  document.head.appendChild(link);
-
-  updateMicHint();
+  registerAppWorker();
+  updateVoiceUI();
   if(state.room && state.lang){
     renderRoomChip();
     renderLangChips();
