@@ -56,8 +56,6 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .lang-card .name{font-weight:700;font-size:0.9rem;}
 .lang-card .native{font-size:0.75rem;color:var(--ink-soft);}
 .lang-card .region{font-size:0.68rem;color:var(--primary-dark);font-weight:700;background:var(--card-alt);padding:2px 8px;border-radius:999px;margin-top:2px;}
-.start-btn{margin-top:22px;width:100%;background:var(--primary);color:#fff;border:none;border-radius:16px;padding:16px;font-size:1.02rem;font-weight:800;cursor:pointer;}
-.start-btn:disabled{background:#B9C5C1;}
 
 /* ---------- Home / categories ---------- */
 .hero{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:20px;padding:20px 20px 22px;margin:8px 0 4px;position:relative;overflow:hidden;}
@@ -83,6 +81,9 @@ body{font-size:calc(16px * var(--font-size-scale));}
 /* ---------- Content detail ---------- */
 .content-card{background:var(--card);border-radius:20px;padding:18px;margin:10px 0;border:1px solid var(--line);}
 .content-card .lbl{font-size:0.72rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.tr-badge{margin-inline-start:auto;flex-shrink:0;font-size:0.62rem;font-weight:800;letter-spacing:0;text-transform:none;line-height:1.3;padding:2px 7px;border-radius:999px;background:var(--card-alt);color:var(--ink-soft);}
+.tr-badge.manual{background:#E5F3EE;color:var(--primary-dark);}
+.tr-badge[hidden]{display:none !important;}
 .content-card p{margin:0;line-height:1.65;font-size:1rem;}
 .content-card.rtl p, .content-card.rtl{direction:rtl;text-align:right;}
 .card-actions{display:flex;gap:8px;margin-top:12px;}
@@ -112,7 +113,9 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .type-fallback{display:flex;gap:8px;margin-top:14px;}
 .type-fallback input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-size:0.95rem;font-family:inherit;}
 .type-fallback button{background:var(--primary);color:#fff;border:none;border-radius:12px;padding:0 16px;font-weight:700;cursor:pointer;}
-.transcript{display:flex;flex-direction:column;gap:10px;margin-top:18px;}
+.transcript{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+#screen-interp{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0;}
+#transcriptWrap{flex:1;min-height:0;overflow-y:auto;padding-bottom:96px;-webkit-overflow-scrolling:touch;}
 .bubble{padding:12px 14px;border-radius:14px;max-width:88%;font-size:0.92rem;line-height:1.5;}
 .bubble.me{align-self:flex-end;background:var(--primary);color:#fff;border-bottom-right-radius:4px;}
 .bubble.them{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px;}
@@ -176,7 +179,7 @@ body{font-size:calc(16px * var(--font-size-scale));}
     border-color:var(--primary);box-shadow:0 4px 16px rgba(14,110,92,.1);cursor:pointer;}
   .tab-btn:hover{background:var(--card-alt);}
   .icon-btn:hover{background:var(--line);}
-  .start-btn:hover:not(:disabled),.mic-btn:hover{filter:brightness(1.06);}
+  .mic-btn:hover{filter:brightness(1.06);}
 }
 
 
@@ -284,8 +287,10 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
       <button id="typeSendBtn">번역</button>
     </div>
     <div id="voiceWarning"></div>
-    <div class="section-title">대화 기록 · Conversation log</div>
-    <div class="transcript" id="transcript"></div>
+    <div id="transcriptWrap">
+      <div class="section-title">대화 기록 · Conversation log</div>
+      <div class="transcript" id="transcript"></div>
+    </div>
   </section>
 
   <!-- ================= CHECKLIST ================= -->
@@ -523,23 +528,137 @@ let state = {
 document.documentElement.style.setProperty('--font-size-scale', state.fontScale);
 
 /* =========================================================
-   4. 번역 캐시 & API · Translation cache & API
+   4. 직접 번역 우선, 없으면 자동 번역 · Manual translation first
+   ---------------------------------------------------------
+   쓰는 방법 (이 블록만 고치면 됩니다. 다른 코드는 건드리지 마세요.)
+
+   1) 아래 언어 코드 중 번역을 넣을 언어를 고릅니다.
+      ja 일본어 · zh 중국어 · vi 베트남어 · th 태국어 · id 인도네시아어
+      tl 필리핀어 · ru 러시아어 · ne 네팔어 · ur 우르두어 · fa 페르시아어
+      (필리핀어 음성 코드는 fil-PH 이지만, 번역 키는 반드시 tl 입니다.)
+   2) 앱 데이터에 있는 영어 문장을 글자 그대로 복사해 왼쪽("키")에 넣습니다.
+      치료실 영어 설명(en_desc)과 주제 본문(en)이 자동 번역되는 문장입니다.
+      문장 안의 띄어쓰기, 쉼표, 마침표, 따옴표까지 같아야 합니다.
+      키 앞뒤의 공백만 무시합니다.
+   3) 콜론(:) 오른쪽에 그 언어로 직접 확인한 번역을 붙여 넣습니다.
+   4) 각 줄 끝의 쉼표(,)를 유지합니다. 영어에 큰따옴표(")가 있으면 \" 로 씁니다.
+      작은따옴표(')는 그대로 둡니다. (예: today's)
+   5) 파일을 저장하고 새로고침합니다.
+      여기에 있는 문장은 MyMemory를 호출하지 않고 바로 표시됩니다.
+      없는 문장만 기존처럼 자동 번역 후 localStorage(tr_…)에 캐시합니다.
+      캐시에 옛 자동 번역이 남아 있어도 이 표가 우선이라, 캐시를 지울 필요 없습니다.
+      번역 칸을 비우면("") 그 문장은 자동 번역으로 넘어갑니다.
+
+   키를 문장 번호(id)가 아니라 영어 원문으로 둔 이유:
+   번호를 찾아 맞출 필요가 없습니다. 화면에 같이 나오는 영어를 복사해 붙이면 연결됩니다.
+   영어 원문을 고치면 키가 어긋나 자동 번역으로 돌아가므로, 예전 번역이 다른 문장에 붙지 않습니다.
+
+   적용 범위: 영어 → 선택 언어 카드(치료실 소개 문장, 주제 본문).
+   통역 화면의 즉석 말(한국어↔선택 언어)은 이 표에 넣지 않으며 계속 자동 번역입니다.
+
+   의학 용어 용어집은 넣지 않았습니다.
+   문장 중간의 physical therapy, ROM, ICU 같은 단어만 미리 바꿔 끼우면
+   자동 번역기가 자리표시를 번역·분리·삭제하는 경우가 있고, 띄어쓰기가 없는
+   중국어·일본어·태국어와 오른쪽에서 왼쪽으로 쓰는 페르시아어·우르두어에서는
+   되돌리기도 불안정합니다. 깨진 기호가 의료 문장에 남는 것보다,
+   그 용어가 들어 있는 문장 전체를 아래에 직접 번역으로 넣는 쪽이 안전합니다.
+
+   예시 두 줄(ja, zh의 환영 인사)은 형식 안내용입니다.
+   임상에서 쓰기 전에 원어민 확인을 받거나, 줄을 지우고 실제 문장으로 바꾸세요.
    ========================================================= */
-async function translateText(text, targetCode, sourceCode='en'){
-  if(targetCode===sourceCode) return text;
+const MANUAL_TR = {
+  fa: {
+    // "영어 원문 전체": "직접 확인한 번역",
+  },
+  ur: {
+    // "영어 원문 전체": "직접 확인한 번역",
+  },
+  ne: {
+    // "영어 원문 전체": "직접 확인한 번역",
+  },
+  ru: {
+    // "영어 원문 전체": "직접 확인한 번역",
+  },
+  tl: {
+    // "영어 원문 전체": "직접 확인한 번역",
+  },
+  id: {
+    // "영어 원문 전체": "직접 확인한 번역",
+  },
+  th: {
+    // "영어 원문 전체": "직접 확인한 번역",
+  },
+  vi: {
+    // "영어 원문 전체": "직접 확인한 번역",
+  },
+  zh: {
+    // 예시 EXAMPLE — 주제 「환영 인사」 영어 본문. 원어민 검수 전 형식 예시입니다. 확인 후 고치거나 지우세요.
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.":
+      "欢迎来到我们的康复医学治疗中心。在今天的参观中，我们将介绍设施布局、设备、治疗方法以及我们的康复系统。",
+  },
+  ja: {
+    // 예시 EXAMPLE — 위와 같은 영어 문장. 원어민 검수 전 형식 예시입니다. 확인 후 고치거나 지우세요.
+    "Welcome to our Rehabilitation Medicine treatment center. During today's tour, we will introduce the facility layout, equipment, treatment methods, and our rehabilitation system.":
+      "リハビリテーション医学治療センターへようこそ。本日の見学では、施設の配置、機器、治療法、そして当院のリハビリテーションシステムをご紹介します。",
+  },
+};
+
+function lookupManual(text, targetCode, sourceCode){
+  if(sourceCode!=='en' || text==null) return null;
+  const bucket = MANUAL_TR[targetCode];
+  if(!bucket || typeof bucket!=='object') return null;
+  const wanted = String(text).trim();
+  const keys = Object.keys(bucket);
+  for(let i=0;i<keys.length;i++){
+    if(keys[i].trim()!==wanted) continue;
+    const value = bucket[keys[i]];
+    if(typeof value==='string' && value.trim()) return value.trim();
+  }
+  return null;
+}
+
+function applyTrBadge(el, origin){
+  if(!el) return;
+  if(origin==='manual'){
+    el.hidden = false;
+    el.className = 'tr-badge manual';
+    el.textContent = '검수';
+    el.title = '직접 확인한 번역';
+  }else if(origin==='auto' || origin==='cache'){
+    el.hidden = false;
+    el.className = 'tr-badge';
+    el.textContent = '자동';
+    el.title = '자동 번역 (검수 전)';
+  }else{
+    el.hidden = true;
+    el.className = 'tr-badge';
+    el.textContent = '';
+    el.removeAttribute('title');
+  }
+}
+
+/* 자동 번역 + localStorage 캐시. 직접 번역이 있으면 API를 호출하지 않습니다. */
+async function translateDetailed(text, targetCode, sourceCode='en'){
+  if(targetCode===sourceCode) return {text:text, origin:'original'};
+  const manual = lookupManual(text, targetCode, sourceCode);
+  if(manual!=null) return {text:manual, origin:'manual'};
   const cacheKey = 'tr_'+sourceCode+'_'+targetCode+'_'+text;
   const cached = localStorage.getItem(cacheKey);
-  if(cached) return cached;
+  if(cached) return {text:cached, origin:'cache'};
   try{
     const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceCode}|${targetCode}`;
     const res = await fetch(url);
     const data = await res.json();
     const out = (data && data.responseData && data.responseData.translatedText) ? data.responseData.translatedText : text;
     localStorage.setItem(cacheKey, out);
-    return out;
+    return {text:out, origin:'auto'};
   }catch(e){
-    return text + '  [번역 실패: 오프라인이거나 서버 오류입니다]';
+    return {text: text + '  [번역 실패: 오프라인이거나 서버 오류입니다]', origin:'error'};
   }
+}
+async function translateText(text, targetCode, sourceCode='en'){
+  const result = await translateDetailed(text, targetCode, sourceCode);
+  return result.text;
 }
 
 /* =========================================================
@@ -636,7 +755,7 @@ async function renderRoomIntroCard(){
   const card = document.getElementById('roomIntroCard');
   card.className = 'content-card'+(l.rtl?' rtl':'');
   card.innerHTML = `
-    <div class="lbl">${l.flag} ${l.name}</div>
+    <div class="lbl">${l.flag} ${l.name}<span class="tr-badge" id="roomTrBadge" hidden></span></div>
     <p id="roomTargetText"><span class="loading-dot"></span> <span class="loading-dot"></span> <span class="loading-dot"></span></p>
     <div class="card-actions">
       <button class="icon-btn" id="roomPlayTarget">🔊 재생</button>
@@ -647,8 +766,14 @@ async function renderRoomIntroCard(){
       🇺🇸 ${r.en_desc}
     </p>`}`;
   let targetText = r.en_desc;
-  if(l.code!=='en'){ targetText = await translateText(r.en_desc, l.code, 'en'); }
+  let origin = 'original';
+  if(l.code!=='en'){
+    const tr = await translateDetailed(r.en_desc, l.code, 'en');
+    targetText = tr.text;
+    origin = tr.origin;
+  }
   document.getElementById('roomTargetText').textContent = targetText;
+  applyTrBadge(document.getElementById('roomTrBadge'), origin);
   document.getElementById('roomPlayTarget').onclick = (e)=>speak(targetText, l.tts, e.target);
   document.getElementById('roomBigBtn').onclick = ()=>showBigView(targetText, r.en_desc, l.rtl);
 }
@@ -730,7 +855,7 @@ async function openDetail(catId, idx){
   const body = document.getElementById('detailBody');
   body.innerHTML = `
     <div class="content-card ${l.rtl?'rtl':''}">
-      <div class="lbl">${l.flag} ${l.name}</div>
+      <div class="lbl">${l.flag} ${l.name}<span class="tr-badge" id="targetTrBadge" hidden></span></div>
       <p id="targetText"><span class="loading-dot"></span> <span class="loading-dot"></span> <span class="loading-dot"></span></p>
       <div class="card-actions">
         <button class="icon-btn" id="playTarget">🔊 재생</button>
@@ -754,10 +879,14 @@ async function openDetail(catId, idx){
   goTo('detail');
 
   let targetText = topic.en;
+  let origin = 'original';
   if(l.code!=='en'){
-    targetText = await translateText(topic.en, l.code, 'en');
+    const tr = await translateDetailed(topic.en, l.code, 'en');
+    targetText = tr.text;
+    origin = tr.origin;
   }
   document.getElementById('targetText').textContent = targetText;
+  applyTrBadge(document.getElementById('targetTrBadge'), origin);
 
   document.getElementById('playTarget').onclick = (e)=>speak(targetText, l.tts, e.target);
   if(l.code!=='en'){
@@ -878,11 +1007,12 @@ document.getElementById('typeInput').addEventListener('keydown', (e)=>{
 
 function addBubble(who, text, isOriginal){
   const wrap = document.getElementById('transcript');
+  const scrollWrap = document.getElementById('transcriptWrap');
   const div = document.createElement('div');
   div.className = 'bubble '+who;
   div.textContent = text;
   wrap.appendChild(div);
-  wrap.scrollTop = wrap.scrollHeight;
+  scrollWrap.scrollTop = scrollWrap.scrollHeight;
 }
 
 /* =========================================================
