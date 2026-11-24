@@ -202,6 +202,20 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
   outline:3px solid var(--accent);outline-offset:2px;
 }
 
+.ver-pill{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:999px;background:#E5F3EE;color:var(--primary-dark);border:1px solid #B7DDD2;font-size:0.68rem;font-weight:800;letter-spacing:0;}
+.ver-tag{display:inline-flex;align-items:center;border-radius:6px;padding:2px 8px;font-size:0.72rem;font-weight:800;color:#fff;background:#6B7C76;}
+.ver-tag.latest{background:var(--primary);}
+.ver-date{font-size:0.68rem;color:var(--ink-soft);font-weight:700;}
+.ver-latest{font-size:0.66rem;font-weight:800;color:var(--primary-dark);background:#E5F3EE;border-radius:5px;padding:1px 6px;}
+.release-overlay{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:20px;}
+.release-sheet{background:#fff;border-radius:16px;padding:22px 18px 16px;width:100%;max-width:420px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.18);}
+.release-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.release-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;}
+.release-list li{font-size:0.82rem;line-height:1.45;color:var(--ink);}
+.release-block{margin-bottom:16px;}
+.new-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-inline-start:6px;vertical-align:middle;}
+.new-dot[hidden]{display:none !important;}
+
 /* ---- 가로모드 폰 대응: 하단 탭바가 콘텐츠를 가리지 않도록 ---- */
 @media (max-width:899px) and (orientation:landscape) and (max-height:480px){
   .tabbar{padding:4px 6px calc(4px + env(safe-area-inset-bottom));}
@@ -218,7 +232,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub">Rehabilitation Center Visitor Guide</div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v1.4</span></div>
       </div>
     </div>
     <div class="section-title">지금 계신(또는 안내할) 치료실을 선택해주세요 · Select the room</div>
@@ -230,7 +244,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub">Rehabilitation Center Visitor Guide</div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v1.4</span></div>
       </div>
     </div>
     <div class="back-row" style="padding-top:0;">
@@ -335,7 +349,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>⚙️ 설정</h1>
-        <div class="sub">Settings</div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v1.4</span></div>
       </div>
     </div>
     <div class="set-row" style="flex-direction:column;align-items:stretch;gap:6px;">
@@ -356,6 +370,10 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     </div>
     <div class="set-row" onclick="goTo('lang')" style="cursor:pointer;">
       <div class="lbl2">언어 변경 · Change language</div>
+      <div>▸</div>
+    </div>
+    <div class="set-row" id="releaseNotesRow" style="cursor:pointer;">
+      <div class="lbl2">업데이트 내역 <span class="new-dot" id="releaseNew" hidden></span></div>
       <div>▸</div>
     </div>
     <div class="set-row" id="prefetchRow" style="cursor:pointer;">
@@ -394,12 +412,76 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     </div>
   </div>
 
+  <div class="release-overlay hidden" id="releaseNotes">
+    <div class="release-sheet" role="dialog" aria-modal="true" aria-labelledby="releaseTitle">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <span id="releaseTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);">📋 업데이트 내역</span>
+        <button type="button" id="releaseClose" aria-label="닫기" style="background:none;border:none;font-size:1.25rem;color:var(--ink-soft);cursor:pointer;padding:2px 6px;">✕</button>
+      </div>
+      <div id="releaseList"></div>
+      <button type="button" class="icon-btn" id="releaseOk" style="margin-top:8px;width:100%;justify-content:center;background:var(--primary);color:#fff;">확인</button>
+    </div>
+  </div>
+
+  <div class="release-overlay hidden" id="updateBanner">
+    <div class="release-sheet" role="dialog" aria-modal="true" aria-labelledby="updateTitle" style="max-width:380px;">
+      <div style="text-align:center;margin-bottom:12px;">
+        <div style="font-size:2rem;">🎉</div>
+        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v1.4 업데이트</div>
+        <div style="font-size:0.82rem;color:var(--ink-soft);line-height:1.55;margin-top:6px;">앱이 업데이트되었어요.<br>주요 변경사항을 확인해보세요.</div>
+      </div>
+      <ul class="release-list" id="updateLatest" style="margin-bottom:16px;"></ul>
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="icon-btn" id="updateDetail" style="flex:1;justify-content:center;">자세히 보기</button>
+        <button type="button" class="icon-btn" id="updateOk" style="flex:1;justify-content:center;background:var(--primary);color:#fff;">확인</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
 /* =========================================================
    1. 언어 정의 · Language definitions
    ========================================================= */
+const APP_VERSION = 'v1.4';
+const CHANGELOG = [
+  {version:'v1.4', date:'2026.11.24', items:[
+    '업데이트 내역을 설정에서 볼 수 있습니다.',
+    '새 버전이 있으면 안내 창이 뜹니다.'
+  ]},
+  {version:'v1.3', date:'2026.11.24', items:[
+    '통역 화면은 위쪽은 고정되고, 대화 기록만 스크롤됩니다.',
+    '휴대폰 뒤로가기로 이전 화면으로 돌아갑니다. 크게 보기는 먼저 닫힙니다.',
+    '투어 타이머가 화면을 꺼도, 앱을 다시 열어도 이어집니다.',
+    '통역한 말은 기기에 저장하지 않습니다. 이름·등록번호는 말하지 말라는 안내가 있습니다.',
+    '번역이 안 되면 다시 시도할 수 있고, 긴 문장도 나누어 번역합니다.',
+    '연속으로 입력해도 대화 순서가 바뀌지 않습니다.',
+    '음성 인식이 안 되면 이유를 짧게 알려 줍니다.',
+    '홈 화면 아이콘이 생기고, 인터넷이 느려도 저장된 화면이 열립니다.',
+    '화면을 두 손가락으로 확대할 수 있습니다. 아랍어·우르두어 버튼이 잘리지 않습니다.'
+  ]},
+  {version:'v1.2', date:'2026.10.20', items:[
+    '인터넷이 없어도 앱이 열립니다.',
+    '설정에서 선택한 언어의 안내 문장을 미리 받아 둘 수 있습니다.',
+    '치료실마다 장비·치료 주제를 따로 넣을 수 있습니다. 아직 초안인 주제는 표시됩니다.',
+    '직접 넣은 번역은 초안과 검수로 구분됩니다.',
+    '자동 번역이 안 되면 영어 원문과 다시 시도가 나옵니다.',
+    '음성 출력이 없는 언어는 안내가 나옵니다.'
+  ]},
+  {version:'v1.1', date:'2026.10.20', items:[
+    '확인해 둔 번역이 자동 번역보다 먼저 나옵니다.',
+    '카드에 검수·자동 표시가 붙습니다.',
+    '통역 화면에서 대화 기록만 스크롤됩니다.',
+    '쓰이지 않던 시작 버튼을 없앴습니다.'
+  ]},
+  {version:'v1.0', date:'2026.08.04', items:[
+    '치료실과 언어를 고르고 투어 안내를 볼 수 있습니다.',
+    '통역, 체크리스트와 타이머, 글자 크기 설정이 있습니다.',
+    '글을 읽어 주고, 말로 입력할 수 있습니다.',
+    '한 번 받은 번역은 기기에 저장됩니다.'
+  ]}
+];
+
 const LANGS = [
   {code:'en', flag:'🇺🇸', name:'English',   native:'English',      region:'미국·영국·필리핀 등', tts:'en-US', stt:'en-US', rtl:false},
   {code:'fa', flag:'🇮🇷', name:'Persian',   native:'فارسی',        region:'이란 Iran',           tts:'fa-IR', stt:'fa-IR', rtl:true },
@@ -1163,8 +1245,10 @@ let histDepth = 0;
 let homeReset = false;
 
 function bigOpen(){ return !document.getElementById('bigview').classList.contains('hidden'); }
+function notesOpen(){ return !document.getElementById('releaseNotes').classList.contains('hidden'); }
+function bannerOpen(){ return !document.getElementById('updateBanner').classList.contains('hidden'); }
 function histSnapshot(){
-  return {app:true, screen:currentScreen, stack:navStack.slice(), big:bigOpen(), depth:histDepth};
+  return {app:true, screen:currentScreen, stack:navStack.slice(), big:bigOpen(), notes:notesOpen(), banner:bannerOpen(), depth:histDepth};
 }
 function replaceHist(){ try{ history.replaceState(histSnapshot(), ''); }catch(e){} }
 function pushHist(){
@@ -1193,11 +1277,13 @@ function goTo(screen, opts){
 }
 
 function goBack(){
-  if(bigOpen()){
-    if(histDepth>0) history.back();
-    else { hideBig(); updateBackTabState(); }
+  if((notesOpen() || bannerOpen() || bigOpen()) && histDepth>0){
+    history.back();
     return;
   }
+  if(notesOpen()){ document.getElementById('releaseNotes').classList.add('hidden'); updateBackTabState(); return; }
+  if(bannerOpen()){ dismissUpdate(false); return; }
+  if(bigOpen()){ hideBig(); updateBackTabState(); return; }
   if(navStack.length===0) return;
   if(histDepth>0) history.back();
   else {
@@ -1211,7 +1297,8 @@ function restoreHist(s){
   navStack = Array.isArray(s.stack) ? s.stack.slice() : [];
   const bv = document.getElementById('bigview');
   bv.classList.toggle('hidden', !s.big);
-  if(bv.classList.contains('hidden')===false) bv.classList.toggle('rtl', false);
+  document.getElementById('releaseNotes').classList.toggle('hidden', !s.notes);
+  document.getElementById('updateBanner').classList.toggle('hidden', !s.banner);
   goTo(s.screen||'room', {isBack:true, noHist:true});
   updateBackTabState();
 }
@@ -1234,6 +1321,8 @@ function resetToHome(){
   const d = histDepth;
   navStack = [];
   hideBig();
+  document.getElementById('releaseNotes').classList.add('hidden');
+  document.getElementById('updateBanner').classList.add('hidden');
   if(d>0){
     homeReset = true;
     history.go(-d);
@@ -1244,12 +1333,12 @@ function resetToHome(){
 }
 
 function updateBackTabState(){
-  const blocked = navStack.length===0 && !bigOpen();
+  const blocked = navStack.length===0 && !bigOpen() && !notesOpen() && !bannerOpen();
   document.getElementById('tabBackBtn').classList.toggle('disabled', blocked);
 }
 
 document.getElementById('tabBackBtn').addEventListener('click', ()=>{
-  if(navStack.length===0 && !bigOpen()) return;
+  if(navStack.length===0 && !bigOpen() && !notesOpen() && !bannerOpen()) return;
   goBack();
 });
 
@@ -1916,6 +2005,105 @@ function registerAppWorker(){
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
 
+function renderReleaseList(){
+  const list = document.getElementById('releaseList');
+  list.innerHTML = '';
+  CHANGELOG.forEach((entry, i)=>{
+    const block = document.createElement('div');
+    block.className = 'release-block';
+    const head = document.createElement('div');
+    head.className = 'release-head';
+    const tag = document.createElement('span');
+    tag.className = 'ver-tag'+(i===0?' latest':'');
+    tag.textContent = entry.version;
+    const date = document.createElement('span');
+    date.className = 'ver-date';
+    date.textContent = entry.date;
+    head.append(tag, date);
+    if(i===0){
+      const latest = document.createElement('span');
+      latest.className = 'ver-latest';
+      latest.textContent = '최신';
+      head.append(latest);
+    }
+    const ul = document.createElement('ul');
+    ul.className = 'release-list';
+    entry.items.forEach(text=>{
+      const li = document.createElement('li');
+      li.textContent = text;
+      ul.append(li);
+    });
+    block.append(head, ul);
+    list.append(block);
+  });
+  const latestUl = document.getElementById('updateLatest');
+  latestUl.innerHTML = '';
+  CHANGELOG[0].items.forEach(text=>{
+    const li = document.createElement('li');
+    li.textContent = text;
+    latestUl.append(li);
+  });
+  document.getElementById('updateTitle').textContent = APP_VERSION+' 업데이트';
+}
+function markVersionSeen(){
+  try{ localStorage.setItem('guide_seen_version', APP_VERSION); }catch(e){}
+  const dot = document.getElementById('releaseNew');
+  if(dot) dot.hidden = true;
+}
+function openReleaseNotes(){
+  renderReleaseList();
+  document.getElementById('releaseNotes').classList.remove('hidden');
+  markVersionSeen();
+  pushHist();
+  updateBackTabState();
+}
+function closeReleaseNotes(){
+  if(notesOpen() && histDepth>0 && history.state && history.state.notes) history.back();
+  else {
+    document.getElementById('releaseNotes').classList.add('hidden');
+    updateBackTabState();
+  }
+}
+function dismissUpdate(openNotes){
+  markVersionSeen();
+  document.getElementById('updateBanner').classList.add('hidden');
+  if(openNotes){
+    document.getElementById('releaseNotes').classList.remove('hidden');
+    replaceHist();
+    updateBackTabState();
+    return;
+  }
+  if(histDepth>0 && history.state && history.state.banner) history.back();
+  else updateBackTabState();
+}
+function maybeShowUpdate(){
+  let seen = null;
+  try{ seen = localStorage.getItem('guide_seen_version'); }catch(e){}
+  if(seen===null){
+    markVersionSeen();
+    return;
+  }
+  if(seen!==APP_VERSION){
+    const dot = document.getElementById('releaseNew');
+    if(dot) dot.hidden = false;
+    renderReleaseList();
+    document.getElementById('updateBanner').classList.remove('hidden');
+    pushHist();
+    updateBackTabState();
+  }
+}
+document.getElementById('releaseNotesRow').onclick = ()=>openReleaseNotes();
+document.getElementById('releaseClose').onclick = ()=>closeReleaseNotes();
+document.getElementById('releaseOk').onclick = ()=>closeReleaseNotes();
+document.getElementById('releaseNotes').addEventListener('click', (e)=>{
+  if(e.target.id==='releaseNotes') closeReleaseNotes();
+});
+document.getElementById('updateDetail').onclick = ()=>dismissUpdate(true);
+document.getElementById('updateOk').onclick = ()=>dismissUpdate(false);
+document.getElementById('updateBanner').addEventListener('click', (e)=>{
+  if(e.target.id==='updateBanner') dismissUpdate(false);
+});
+
 /* =========================================================
    10. 초기 실행 · Init
    ========================================================= */
@@ -1957,6 +2145,7 @@ function registerAppWorker(){
     goTo('room');
   }
   replaceHist();
+  maybeShowUpdate();
 })();
 </script>
 </body>
