@@ -97,7 +97,10 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .icon-btn{border:none;background:var(--card-alt);color:var(--primary-dark);border-radius:12px;padding:9px 13px;font-size:0.85rem;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap;}
 .icon-btn[hidden]{display:none !important;}
 .icon-btn:active{background:var(--line);}
-.icon-btn.speaking{background:var(--accent);color:#fff;}
+.icon-btn.speaking{background:var(--danger);color:#fff;}
+.bubble-speak{margin-top:8px;padding:6px 10px;font-size:0.8rem;}
+#bigPlay{align-self:flex-start;margin-top:4px;}
+.bigview.rtl #bigPlay{align-self:flex-end;}
 .loading-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ink-soft);animation:pulse 1s infinite ease-in-out;}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
 
@@ -232,7 +235,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v1.4</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v1.5</span></div>
       </div>
     </div>
     <div class="section-title">지금 계신(또는 안내할) 치료실을 선택해주세요 · Select the room</div>
@@ -244,7 +247,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v1.4</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v1.5</span></div>
       </div>
     </div>
     <div class="back-row" style="padding-top:0;">
@@ -349,7 +352,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>⚙️ 설정</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v1.4</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v1.5</span></div>
       </div>
     </div>
     <div class="set-row" style="flex-direction:column;align-items:stretch;gap:6px;">
@@ -410,6 +413,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
       <div class="line1" id="bigLine1"></div>
       <div class="line2" id="bigLine2"></div>
     </div>
+    <button type="button" class="icon-btn" id="bigPlay" aria-label="재생">🔊 재생</button>
   </div>
 
   <div class="release-overlay hidden" id="releaseNotes">
@@ -427,7 +431,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="release-sheet" role="dialog" aria-modal="true" aria-labelledby="updateTitle" style="max-width:380px;">
       <div style="text-align:center;margin-bottom:12px;">
         <div style="font-size:2rem;">🎉</div>
-        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v1.4 업데이트</div>
+        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v1.5 업데이트</div>
         <div style="font-size:0.82rem;color:var(--ink-soft);line-height:1.55;margin-top:6px;">앱이 업데이트되었어요.<br>주요 변경사항을 확인해보세요.</div>
       </div>
       <ul class="release-list" id="updateLatest" style="margin-bottom:16px;"></ul>
@@ -443,8 +447,11 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 /* =========================================================
    1. 언어 정의 · Language definitions
    ========================================================= */
-const APP_VERSION = 'v1.4';
+const APP_VERSION = 'v1.5';
 const CHANGELOG = [
+  {version:'v1.5', date:'2026.11.24', items:[
+    '음성 재생 중 중지 버튼 추가'
+  ]},
   {version:'v1.4', date:'2026.11.24', items:[
     '업데이트 내역을 설정에서 볼 수 있습니다.',
     '새 버전이 있으면 안내 창이 뜹니다.'
@@ -1259,6 +1266,7 @@ function hideBig(){ document.getElementById('bigview').classList.add('hidden'); 
 
 function goTo(screen, opts){
   opts = opts || {};
+  stopSpeech();
   const changed = !!(currentScreen && currentScreen!==screen);
   if(!opts.isBack && !opts.noHist && changed){
     if(navStack[navStack.length-1]!==currentScreen) navStack.push(currentScreen);
@@ -1398,6 +1406,7 @@ function renderRoomChip(){
 }
 let roomRenderGen = 0;
 async function renderRoomIntroCard(){
+  stopSpeech();
   const gen = ++roomRenderGen;
   const r = roomObj(state.room);
   const l = langObj(state.lang);
@@ -1410,7 +1419,7 @@ async function renderRoomIntroCard(){
     <p id="roomTargetText"><span class="loading-dot"></span> <span class="loading-dot"></span> <span class="loading-dot"></span></p>
     <p class="tr-notice" id="roomNotice" hidden></p>
     <div class="card-actions">
-      <button class="icon-btn" id="roomPlayTarget">🔊 재생</button>
+      <button type="button" class="icon-btn" id="roomPlayTarget" aria-label="재생">🔊 재생</button>
       <button class="icon-btn" id="roomBigBtn">🔍 크게 보기</button>
       <button class="icon-btn" id="roomRetry" hidden>다시 시도</button>
     </div>
@@ -1435,8 +1444,8 @@ async function renderRoomIntroCard(){
     roomNotice.hidden = true;
     roomRetry.hidden = true;
   }
-  document.getElementById('roomPlayTarget').onclick = (e)=>speak(targetText, l.tts, e.target);
-  document.getElementById('roomBigBtn').onclick = ()=>showBigView(targetText, r.en_desc, l.rtl);
+  document.getElementById('roomPlayTarget').onclick = (e)=>speak(targetText, l.tts, e.currentTarget);
+  document.getElementById('roomBigBtn').onclick = ()=>showBigView(targetText, r.en_desc, l.rtl, l.tts);
 }
 
 /* ---------- Language picker ---------- */
@@ -1531,6 +1540,7 @@ document.getElementById('detailBackBtn').onclick = ()=>{
 /* ---------- Detail view ---------- */
 let detailGen = 0;
 async function openDetail(catId, idx){
+  stopSpeech();
   const gen = ++detailGen;
   state.currentCat = catId;
   state.currentTopicIdx = idx;
@@ -1545,7 +1555,7 @@ async function openDetail(catId, idx){
       <p id="targetText"><span class="loading-dot"></span> <span class="loading-dot"></span> <span class="loading-dot"></span></p>
       <p class="tr-notice" id="targetNotice" hidden></p>
       <div class="card-actions">
-        <button class="icon-btn" id="playTarget">🔊 재생</button>
+        <button type="button" class="icon-btn" id="playTarget" aria-label="재생">🔊 재생</button>
         <button class="icon-btn" id="bigBtn">🔍 크게 보기</button>
         <button class="icon-btn" id="copyBtn">📋 복사</button>
         <button class="icon-btn" id="targetRetry" hidden>다시 시도</button>
@@ -1556,7 +1566,7 @@ async function openDetail(catId, idx){
       <div class="lbl">🇺🇸 English</div>
       <p>${escHtml(topic.en)}</p>
       <div class="card-actions">
-        <button class="icon-btn" id="playEn">🔊 Play</button>
+        <button type="button" class="icon-btn" id="playEn" aria-label="재생">🔊 Play</button>
       </div>
     </div>`}
     <div class="content-card">
@@ -1584,22 +1594,25 @@ async function openDetail(catId, idx){
     targetRetry.hidden = true;
   }
 
-  document.getElementById('playTarget').onclick = (e)=>speak(targetText, l.tts, e.target);
+  document.getElementById('playTarget').onclick = (e)=>speak(targetText, l.tts, e.currentTarget);
   if(l.code!=='en'){
-    document.getElementById('playEn').onclick = (e)=>speak(topic.en, 'en-US', e.target);
+    document.getElementById('playEn').onclick = (e)=>speak(topic.en, 'en-US', e.currentTarget);
   }
   document.getElementById('copyBtn').onclick = ()=>{
     navigator.clipboard && navigator.clipboard.writeText(targetText);
     document.getElementById('copyBtn').textContent = '✅ 복사됨';
     setTimeout(()=>document.getElementById('copyBtn').textContent='📋 복사', 1500);
   };
-  document.getElementById('bigBtn').onclick = ()=>showBigView(targetText, topic.en, l.rtl);
+  document.getElementById('bigBtn').onclick = ()=>showBigView(targetText, topic.en, l.rtl, l.tts);
 }
 
 /* ---------- Big display overlay ---------- */
-function showBigView(line1, line2, rtl){
+function showBigView(line1, line2, rtl, langCode){
+  stopSpeech();
   document.getElementById('bigLine1').textContent = line1;
   document.getElementById('bigLine2').textContent = line2;
+  const play = document.getElementById('bigPlay');
+  play.onclick = ()=>speak(line1, langCode || langObj(state.lang).tts, play);
   const bv = document.getElementById('bigview');
   const wasOpen = !bv.classList.contains('hidden');
   bv.classList.toggle('rtl', !!rtl);
@@ -1609,7 +1622,7 @@ function showBigView(line1, line2, rtl){
 }
 document.getElementById('bigviewClose').onclick = ()=>{
   if(bigOpen() && histDepth>0) history.back();
-  else { hideBig(); updateBackTabState(); }
+  else { stopSpeech(); hideBig(); updateBackTabState(); }
 };
 
 /* =========================================================
@@ -1632,22 +1645,101 @@ function hasTtsVoice(bcp47){
     return false;
   });
 }
+let ttsToken = 0;
+let ttsButton = null;
+function ttsChunks(text){
+  const src = String(text||'');
+  if(!src.trim()) return [];
+  const MAX = 180;
+  if(src.length<=MAX) return [src];
+  const bits = src.split(/([.!?。！？]\s*|\n+)/);
+  const parts = [];
+  for(let i=0;i<bits.length;i+=2){
+    const piece = (bits[i]||'')+(bits[i+1]||'');
+    if(piece) parts.push(piece);
+  }
+  if(!parts.length) parts.push(src);
+  const chunks = [];
+  let cur = '';
+  function hard(s){
+    let buf = '';
+    for(const ch of s){
+      if(buf.length>=MAX){ chunks.push(buf); buf = ch; }
+      else buf += ch;
+    }
+    return buf;
+  }
+  parts.forEach(s=>{
+    if(s.length>MAX){
+      if(cur){ chunks.push(cur); cur = ''; }
+      cur = hard(s);
+    }else if((cur+s).length>MAX){
+      if(cur) chunks.push(cur);
+      cur = s;
+    }else cur += s;
+  });
+  if(cur) chunks.push(cur);
+  return chunks;
+}
+function resetSpeakButton(btn){
+  if(!btn) return;
+  btn.classList.remove('speaking');
+  if(btn.dataset.speakLabel) btn.textContent = btn.dataset.speakLabel;
+  btn.setAttribute('aria-label', btn.dataset.speakAria || '재생');
+  if(ttsButton===btn) ttsButton = null;
+}
+function markSpeaking(btn){
+  if(!btn) return;
+  if(!btn.dataset.speakLabel){
+    btn.dataset.speakLabel = btn.textContent;
+    btn.dataset.speakAria = btn.getAttribute('aria-label') || '재생';
+  }
+  btn.classList.add('speaking');
+  btn.textContent = btn.dataset.speakLabel.trim()==='🔊' ? '⏹' : '⏹ 중지';
+  btn.setAttribute('aria-label', '중지');
+  ttsButton = btn;
+}
+function stopSpeech(){
+  ttsToken++;
+  const btn = ttsButton;
+  ttsButton = null;
+  if('speechSynthesis' in window){
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+  }
+  resetSpeakButton(btn);
+}
 function speak(text, langCode, btnEl){
   if(!('speechSynthesis' in window)){
     alert('이 기기/브라우저는 음성 출력을 지원하지 않습니다. 화면의 글을 보여 주세요.');
     return;
   }
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = langCode;
-  if(btnEl){
-    btnEl.classList.add('speaking');
-    u.onend = ()=>btnEl.classList.remove('speaking');
-    u.onerror = ()=>btnEl.classList.remove('speaking');
+  if(btnEl && ttsButton===btnEl){
+    stopSpeech();
+    return;
   }
-  const matched = hasTtsVoice(langCode);
-  if(matched===false) updateVoiceUI();
-  window.speechSynthesis.speak(u);
+  stopSpeech();
+  const chunks = ttsChunks(text);
+  if(!chunks.length) return;
+  const token = ttsToken;
+  markSpeaking(btnEl);
+  chunks.forEach((part, i)=>{
+    const u = new SpeechSynthesisUtterance(part);
+    u.lang = langCode || '';
+    u.onend = ()=>{
+      if(token!==ttsToken) return;
+      if(i===chunks.length-1) resetSpeakButton(btnEl);
+    };
+    u.onerror = (ev)=>{
+      if(token!==ttsToken) return;
+      const err = (ev && ev.error) || '';
+      if(err==='interrupted' || err==='canceled' || err==='cancelled') return;
+      ttsToken++;
+      try{ window.speechSynthesis.cancel(); }catch(e){}
+      resetSpeakButton(btnEl);
+    };
+    window.speechSynthesis.speak(u);
+  });
+  if(hasTtsVoice(langCode)===false) updateVoiceUI();
 }
 if('speechSynthesis' in window){
   window.speechSynthesis.onvoiceschanged = ()=>{
@@ -1749,7 +1841,7 @@ micBtn.addEventListener('click', ()=>{
     return;
   }
   if(recognizing){ recognizer && recognizer.stop(); return; }
-  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  stopSpeech();
   recognizer = new SpeechRecognitionAPI();
   recognizer.lang = currentSttLang();
   recognizer.interimResults = false;
@@ -1786,17 +1878,32 @@ async function handleInterpretation(saidText){
     addBubble('me', saidText, true);
     const slot = addBubble('them', '…', false);
     const tr = await translateDetailed(saidText, l.code, 'ko', {noCache:true});
-    slot.textContent = tr.text;
+    const btn = fillSpeakBubble(slot, tr.text, l.tts);
     if(tr.origin==='fallback') showTrFail(tr.notice);
-    else { showTrFail(''); speak(tr.text, l.tts); }
+    else { showTrFail(''); speak(tr.text, l.tts, btn); }
   }else{
     addBubble('them', saidText, true);
     const slot = addBubble('me', '…', false);
     const tr = await translateDetailed(saidText, 'ko', l.code, {noCache:true});
-    slot.textContent = tr.text;
+    fillSpeakBubble(slot, tr.text, 'ko-KR');
     if(tr.origin==='fallback') showTrFail(tr.notice);
     else showTrFail('');
   }
+}
+function fillSpeakBubble(slot, text, langCode){
+  slot.textContent = '';
+  const body = document.createElement('div');
+  body.textContent = text;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'icon-btn bubble-speak';
+  btn.textContent = '🔊';
+  btn.setAttribute('aria-label', '재생');
+  btn.onclick = ()=>speak(text, langCode, btn);
+  slot.append(body, btn);
+  const wrap = document.getElementById('transcriptWrap');
+  if(wrap) wrap.scrollTop = wrap.scrollHeight;
+  return btn;
 }
 
 document.getElementById('typeSendBtn').onclick = ()=>{
