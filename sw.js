@@ -2,7 +2,7 @@
    HTML은 네트워크를 먼저 보되, 약 3.5초 안에 답이 없으면 저장본을 엽니다.
    네트워크 응답이 늦게 도착하면 캐시만 갱신합니다.
 */
-const CACHE = 'rehab-guide-v2';
+const CACHE = 'rehab-guide-v3';
 const FONT_CSS = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css';
 const NET_TIMEOUT_MS = 3500;
 
