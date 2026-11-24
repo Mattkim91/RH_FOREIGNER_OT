@@ -1,40 +1,10 @@
 /* 재활 연수자 가이드 서비스 워커
-   HTML은 네트워크 우선이라 온라인이면 옛 index.html에 갇히지 않습니다.
-   오프라인이면 마지막으로 저장한 페이지를 엽니다.
-   글꼴과 매니페스트는 캐시를 먼저 씁니다.
+   HTML은 네트워크를 먼저 보되, 약 3.5초 안에 답이 없으면 저장본을 엽니다.
+   네트워크 응답이 늦게 도착하면 캐시만 갱신합니다.
 */
-const CACHE = 'rehab-guide-v1';
+const CACHE = 'rehab-guide-v2';
 const FONT_CSS = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css';
-const ICON_192 = 'iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAACXBIWXMAAAABAAAAAQBPJcTWAAAB6klEQVR4nO3SMQ0AIADAMAygEA34f/HADkLSpAJ2bMy94Np4XsDXDERiIBIDkRiIxEAkBiIxEImBSAxEYiASA5EYiMRAJAYiMRCJgUgMRGIgEgORGIjEQCQGIjEQiYFIDERiIBIDkRiIxEAkBiIxEImBSAxEYiASA5EYiMRAJAYiMRCJgUgMRGIgEgORGIjEQCQGIjEQiYFIDERiIBIDkRiIxEAkBiIxEImBSAxEYiASA5EYiMRAJAYiMRCJgUgMRGIgEgORGIjEQCQGIjEQiYFIDERiIBIDkRiIxEAkBiIxEImBSAxEYiASA5EYiMRAJAYiMRCJgUgMRGIgEgORGIjEQCQGIjEQiYFIDERiIBIDkRiIxEAkBiIxEImBSAxEYiASA5EYiMRAJAYiMRCJgUgMRGIgEgORGIjEQCQGIjEQiYFIDERiIBIDkRiIxEAkBiIxEImBSAxEYiASA5EYiMRAJAYiMRCJgUgMRGIgEgORGIjEQCQGIjEQiYFIDERiIBIDkRiIxEAkBiIxEImBSAxEYiASA5EYiMRAJAYiMRCJgUgMRGIgEgORGIjEQCQGIjEQiYFIDERiIBIDkRiIxEAkBiIxEImBSAxEYiASA5EYiMRAJAYiMRCJgUgMRGIgEgORGIjEQCQGIjkpvdb6IVPongAAAABJRU5ErkJggg==';
-const ICON_512 = 'iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAACXBIWXMAAAABAAAAAQBPJcTWAAAHIElEQVR4nO3VMQ0AMAzAsBIYwmEY/3cwesSSAeTLnHcBCJr1AgBWGABAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEGQBAlAEARBkAQJQBAEQZAECUAQBEfW1RMe1UgsAiAAAAAElFTkSuQmCC';
-
-function pngResponse(b64){
-  const bin = atob(b64);
-  const bytes = new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
-  return new Response(bytes, {headers:{'Content-Type':'image/png', 'Cache-Control':'public, max-age=86400'}});
-}
-
-function manifestResponse(){
-  const scope = self.registration.scope;
-  const manifest = {
-    name: '재활치료실 연수자 가이드',
-    short_name: '재활가이드',
-    start_url: new URL('index.html', scope).href,
-    scope: scope,
-    display: 'standalone',
-    background_color: '#F1F4F1',
-    theme_color: '#0E6E5C',
-    lang: 'ko',
-    icons: [
-      {src: new URL('icon-192.png', scope).href, sizes:'192x192', type:'image/png', purpose:'any'},
-      {src: new URL('icon-512.png', scope).href, sizes:'512x512', type:'image/png', purpose:'any'}
-    ]
-  };
-  return new Response(JSON.stringify(manifest), {
-    headers:{'Content-Type':'application/manifest+json', 'Cache-Control':'no-cache'}
-  });
-}
+const NET_TIMEOUT_MS = 3500;
 
 async function cacheFonts(cache){
   const cssRes = await fetch(FONT_CSS, {mode:'cors'});
@@ -56,18 +26,31 @@ async function cacheFonts(cache){
   }));
 }
 
+function matchCached(cache, request){
+  return cache.match(request)
+    .then(hit => hit || cache.match('./index.html'))
+    .then(hit => hit || cache.match('./'));
+}
+
 async function networkFirst(request){
   const cache = await caches.open(CACHE);
-  try{
-    const fresh = await fetch(request);
-    if(fresh && fresh.ok){
-      try{ await cache.put(request, fresh.clone()); }catch(e){}
+  const cached = await matchCached(cache, request);
+  const net = fetch(request).then(res=>{
+    if(res && res.ok){
+      cache.put(request, res.clone()).catch(()=>{});
     }
-    return fresh;
+    return res;
+  });
+  let timer;
+  const timeout = new Promise(resolve => { timer = setTimeout(()=>resolve(null), NET_TIMEOUT_MS); });
+  try{
+    const fresh = await Promise.race([net.catch(()=>null), timeout]);
+    clearTimeout(timer);
+    if(fresh) return fresh;
+    if(cached) return cached;
+    return await net;
   }catch(e){
-    const cached = await cache.match(request)
-      || await cache.match('./index.html')
-      || await cache.match('./');
+    clearTimeout(timer);
     if(cached) return cached;
     return new Response('오프라인 상태이고 저장된 페이지가 없습니다.', {
       status:503, headers:{'Content-Type':'text/plain;charset=utf-8'}
@@ -80,7 +63,9 @@ async function cacheFirst(request){
   const hit = await cache.match(request);
   if(hit) return hit;
   const fresh = await fetch(request);
-  if(fresh && fresh.ok) await cache.put(request, fresh.clone());
+  if(fresh && fresh.ok){
+    try{ await cache.put(request, fresh.clone()); }catch(e){}
+  }
   return fresh;
 }
 
@@ -88,7 +73,10 @@ self.addEventListener('install', event=>{
   event.waitUntil((async ()=>{
     const cache = await caches.open(CACHE);
     const scope = self.registration.scope;
-    await cache.add(new URL('index.html', scope).href);
+    const files = ['index.html','manifest.webmanifest','icon-192.png','icon-512.png','apple-touch-icon.png'];
+    await Promise.all(files.map(async name=>{
+      try{ await cache.add(new URL(name, scope).href); }catch(e){}
+    }));
     try{ await cache.add(new URL('./', scope).href); }catch(e){}
     try{ await cacheFonts(cache); }catch(e){}
     await self.skipWaiting();
@@ -107,24 +95,12 @@ self.addEventListener('fetch', event=>{
   const req = event.request;
   if(req.method!=='GET') return;
   const url = new URL(req.url);
-  if(url.origin===self.location.origin && url.pathname.endsWith('/manifest.webmanifest')){
-    event.respondWith(manifestResponse());
-    return;
-  }
-  if(url.origin===self.location.origin && url.pathname.endsWith('/icon-192.png')){
-    event.respondWith(pngResponse(ICON_192));
-    return;
-  }
-  if(url.origin===self.location.origin && url.pathname.endsWith('/icon-512.png')){
-    event.respondWith(pngResponse(ICON_512));
-    return;
-  }
   const isHtml = req.mode==='navigate' || (url.origin===self.location.origin && (url.pathname.endsWith('.html') || url.pathname.endsWith('/')));
   if(isHtml){
     event.respondWith(networkFirst(req));
     return;
   }
-  if(url.hostname==='cdn.jsdelivr.net' || url.hostname.endsWith('.jsdelivr.net')){
+  if(url.origin===self.location.origin || url.hostname==='cdn.jsdelivr.net' || url.hostname.endsWith('.jsdelivr.net')){
     event.respondWith(cacheFirst(req));
   }
 });

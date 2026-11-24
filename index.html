@@ -2,15 +2,16 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#0E6E5C">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="재활 연수자 가이드">
 <title>재활치료실 외국인 연수자 응대 가이드</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230E6E5C'/%3E%3Cpath d='M15 60 Q30 60 35 45 T55 30 Q65 15 85 40' stroke='%23E3963E' stroke-width='7' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230E6E5C'/%3E%3Cpath d='M15 60 Q30 60 35 45 T55 30 Q65 15 85 40' stroke='%23E3963E' stroke-width='7' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
@@ -34,7 +35,7 @@ html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--ink);
   font-family:'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', 'Malgun Gothic', sans-serif;
   overscroll-behavior:none;}
 body{font-size:calc(16px * var(--font-size-scale));}
-#app{max-width:560px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);position:relative;}
+#app{max-width:560px;margin:0 auto;height:100vh;height:100dvh;max-height:100vh;max-height:100dvh;min-height:0;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden;}
 .hidden{display:none !important;}
 
 /* ---------- Top bar ---------- */
@@ -45,7 +46,7 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .lang-chip .flag{font-size:1.05rem;}
 
 /* ---------- Screens ---------- */
-.screen{flex:1;padding:0 16px 96px;overflow-y:auto;}
+.screen{flex:1;min-height:0;padding:0 16px 96px;overflow-y:auto;}
 .section-title{font-size:0.78rem;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;margin:18px 2px 10px;}
 
 /* ---------- Language picker ---------- */
@@ -92,8 +93,9 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .voice-note{font-size:0.68rem;font-weight:700;color:#7A5417;}
 .content-card p{margin:0;line-height:1.65;font-size:1rem;}
 .content-card.rtl p, .content-card.rtl{direction:rtl;text-align:right;}
-.card-actions{display:flex;gap:8px;margin-top:12px;}
-.icon-btn{border:none;background:var(--card-alt);color:var(--primary-dark);border-radius:12px;padding:9px 13px;font-size:0.85rem;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.icon-btn{border:none;background:var(--card-alt);color:var(--primary-dark);border-radius:12px;padding:9px 13px;font-size:0.85rem;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap;}
+.icon-btn[hidden]{display:none !important;}
 .icon-btn:active{background:var(--line);}
 .icon-btn.speaking{background:var(--accent);color:#fff;}
 .loading-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ink-soft);animation:pulse 1s infinite ease-in-out;}
@@ -118,11 +120,15 @@ body{font-size:calc(16px * var(--font-size-scale));}
 @keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(193,68,60,.45)}70%{box-shadow:0 0 0 22px rgba(193,68,60,0)}100%{box-shadow:0 0 0 0 rgba(193,68,60,0)}}
 .mic-hint{margin-top:12px;font-size:0.82rem;color:var(--ink-soft);font-weight:600;}
 .type-fallback{display:flex;gap:8px;margin-top:14px;}
-.type-fallback input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-size:0.95rem;font-family:inherit;}
+.type-fallback input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-size:16px;font-family:inherit;}
 .type-fallback button{background:var(--primary);color:#fff;border:none;border-radius:12px;padding:0 16px;font-weight:700;cursor:pointer;}
 .transcript{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
-#screen-interp{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0;}
+#screen-interp{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0;min-height:0;}
 #transcriptWrap{flex:1;min-height:0;overflow-y:auto;padding-bottom:96px;-webkit-overflow-scrolling:touch;}
+.topbar.has-chip{padding-right:68px;}
+.privacy-note{margin:8px 0 0;font-size:0.75rem;line-height:1.45;color:#7A5417;}
+#app.kb-open .mic-wrap{padding:8px 0 4px;}
+#app.kb-open .mic-btn{width:64px;height:64px;font-size:1.5rem;}
 .bubble{padding:12px 14px;border-radius:14px;max-width:88%;font-size:0.92rem;line-height:1.5;}
 .bubble.me{align-self:flex-end;background:var(--primary);color:#fff;border-bottom-right-radius:4px;}
 .bubble.them{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px;}
@@ -275,25 +281,26 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 
   <!-- ================= INTERPRETER ================= -->
   <section id="screen-interp" class="screen hidden">
-    <div class="topbar" style="padding-left:2px;padding-right:2px;">
+    <div class="topbar has-chip" style="padding-left:2px;">
       <div>
         <h1>🎙️ 실시간 통역</h1>
         <div class="sub">Live Two-way Interpreter</div>
       </div>
-      <div class="lang-chip" id="langChipInterp" onclick="goTo('lang')"></div>
+      <div class="lang-chip" id="langChipInterp" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div>
     </div>
     <div class="interp-toggle">
       <button id="dirKoToTarget" class="active">🇰🇷 제가 말해요 → 상대 언어</button>
       <button id="dirTargetToKo">🌍 상대방이 말해요 → 한국어</button>
     </div>
     <div class="mic-wrap">
-      <button class="mic-btn" id="micBtn">🎤</button>
+      <button class="mic-btn" id="micBtn" aria-label="음성 인식">🎤</button>
       <div class="mic-hint" id="micHint">버튼을 누르고 말씀하세요 · Tap and speak</div>
     </div>
     <div class="type-fallback">
       <input id="typeInput" placeholder="음성인식이 안 될 때 직접 입력하세요">
       <button id="typeSendBtn">번역</button>
     </div>
+    <p class="privacy-note">환자 개인정보(이름·등록번호 등)는 말하거나 입력하지 마세요.</p>
     <div id="voiceWarning"></div>
     <div id="trFailBanner"></div>
     <div id="transcriptWrap">
@@ -330,6 +337,11 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
         <h1>⚙️ 설정</h1>
         <div class="sub">Settings</div>
       </div>
+    </div>
+    <div class="set-row" style="flex-direction:column;align-items:stretch;gap:6px;">
+      <label class="lbl2" for="trEmail">번역 사용량 늘리기용 이메일 (선택)</label>
+      <input id="trEmail" type="email" inputmode="email" autocomplete="off" placeholder="선택 입력" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-family:inherit;font-size:16px;">
+      <div style="font-size:.75rem;color:var(--ink-soft);line-height:1.45;">병원 메일을 넣으면 MyMemory 무료 한도가 늘어날 수 있습니다. 주소는 이 기기에만 저장되고, 번역 요청에만 붙습니다.</div>
     </div>
     <div class="set-row">
       <div class="lbl2">글자 크기 · Text size</div>
@@ -375,7 +387,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 
   <!-- ================= BIG DISPLAY OVERLAY ================= -->
   <div class="bigview hidden" id="bigview">
-    <button class="close" id="bigviewClose">✕</button>
+    <button class="close" id="bigviewClose" aria-label="닫기">✕</button>
     <div class="big-text">
       <div class="line1" id="bigLine1"></div>
       <div class="line2" id="bigLine2"></div>
@@ -554,32 +566,64 @@ const ROOM_TOPICS = {
   exercise: {
     equipment: [
       {draft:true, title_ko:'평행봉과 보행 연습', title_en:'Parallel bars and gait practice',
-       ko:'평행봉을 잡고 서기와 걷기를 연습할 수 있습니다. 균형과 안전에 맞춰 돕는 정도를 조절합니다. (초안: 병원 장비 설명으로 바꾸세요.)',
-       en:'Standing and walking can be practiced while holding parallel bars. The amount of help is adjusted to balance and safety. (Draft: replace with this hospital\'s equipment description.)'},
+       ko:'평행봉을 잡고 서기와 걷기를 연습할 수 있습니다. 균형과 안전에 맞춰 돕는 정도를 조절합니다.',
+       en:'Standing and walking can be practiced while holding parallel bars. The amount of help is adjusted to balance and safety.'},
       {draft:true, title_ko:'근력 운동', title_en:'Strength exercise',
-       ko:'밴드나 체중을 이용한 저항 운동으로 근력을 연습합니다. 통증과 피로를 보며 강도를 조절합니다. (초안: 병원 장비 설명으로 바꾸세요.)',
-       en:'Strength is practiced with resistance from bands or body weight. Intensity is adjusted while watching pain and fatigue. (Draft: replace with this hospital\'s equipment description.)'},
+       ko:'밴드나 체중을 이용한 저항 운동으로 근력을 연습합니다. 통증과 피로를 보며 강도를 조절합니다.',
+       en:'Strength is practiced with resistance from bands or body weight. Intensity is adjusted while watching pain and fatigue.'},
     ],
     treatment: [
       {draft:true, title_ko:'관절가동범위 운동', title_en:'Range-of-motion exercise',
-       ko:'관절이 굳지 않도록 치료사가 움직임을 돕거나, 환자가 스스로 움직이는 연습을 합니다. (초안: 실제 치료 설명으로 바꾸세요.)',
-       en:'To limit joint stiffness, the therapist assists the movement or the patient practices moving independently. (Draft: replace with the real treatment description.)'},
+       ko:'관절이 굳지 않도록 치료사가 움직임을 돕거나, 환자가 스스로 움직이는 연습을 합니다.',
+       en:'To limit joint stiffness, the therapist assists the movement or the patient practices moving independently.'},
     ],
   },
   speech: {
     treatment: [
       {draft:true, title_ko:'삼킴과 식사 안전', title_en:'Swallowing and meal safety',
-       ko:'삼킴을 살펴보고, 자세나 음식 농도를 조정하는 연습을 할 수 있습니다. 사레들림을 줄이는 것이 목적입니다. (초안: 실제 치료 설명으로 바꾸세요.)',
-       en:'Swallowing can be assessed, and posture or food texture may be adjusted in practice. The aim is to reduce aspiration. (Draft: replace with the real treatment description.)'},
+       ko:'삼킴을 살펴보고, 자세나 음식 농도를 조정하는 연습을 할 수 있습니다. 사레들림을 줄이는 것이 목적입니다.',
+       en:'Swallowing can be assessed, and posture or food texture may be adjusted in practice. The aim is to reduce aspiration.'},
       {draft:true, title_ko:'의사소통 연습', title_en:'Communication practice',
-       ko:'말하기, 이해하기, 다른 방법으로 의사를 전하는 연습을 합니다. (초안: 실제 치료 설명으로 바꾸세요.)',
-       en:'Practice can include speaking, understanding, and other ways of conveying meaning. (Draft: replace with the real treatment description.)'},
+       ko:'말하기, 이해하기, 다른 방법으로 의사를 전하는 연습을 합니다.',
+       en:'Practice can include speaking, understanding, and other ways of conveying meaning.'},
     ],
   },
 };
 
 function escHtml(s){
   return String(s==null?'':s).replace(/[&<>]/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]));
+}
+function safeJson(raw, fallback){
+  try{
+    const v = JSON.parse(raw);
+    return v==null ? fallback : v;
+  }catch(e){ return fallback; }
+}
+function favKey(roomId, catId, topic){
+  return (roomId||'')+'::'+catId+'::'+(topic && topic.title_en || '');
+}
+function migrateFavorites(){
+  if(!Array.isArray(state.favorites)) state.favorites = [];
+  const next = [];
+  state.favorites.forEach(key=>{
+    if(typeof key!=='string') return;
+    if(key.includes('::')){ next.push(key); return; }
+    const m = key.match(/^(.*?)_(facility|equipment|treatment|system)_(\d+)$/);
+    if(m){
+      const topics = topicsFor(m[1], m[2]);
+      if(topics[Number(m[3])]) next.push(favKey(m[1], m[2], topics[Number(m[3])]));
+      return;
+    }
+    const m2 = key.match(/^(facility|equipment|treatment|system)_(\d+)$/);
+    if(m2){
+      const room = state.room || '';
+      const topics = topicsFor(room, m2[1]);
+      if(topics[Number(m2[2])]) next.push(favKey(room, m2[1], topics[Number(m2[2])]));
+    }
+  });
+  const uniq = [...new Set(next)];
+  state.favorites = uniq;
+  localStorage.setItem('guide_favs', JSON.stringify(uniq));
 }
 function topicsFor(roomId, catId){
   if(catId==='equipment' || catId==='treatment'){
@@ -597,7 +641,7 @@ function topicsFor(roomId, catId){
 let state = {
   lang: localStorage.getItem('guide_lang') || null,
   room: localStorage.getItem('guide_room') || null,
-  favorites: JSON.parse(localStorage.getItem('guide_favs') || '[]'),
+  favorites: safeJson(localStorage.getItem('guide_favs'), []),
   currentCat: null,
   currentTopicIdx: null,
   interpDir: 'ko2target',
@@ -996,34 +1040,114 @@ function throttleTr(){
   trQueue = run.then(()=>{}, ()=>{});
   return run;
 }
+function byteLength(s){
+  return new TextEncoder().encode(String(s)).length;
+}
+function splitTranslateChunks(text){
+  const MAX = 450;
+  const src = String(text||'');
+  if(byteLength(src) <= MAX) return [src];
+  const bits = src.split(/([.!?。！？]\s*|\n+)/);
+  const sentences = [];
+  for(let i=0;i<bits.length;i+=2){
+    const piece = (bits[i]||'')+(bits[i+1]||'');
+    if(piece) sentences.push(piece);
+  }
+  if(!sentences.length) sentences.push(src);
+  const chunks = [];
+  let cur = '';
+  function hardSplit(s){
+    let buf = '';
+    for(const ch of s){
+      if(buf && byteLength(buf+ch) > MAX){ chunks.push(buf); buf = ch; }
+      else buf += ch;
+    }
+    return buf;
+  }
+  sentences.forEach(s=>{
+    if(byteLength(s) > MAX){
+      if(cur){ chunks.push(cur); cur = ''; }
+      cur = hardSplit(s);
+    }else if(byteLength(cur+s) > MAX){
+      if(cur) chunks.push(cur);
+      cur = s;
+    }else cur += s;
+  });
+  if(cur) chunks.push(cur);
+  return chunks.length ? chunks : [src];
+}
+function decodeEntities(s){
+  const raw = String(s==null?'':s);
+  if(!/[&](#?\w+;)/.test(raw) && raw.indexOf('&')===-1) return raw;
+  const doc = new DOMParser().parseFromString('<!doctype html><body>'+raw, 'text/html');
+  return doc.body ? (doc.body.textContent || '') : raw;
+}
+function trEmail(){
+  const v = (localStorage.getItem('guide_tr_email') || '').trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? v : '';
+}
+function myMemoryUrl(text, sourceCode, targetCode){
+  let url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+sourceCode+'|'+targetCode;
+  const email = trEmail();
+  if(email) url += '&de='+encodeURIComponent(email);
+  return url;
+}
+function cacheSetItem(key, val){
+  try{ localStorage.setItem(key, val); return; }catch(e){}
+  try{
+    const keys = Object.keys(localStorage).filter(k=>k.startsWith('tr_') && k!==key);
+    const n = Math.max(1, Math.ceil(keys.length/2));
+    for(let i=0;i<n;i++) localStorage.removeItem(keys[i]);
+    localStorage.setItem(key, val);
+  }catch(e2){}
+}
+function clearInterpCache(){
+  Object.keys(localStorage).forEach(k=>{
+    if(k.startsWith('tr_') && !k.startsWith('tr_en_')) localStorage.removeItem(k);
+  });
+}
 
-/* 직접 번역이 있으면 API를 호출하지 않습니다. 오류 문장은 캐시하지 않습니다. */
-async function translateDetailed(text, targetCode, sourceCode='en', opts){
-  opts = opts || {};
-  if(targetCode===sourceCode) return {text:text, origin:'original', reason:'', notice:''};
-  const manual = lookupManual(text, targetCode, sourceCode);
-  if(manual) return {text:manual.text, origin:manual.status==='verified'?'verified':'draft', reason:'', notice:''};
-  const cacheKey = 'tr_'+sourceCode+'_'+targetCode+'_'+text;
-  const cached = localStorage.getItem(cacheKey);
-  if(cached && looksLikeTrError(cached)) localStorage.removeItem(cacheKey);
-  else if(cached) return {text:cached, origin:'cache', reason:'', notice:''};
-  if(quotaBlocked && !opts.force) return fallbackResult(text, sourceCode, 'quota');
+/* 직접 번역이 있으면 API를 호출하지 않습니다. 통역 문장은 캐시하지 않습니다. */
+async function fetchMyMemory(text, targetCode, sourceCode){
+  if(quotaBlocked) return fallbackResult(text, sourceCode, 'quota');
   try{
     await throttleTr();
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceCode}|${targetCode}`;
-    const res = await fetch(url);
+    const res = await fetch(myMemoryUrl(text, sourceCode, targetCode));
     let data = null;
     try{ data = await res.json(); }catch(e){ data = null; }
     const kind = classifyMyMemory(data, !!(res && res.ok));
     if(kind==='quota'){ quotaBlocked = true; return fallbackResult(text, sourceCode, 'quota'); }
     if(kind) return fallbackResult(text, sourceCode, kind);
-    const out = data.responseData.translatedText;
     quotaBlocked = false;
-    localStorage.setItem(cacheKey, out);
-    return {text:out, origin:'auto', reason:'', notice:''};
+    return {text:decodeEntities(data.responseData.translatedText), origin:'auto', reason:'', notice:''};
   }catch(e){
     return fallbackResult(text, sourceCode, 'network');
   }
+}
+async function translateDetailed(text, targetCode, sourceCode='en', opts){
+  opts = opts || {};
+  const noCache = !!opts.noCache;
+  if(targetCode===sourceCode) return {text:text, origin:'original', reason:'', notice:''};
+  const manual = lookupManual(text, targetCode, sourceCode);
+  if(manual) return {text:manual.text, origin:manual.status==='verified'?'verified':'draft', reason:'', notice:''};
+  const cacheKey = 'tr_'+sourceCode+'_'+targetCode+'_'+text;
+  if(!noCache){
+    const cached = localStorage.getItem(cacheKey);
+    if(cached && looksLikeTrError(cached)) localStorage.removeItem(cacheKey);
+    else if(cached) return {text:decodeEntities(cached), origin:'cache', reason:'', notice:''};
+  }
+  if(quotaBlocked && !opts.force) return fallbackResult(text, sourceCode, 'quota');
+  if(opts.force) quotaBlocked = false;
+  const chunks = splitTranslateChunks(text);
+  const parts = [];
+  for(let i=0;i<chunks.length;i++){
+    const one = await fetchMyMemory(chunks[i], targetCode, sourceCode);
+    if(one.origin==='fallback') return fallbackResult(text, sourceCode, one.reason);
+    parts.push(one.text);
+  }
+  const out = parts.join('');
+  if(!noCache) cacheSetItem(cacheKey, out);
+  return {text:out, origin:'auto', reason:'', notice:''};
 }
 async function translateText(text, targetCode, sourceCode='en'){
   const result = await translateDetailed(text, targetCode, sourceCode);
@@ -1035,34 +1159,99 @@ async function translateText(text, targetCode, sourceCode='en'){
    ========================================================= */
 let currentScreen = null;
 let navStack = [];
+let histDepth = 0;
+let homeReset = false;
+
+function bigOpen(){ return !document.getElementById('bigview').classList.contains('hidden'); }
+function histSnapshot(){
+  return {app:true, screen:currentScreen, stack:navStack.slice(), big:bigOpen(), depth:histDepth};
+}
+function replaceHist(){ try{ history.replaceState(histSnapshot(), ''); }catch(e){} }
+function pushHist(){
+  histDepth++;
+  try{ history.pushState(histSnapshot(), ''); }catch(e){}
+}
+function hideBig(){ document.getElementById('bigview').classList.add('hidden'); }
 
 function goTo(screen, opts){
   opts = opts || {};
-  if(!opts.isBack && currentScreen && currentScreen!==screen){
-    navStack.push(currentScreen);
+  const changed = !!(currentScreen && currentScreen!==screen);
+  if(!opts.isBack && !opts.noHist && changed){
+    if(navStack[navStack.length-1]!==currentScreen) navStack.push(currentScreen);
   }
   document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
-  document.getElementById('screen-'+screen).classList.remove('hidden');
+  const el = document.getElementById('screen-'+screen);
+  if(el) el.classList.remove('hidden');
   const tabbarVisible = !(screen==='topics' || screen==='detail');
   document.getElementById('tabbar').classList.toggle('hidden', !tabbarVisible);
   document.querySelectorAll('.tab-btn[data-tab]').forEach(b=>b.classList.toggle('active', b.dataset.tab===screen));
   currentScreen = screen;
   updateBackTabState();
-  window.scrollTo(0,0);
+  if(el) el.scrollTop = 0;
   if(screen==='interp' || screen==='lang') updateVoiceUI();
+  if(!opts.isBack && !opts.noHist && changed) pushHist();
 }
 
 function goBack(){
+  if(bigOpen()){
+    if(histDepth>0) history.back();
+    else { hideBig(); updateBackTabState(); }
+    return;
+  }
   if(navStack.length===0) return;
-  const prev = navStack.pop();
-  goTo(prev, {isBack:true});
+  if(histDepth>0) history.back();
+  else {
+    const prev = navStack.pop();
+    goTo(prev, {isBack:true, noHist:true});
+  }
+}
+
+function restoreHist(s){
+  histDepth = s.depth||0;
+  navStack = Array.isArray(s.stack) ? s.stack.slice() : [];
+  const bv = document.getElementById('bigview');
+  bv.classList.toggle('hidden', !s.big);
+  if(bv.classList.contains('hidden')===false) bv.classList.toggle('rtl', false);
+  goTo(s.screen||'room', {isBack:true, noHist:true});
+  updateBackTabState();
+}
+window.addEventListener('popstate', (e)=>{
+  const s = e.state;
+  if(homeReset){
+    homeReset = false;
+    histDepth = 0;
+    navStack = [];
+    hideBig();
+    goTo('room', {isBack:true, noHist:true});
+    replaceHist();
+    return;
+  }
+  if(!s || !s.app) return;
+  restoreHist(s);
+});
+
+function resetToHome(){
+  const d = histDepth;
+  navStack = [];
+  hideBig();
+  if(d>0){
+    homeReset = true;
+    history.go(-d);
+    return;
+  }
+  goTo('room', {isBack:true, noHist:true});
+  replaceHist();
 }
 
 function updateBackTabState(){
-  document.getElementById('tabBackBtn').classList.toggle('disabled', navStack.length===0);
+  const blocked = navStack.length===0 && !bigOpen();
+  document.getElementById('tabBackBtn').classList.toggle('disabled', blocked);
 }
 
-document.getElementById('tabBackBtn').addEventListener('click', goBack);
+document.getElementById('tabBackBtn').addEventListener('click', ()=>{
+  if(navStack.length===0 && !bigOpen()) return;
+  goBack();
+});
 
 document.getElementById('settingsFab').addEventListener('click', ()=>{
   if(!state.room){
@@ -1081,7 +1270,7 @@ document.getElementById('settingsFab').addEventListener('click', ()=>{
 document.querySelectorAll('.tab-btn[data-tab]').forEach(b=>{
   b.addEventListener('click', ()=>{
     const target = b.dataset.tab;
-    if(target==='room'){ goTo('room'); return; }
+    if(target==='room'){ resetToHome(); return; }
     if(!state.room){
       alert('치료실을 먼저 선택해주세요.\nPlease select a room first.');
       goTo('room');
@@ -1102,6 +1291,7 @@ ROOMS.forEach(r=>{
   const div = document.createElement('div');
   div.className = 'lang-card'+(state.room===r.id?' selected':'');
   div.innerHTML = `<div class="flag">${r.icon}</div><div class="name">${r.ko}</div><div class="native">${r.en}</div>`;
+  armClick(div);
   div.onclick = ()=>{
     document.querySelectorAll('#roomGrid .lang-card').forEach(c=>c.classList.remove('selected'));
     div.classList.add('selected');
@@ -1117,7 +1307,9 @@ function renderRoomChip(){
   document.getElementById('roomChipHome').innerHTML = `<span class="flag">${r.icon}</span>`;
   document.getElementById('roomChipHome').title = r.ko + ' · ' + r.en;
 }
+let roomRenderGen = 0;
 async function renderRoomIntroCard(){
+  const gen = ++roomRenderGen;
   const r = roomObj(state.room);
   const l = langObj(state.lang);
   document.getElementById('heroTitleKo').textContent = `환영합니다 👋 · ${r.ko}`;
@@ -1139,6 +1331,7 @@ async function renderRoomIntroCard(){
     </p>`}`;
   let tr = {text:r.en_desc, origin:'original', notice:'', reason:''};
   if(l.code!=='en') tr = await translateDetailed(r.en_desc, l.code, 'en');
+  if(gen!==roomRenderGen) return;
   const targetText = tr.text;
   document.getElementById('roomTargetText').textContent = targetText;
   applyTrBadge(document.getElementById('roomTrBadge'), tr.origin);
@@ -1163,6 +1356,7 @@ LANGS.forEach(l=>{
   const div = document.createElement('div');
   div.className = 'lang-card'+(state.lang===l.code?' selected':'');
   div.innerHTML = `<div class="flag">${l.flag}</div><div class="name">${l.name}</div><div class="native">${l.native}</div><div class="region">${l.region}</div><div class="voice-note" data-tts="${l.tts}" hidden></div>`;
+  armClick(div, l.name+' 선택');
   div.onclick = ()=>{
     document.querySelectorAll('.lang-card').forEach(c=>c.classList.remove('selected'));
     div.classList.add('selected');
@@ -1190,6 +1384,7 @@ CATEGORIES.forEach(cat=>{
     <div><div class="cat-title">${cat.title_ko}</div><div class="cat-desc">${cat.title_en} · ${cat.desc_en}</div></div>
     <div class="cat-arrow">›</div>`;
   div.onclick = ()=>openCategory(cat.id);
+  armClick(div, cat.title_ko);
   catGrid.appendChild(div);
 });
 
@@ -1216,13 +1411,14 @@ function openCategory(catId){
   list.innerHTML = '';
   const topics = topicsFor(state.room, catId);
   topics.forEach((t, idx)=>{
-    const key = (state.room||'')+'_'+catId+'_'+idx;
+    const key = favKey(state.room, catId, t);
     const isFav = state.favorites.includes(key);
     const div = document.createElement('div');
     div.className = 'topic-item';
     div.innerHTML = `<div><div class="topic-title">${escHtml(t.title_ko)}${t.draft?' <span class="draft-tag">초안</span>':''}</div><div style="font-size:.78rem;color:var(--ink-soft);">${escHtml(t.title_en)}</div></div>
       <div class="star ${isFav?'active':''}" data-key="${key}">${isFav?'★':'☆'}</div>`;
     div.onclick = ()=>openDetail(catId, idx);
+    armClick(div, t.title_ko);
     div.querySelector('.star').onclick = (e)=>{
       e.stopPropagation();
       toggleFav(key);
@@ -1238,13 +1434,19 @@ function toggleFav(key){
   if(i>-1) state.favorites.splice(i,1); else state.favorites.push(key);
   localStorage.setItem('guide_favs', JSON.stringify(state.favorites));
 }
-document.getElementById('detailBackBtn').onclick = ()=>openCategory(state.currentCat);
+document.getElementById('detailBackBtn').onclick = ()=>{
+  if(navStack.length && navStack[navStack.length-1]==='topics') goBack();
+  else openCategory(state.currentCat);
+};
 
 /* ---------- Detail view ---------- */
+let detailGen = 0;
 async function openDetail(catId, idx){
+  const gen = ++detailGen;
   state.currentCat = catId;
   state.currentTopicIdx = idx;
   const topic = topicsFor(state.room, catId)[idx];
+  if(!topic) return;
   const l = langObj(state.lang);
   const body = document.getElementById('detailBody');
   body.innerHTML = `
@@ -1277,6 +1479,7 @@ async function openDetail(catId, idx){
 
   let tr = {text:topic.en, origin:'original', notice:'', reason:''};
   if(l.code!=='en') tr = await translateDetailed(topic.en, l.code, 'en');
+  if(gen!==detailGen) return;
   const targetText = tr.text;
   document.getElementById('targetText').textContent = targetText;
   applyTrBadge(document.getElementById('targetTrBadge'), tr.origin);
@@ -1309,10 +1512,16 @@ function showBigView(line1, line2, rtl){
   document.getElementById('bigLine1').textContent = line1;
   document.getElementById('bigLine2').textContent = line2;
   const bv = document.getElementById('bigview');
+  const wasOpen = !bv.classList.contains('hidden');
   bv.classList.toggle('rtl', !!rtl);
   bv.classList.remove('hidden');
+  updateBackTabState();
+  if(!wasOpen) pushHist();
 }
-document.getElementById('bigviewClose').onclick = ()=>document.getElementById('bigview').classList.add('hidden');
+document.getElementById('bigviewClose').onclick = ()=>{
+  if(bigOpen() && histDepth>0) history.back();
+  else { hideBig(); updateBackTabState(); }
+};
 
 /* =========================================================
    6. 음성 출력 (TTS) · Text-to-speech
@@ -1431,13 +1640,27 @@ let recognizing = false;
 let recognizer = null;
 const micBtn = document.getElementById('micBtn');
 
+const STT_HINTS = {
+  'no-speech':'음성이 들리지 않았습니다. 다시 누르거나 아래 칸에 직접 입력하세요.',
+  'audio-capture':'마이크를 찾지 못했습니다. 아래 칸에 직접 입력해 주세요.',
+  'network':'음성 인식 서버에 연결하지 못했습니다. 아래 칸에 직접 입력해 주세요.',
+  'not-allowed':'마이크 권한을 허용해 주세요. 직접 입력도 가능합니다.',
+  'language-not-supported':'이 언어의 음성 인식을 쓸 수 없습니다. 아래 칸에 직접 입력해 주세요.',
+  'service-not-allowed':'이 브라우저에서 음성 인식을 쓸 수 없습니다. 아래 칸에 직접 입력해 주세요.',
+  'aborted':''
+};
+function showSttHint(msg){
+  const warn = document.getElementById('voiceWarning');
+  if(!warn) return;
+  warn.innerHTML = msg ? `<div class="banner">${msg}</div>` : '';
+}
 micBtn.addEventListener('click', ()=>{
   if(!sttAvailable()){
     updateVoiceUI();
     return;
   }
   if(recognizing){ recognizer && recognizer.stop(); return; }
-  const l = langObj(state.lang);
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
   recognizer = new SpeechRecognitionAPI();
   recognizer.lang = currentSttLang();
   recognizer.interimResults = false;
@@ -1446,11 +1669,14 @@ micBtn.addEventListener('click', ()=>{
   recognizer.onend = ()=>{ recognizing=false; micBtn.classList.remove('listening'); };
   recognizer.onerror = (e)=>{
     recognizing=false; micBtn.classList.remove('listening');
-    if(e.error==='not-allowed'){ alert('마이크 권한을 허용해주세요. Please allow microphone access.'); }
-    if(e.error==='language-not-supported' || e.error==='service-not-allowed'){
+    const code = e.error || '';
+    if(code==='language-not-supported' || code==='service-not-allowed'){
       sttUnsupported[recognizer.lang] = true;
       updateVoiceUI();
     }
+    const hint = STT_HINTS[code];
+    if(hint) showSttHint(hint);
+    else if(code && code!=='aborted') showSttHint('음성 인식을 시작하지 못했습니다. 아래 칸에 직접 입력해 주세요.');
   };
   recognizer.onresult = (e)=>{
     const said = e.results[0][0].transcript;
@@ -1466,16 +1692,19 @@ function showTrFail(notice){
 }
 async function handleInterpretation(saidText){
   const l = langObj(state.lang);
-  if(state.interpDir==='ko2target'){
+  const dir = state.interpDir;
+  if(dir==='ko2target'){
     addBubble('me', saidText, true);
-    const tr = await translateDetailed(saidText, l.code, 'ko');
-    addBubble('them', tr.text, false);
+    const slot = addBubble('them', '…', false);
+    const tr = await translateDetailed(saidText, l.code, 'ko', {noCache:true});
+    slot.textContent = tr.text;
     if(tr.origin==='fallback') showTrFail(tr.notice);
     else { showTrFail(''); speak(tr.text, l.tts); }
   }else{
     addBubble('them', saidText, true);
-    const tr = await translateDetailed(saidText, 'ko', l.code);
-    addBubble('me', tr.text, false);
+    const slot = addBubble('me', '…', false);
+    const tr = await translateDetailed(saidText, 'ko', l.code, {noCache:true});
+    slot.textContent = tr.text;
     if(tr.origin==='fallback') showTrFail(tr.notice);
     else showTrFail('');
   }
@@ -1499,6 +1728,7 @@ function addBubble(who, text, isOriginal){
   div.textContent = text;
   wrap.appendChild(div);
   scrollWrap.scrollTop = scrollWrap.scrollHeight;
+  return div;
 }
 
 /* =========================================================
@@ -1513,7 +1743,8 @@ const CHECK_ITEMS = [
   {ko:'질의응답', en:'Q&A'},
   {ko:'마무리 인사', en:'Closing'},
 ];
-let checkedState = JSON.parse(localStorage.getItem('guide_checks') || '[]');
+let checkedState = safeJson(localStorage.getItem('guide_checks'), []);
+if(!Array.isArray(checkedState)) checkedState = [];
 function renderChecklist(){
   const wrap = document.getElementById('checklistItems');
   wrap.innerHTML = '';
@@ -1522,6 +1753,7 @@ function renderChecklist(){
     const div = document.createElement('div');
     div.className = 'chk-item'+(done?' done':'');
     div.innerHTML = `<div class="box">${done?'✓':''}</div><div class="txt ${done?'done':''}">${item.ko} · ${item.en}</div>`;
+    armClick(div, item.ko);
     div.onclick = ()=>{
       const idx = checkedState.indexOf(i);
       if(idx>-1) checkedState.splice(idx,1); else checkedState.push(i);
@@ -1533,19 +1765,56 @@ function renderChecklist(){
 }
 renderChecklist();
 
-let timerSeconds = 0, timerRunning=false, timerInterval=null;
+let timerAccum = 0, timerStart = null, timerRunning = false, timerInterval = null;
 function fmt(s){ const m=Math.floor(s/60).toString().padStart(2,'0'); const sec=(s%60).toString().padStart(2,'0'); return m+':'+sec; }
-document.getElementById('timerToggle').onclick = (e)=>{
-  timerRunning = !timerRunning;
-  e.target.textContent = timerRunning ? '일시정지' : '시작';
+function loadTimer(){
+  const s = safeJson(localStorage.getItem('guide_timer'), null);
+  if(!s || typeof s!=='object') return;
+  timerAccum = Number(s.accum)||0;
+  timerStart = s.running && s.start ? Number(s.start) : null;
+  timerRunning = !!(s.running && timerStart);
+}
+function saveTimer(){
+  try{ localStorage.setItem('guide_timer', JSON.stringify({accum:timerAccum, start:timerStart, running:timerRunning})); }catch(e){}
+}
+function elapsedMs(){
+  return timerAccum + (timerRunning && timerStart ? Math.max(0, Date.now()-timerStart) : 0);
+}
+function renderTimer(){
+  const sec = Math.floor(elapsedMs()/1000);
+  document.getElementById('timerDisplay').textContent = fmt(sec);
+  document.getElementById('timerToggle').textContent = timerRunning ? '일시정지' : '시작';
+}
+function startTimerLoop(){
+  if(timerInterval) clearInterval(timerInterval);
+  if(!timerRunning) return;
+  timerInterval = setInterval(renderTimer, 250);
+}
+loadTimer();
+renderTimer();
+startTimerLoop();
+document.addEventListener('visibilitychange', renderTimer);
+document.getElementById('timerToggle').onclick = ()=>{
   if(timerRunning){
-    timerInterval = setInterval(()=>{ timerSeconds++; document.getElementById('timerDisplay').textContent = fmt(timerSeconds); }, 1000);
-  }else{ clearInterval(timerInterval); }
+    timerAccum += Math.max(0, Date.now()-timerStart);
+    timerStart = null;
+    timerRunning = false;
+    clearInterval(timerInterval);
+  }else{
+    timerStart = Date.now();
+    timerRunning = true;
+    startTimerLoop();
+  }
+  saveTimer();
+  renderTimer();
 };
 document.getElementById('timerReset').onclick = ()=>{
-  timerRunning=false; clearInterval(timerInterval); timerSeconds=0;
-  document.getElementById('timerDisplay').textContent='00:00';
-  document.getElementById('timerToggle').textContent='시작';
+  timerRunning = false;
+  timerStart = null;
+  timerAccum = 0;
+  clearInterval(timerInterval);
+  saveTimer();
+  renderTimer();
 };
 
 /* =========================================================
@@ -1623,28 +1892,58 @@ async function prefetchCurrentLang(){
 }
 document.getElementById('prefetchRow').onclick = ()=>{ prefetchCurrentLang(); };
 
-function attachManifest(){
-  if(document.querySelector('link[rel="manifest"]')) return;
-  const link = document.createElement('link');
-  link.rel = 'manifest';
-  link.href = 'manifest.webmanifest';
-  document.head.appendChild(link);
+function armClick(el, label){
+  if(!el || el.dataset.armed) return;
+  el.dataset.armed = '1';
+  if(!el.getAttribute('role')) el.setAttribute('role','button');
+  if(!el.hasAttribute('tabindex')) el.tabIndex = 0;
+  if(label && !el.getAttribute('aria-label')) el.setAttribute('aria-label', label);
+  el.addEventListener('keydown', (e)=>{
+    if(e.key==='Enter' || e.key===' '){ e.preventDefault(); el.click(); }
+  });
+}
+function fitAppHeight(){
+  const app = document.getElementById('app');
+  const vv = window.visualViewport;
+  const h = vv ? vv.height : window.innerHeight;
+  app.style.height = Math.round(h)+'px';
+  const base = window.innerHeight || h;
+  app.classList.toggle('kb-open', !!(vv && base-vv.height>120));
 }
 function registerAppWorker(){
   if(!('serviceWorker' in navigator)) return;
   if(location.protocol==='file:') return;
-  navigator.serviceWorker.register('./sw.js').then(reg=>{
-    if(navigator.serviceWorker.controller) attachManifest();
-    reg.update();
-  }).catch(()=>{});
-  navigator.serviceWorker.addEventListener('controllerchange', attachManifest);
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
 
 /* =========================================================
    10. 초기 실행 · Init
    ========================================================= */
 (function init(){
+  if(!Array.isArray(state.favorites)) state.favorites = [];
+  migrateFavorites();
+  clearInterpCache();
   registerAppWorker();
+  fitAppHeight();
+  window.addEventListener('resize', fitAppHeight);
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', fitAppHeight);
+    window.visualViewport.addEventListener('scroll', fitAppHeight);
+  }
+  const email = document.getElementById('trEmail');
+  email.value = localStorage.getItem('guide_tr_email') || '';
+  email.addEventListener('change', ()=>{ localStorage.setItem('guide_tr_email', email.value.trim()); });
+  document.getElementById('typeInput').addEventListener('focus', ()=>{
+    fitAppHeight();
+    setTimeout(()=>document.getElementById('typeInput').scrollIntoView({block:'nearest'}), 80);
+  });
+  document.querySelectorAll('#screen-settings .set-row').forEach(row=>{
+    if(row.querySelector('button,input')) return;
+    armClick(row);
+  });
+  armClick(document.getElementById('roomChipHome'), '치료실 변경');
+  armClick(document.getElementById('langChipHome'), '언어 변경');
+  armClick(document.getElementById('langChipInterp'), '언어 변경');
   updateVoiceUI();
   if(state.room && state.lang){
     renderRoomChip();
@@ -1657,6 +1956,7 @@ function registerAppWorker(){
   }else{
     goTo('room');
   }
+  replaceHist();
 })();
 </script>
 </body>
