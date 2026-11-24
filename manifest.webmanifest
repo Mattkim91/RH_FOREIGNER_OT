@@ -1,0 +1,14 @@
+{
+  "name": "재활치료실 연수자 가이드",
+  "short_name": "재활가이드",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F1F4F1",
+  "theme_color": "#0E6E5C",
+  "lang": "ko",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}
