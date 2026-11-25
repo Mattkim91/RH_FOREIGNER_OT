@@ -242,7 +242,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v1.7</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v1.8</span></div>
       </div>
     </div>
     <div class="section-title">지금 계신(또는 안내할) 치료실을 선택해주세요 · Select the room</div>
@@ -254,7 +254,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v1.7</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v1.8</span></div>
       </div>
     </div>
     <div class="back-row" style="padding-top:0;">
@@ -361,7 +361,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>⚙️ 설정</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v1.7</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v1.8</span></div>
       </div>
     </div>
     <div class="set-row" style="flex-direction:column;align-items:stretch;gap:6px;">
@@ -451,7 +451,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="release-sheet" role="dialog" aria-modal="true" aria-labelledby="updateTitle" style="max-width:380px;">
       <div style="text-align:center;margin-bottom:12px;">
         <div style="font-size:2rem;">🎉</div>
-        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v1.7 업데이트</div>
+        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v1.8 업데이트</div>
         <div style="font-size:0.82rem;color:var(--ink-soft);line-height:1.55;margin-top:6px;">앱이 업데이트되었어요.<br>주요 변경사항을 확인해보세요.</div>
       </div>
       <ul class="release-list" id="updateLatest" style="margin-bottom:16px;"></ul>
@@ -467,8 +467,13 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 /* =========================================================
    1. 언어 정의 · Language definitions
    ========================================================= */
-const APP_VERSION = 'v1.7';
+const APP_VERSION = 'v1.8';
 const CHANGELOG = [
+  {version:'v1.8', date:'2026.11.26', items:[
+    '치료실 11곳마다 소개, 장비, 치료법, 시스템 내용을 보강했습니다.',
+    '새 내용은 대학병원 재활의학과의 일반 내용을 바탕으로 한 초안입니다.',
+    '번역 미리 받기는 지금 선택한 치료실부터 받습니다.'
+  ]},
   {version:'v1.7', date:'2026.11.26', items:[
     '통역에 동시통역 모드를 추가했습니다. 한 번 누르면 두 언어를 구분해 통역하고 읽어 줍니다.',
     '동시통역은 Gemini 키가 필요합니다. 설정에서 넣으면 이 기기에만 저장됩니다.'
@@ -594,6 +599,9 @@ const CATEGORIES = [
       {title_ko:'다학제팀 구성', title_en:'Multidisciplinary Team',
        ko:'재활의학과 전문의, 물리치료사, 작업치료사, 언어치료사, 간호사가 하나의 팀으로 협력하여 환자의 회복을 돕습니다.',
        en:'A rehabilitation physician, physical therapists, occupational therapists, speech-language therapists, and nurses work together as one team to support patient recovery.'},
+      {draft:true, title_ko:'참관 안내', title_en:'Observation Etiquette',
+       ko:'참관 전에 환자의 동의를 확인하고, 치료사의 안내에 따라 움직여 주세요. 사진과 동영상 촬영, 환자 정보 기록은 사전 허가 없이 할 수 없습니다. 이동하기 전후에는 손 위생을 해 주세요.',
+       en:'Please observe only with the patient\'s consent and follow the therapist\'s guidance. Photos, videos, and notes of patient information require prior permission. Please clean your hands before and after each room.'},
     ]},
   { id:'equipment', icon:'🦾', title_ko:'치료장비 소개', title_en:'Equipment Introduction',
     desc_ko:'주요 재활 장비 소개', desc_en:'Key rehabilitation devices',
@@ -657,14 +665,25 @@ const CATEGORIES = [
       {title_ko:'감염관리 원칙 개요', title_en:'Infection Control Principles',
        ko:'공기주의, 비말주의, 접촉주의 등 격리 유형에 따라 개인보호구 착용과 장비 소독 절차가 다르게 적용됩니다.',
        en:'Depending on the isolation type — airborne, droplet, or contact precautions — personal protective equipment use and equipment disinfection procedures differ.'},
+      {draft:true, title_ko:'재활 목표 설정', title_en:'Rehabilitation Goal Setting',
+       ko:'환자와 보호자의 바람, 기능 평가 결과, 퇴원 후 환경을 함께 고려해 단기 목표와 장기 목표를 세웁니다. 신체 기능뿐 아니라 활동과 사회 참여까지 살피는 국제기능장애건강분류(ICF)의 관점을 따릅니다.',
+       en:'Short-term and long-term goals reflect the wishes of the patient and family, functional assessment, and the discharge environment. We consider body function, activity, and participation, in line with the ICF framework.'},
+      {draft:true, title_ko:'환자 안전과 낙상 예방', title_en:'Patient Safety & Fall Prevention',
+       ko:'치료 전에 환자를 정확히 확인하고 활력징후, 통증, 주의사항을 살핍니다. 낙상 위험이 있는 환자는 보행벨트 착용과 근접 보조로 보호하며, 이상 증상이 있으면 치료를 멈추고 의료진에게 알립니다.',
+       en:'Before treatment, we verify patient identity and check vital signs, pain, and precautions. Patients at risk of falling are protected with a gait belt and close assistance. If symptoms appear, treatment stops and the medical team is informed.'},
+      {draft:true, title_ko:'퇴원 계획과 지역사회 연계', title_en:'Discharge Planning & Community Care',
+       ko:'입원 초기부터 퇴원 후의 생활을 준비합니다. 가정 운동, 보호자 교육, 보조기구, 주거 환경을 점검하고 필요하면 재활병원, 외래 치료, 지역사회 서비스로 연계합니다.',
+       en:'Planning for life after discharge starts early in the hospital stay. We review home exercise, caregiver training, assistive devices, and the home environment, and refer patients to rehabilitation hospitals, outpatient care, or community services when needed.'},
     ]},
 ];
 
 /* =========================================================
    2-2. 치료실별 주제 · Room-specific topics
    ---------------------------------------------------------
-   장비 소개(equipment)와 치료법 소개(treatment)만 방마다 다르게 넣을 수 있습니다.
-   치료실 소개(facility)와 재활 시스템(system)은 모든 방이 위의 공통 주제를 씁니다.
+   네 항목(facility, equipment, treatment, system) 모두 방마다 다르게 넣을 수 있습니다.
+   장비 소개(equipment)와 치료법 소개(treatment)는 방 목록이 있으면 그 목록만 보여 줍니다.
+   치료실 소개(facility)는 환영 인사 다음에 방 목록, 그 뒤에 나머지 공통 주제가 나옵니다.
+   재활 시스템(system)은 방 목록 다음에 공통 주제가 나옵니다.
 
    넣는 방법
    1) 아래 id 중 치료실을 고릅니다.
@@ -672,40 +691,639 @@ const CATEGORIES = [
       lymphedema 림프부종치료실 · neuro 뇌신경재활치료실 · pulmonary 호흡재활치료실
       cardiac 심장재활치료실 · pediatric 소아재활치료실 · function_test 임상재활기능검사실
       ultrasound 초음파실
-   2) equipment 또는 treatment 배열에 주제를 추가합니다.
+   2) facility, equipment, treatment, system 배열에 주제를 추가합니다.
       한 주제는 title_ko, title_en, ko, en 입니다.
-   3) 그 배열에 주제가 하나라도 있으면 그 방의 그 항목은 이 목록만 보여 줍니다.
+   3) equipment, treatment는 주제가 하나라도 있으면 이 목록만 보여 줍니다.
       배열이 없거나 비어 있으면 위 CATEGORIES의 공통 주제로 돌아갑니다.
       공통 주제를 앞에 두고 싶으면 그 문장도 이 배열에 복사해 넣으세요.
    4) 아직 병원 내용이 아니면 draft:true 를 붙이세요. 목록에 '초안'이 표시됩니다.
       실제 내용으로 바꾼 뒤 draft 줄을 지우세요.
 
-   아래 exercise, speech 항목은 예시 초안입니다. 이 병원 사실이 아니니 바꿔 주세요.
+   아래 내용은 대학병원 재활의학과의 일반 내용으로 쓴 초안입니다.
+   이 병원에서 확인한 사실이 아니니, 확인한 주제만 draft:true 를 지워 주세요.
    ========================================================= */
 const ROOM_TOPICS = {
   exercise: {
+    facility: [
+      {draft:true, title_ko:'운동치료실의 역할', title_en:'Role of the Exercise Room',
+       ko:'수술, 근골격계 손상, 신경계 질환, 오랜 침상 생활로 약해진 환자의 근력, 관절 움직임, 균형, 보행 회복을 돕습니다. 환자 상태에 따라 운동의 종류와 강도를 조절합니다.',
+       en:'The exercise room helps patients regain strength, joint motion, balance, and walking after surgery, injury, neurological disease, or prolonged bed rest. The type and intensity of exercise are adjusted to each patient.'},
+      {draft:true, title_ko:'치료 공간의 구역', title_en:'Treatment Zones',
+       ko:'치료 테이블과 매트에서 하는 개별 치료, 근력과 지구력 운동, 균형과 보행 훈련을 구역별로 나누어 진행합니다. 휠체어와 침대가 지나갈 수 있도록 이동 통로를 비워 둡니다.',
+       en:'Individual treatment on tables and mats, strength and endurance exercise, and balance and gait training take place in separate zones. Pathways are kept clear for wheelchairs and beds.'},
+      {draft:true, title_ko:'운동 중 안전 관리', title_en:'Safety During Exercise',
+       ko:'운동 전후와 필요할 때 혈압, 맥박, 산소포화도, 통증, 피로를 확인합니다. 어지럼, 가슴 통증, 심한 호흡곤란이 생기면 즉시 멈추고 의료진에게 알립니다.',
+       en:'Blood pressure, heart rate, oxygen saturation, pain, and fatigue are checked before, during, and after exercise as needed. Exercise stops immediately for dizziness, chest pain, or severe breathlessness, and the medical team is informed.'},
+    ],
     equipment: [
-      {draft:true, title_ko:'평행봉과 보행 연습', title_en:'Parallel bars and gait practice',
-       ko:'평행봉을 잡고 서기와 걷기를 연습할 수 있습니다. 균형과 안전에 맞춰 돕는 정도를 조절합니다.',
-       en:'Standing and walking can be practiced while holding parallel bars. The amount of help is adjusted to balance and safety.'},
-      {draft:true, title_ko:'근력 운동', title_en:'Strength exercise',
-       ko:'밴드나 체중을 이용한 저항 운동으로 근력을 연습합니다. 통증과 피로를 보며 강도를 조절합니다.',
-       en:'Strength is practiced with resistance from bands or body weight. Intensity is adjusted while watching pain and fatigue.'},
+      {draft:true, title_ko:'치료 테이블과 매트', title_en:'Treatment Tables & Mats',
+       ko:'높이를 조절하는 치료 테이블과 넓은 매트에서 관절 운동, 스트레칭, 구르기, 앉기, 일어서기를 연습합니다. 환자의 이동을 돕고 치료사의 허리 부담도 줄여 줍니다.',
+       en:'Height-adjustable tables and wide mats are used for joint exercise, stretching, rolling, sitting, and standing practice. They make transfers easier and reduce strain on the therapist\'s back.'},
+      {draft:true, title_ko:'경사대', title_en:'Tilt Table',
+       ko:'오래 누워 지내 서기 어려운 환자를 안전하게 고정하고 각도를 조금씩 높여 선 자세에 적응하게 합니다. 기립성 저혈압을 살피기 위해 혈압과 증상을 확인합니다.',
+       en:'A tilt table safely supports patients who cannot stand after long bed rest and gradually raises them toward upright. Blood pressure and symptoms are monitored for orthostatic hypotension.'},
+      {draft:true, title_ko:'평행봉과 보행 보조기구', title_en:'Parallel Bars & Walking Aids',
+       ko:'평행봉에서 서기와 체중 이동, 첫걸음을 연습한 뒤 워커, 목발, 지팡이로 단계를 올립니다. 보조기구의 높이와 사용법을 환자에게 맞추어 교육합니다.',
+       en:'Patients practice standing, weight shifting, and first steps in the parallel bars, then progress to a walker, crutches, or a cane. Each aid is fitted and its use is taught individually.'},
+      {draft:true, title_ko:'트레드밀과 체중지지 장치', title_en:'Treadmill & Body-Weight Support',
+       ko:'하네스로 체중의 일부를 덜어 주면서 트레드밀이나 평지에서 걷는 연습을 반복합니다. 낙상 걱정을 줄이고 충분한 보행 연습량을 확보하는 데 도움이 됩니다.',
+       en:'A harness supports part of the body weight while the patient repeats walking on a treadmill or over ground. It reduces the fear of falling and allows enough walking practice.'},
+      {draft:true, title_ko:'자전거와 상하지 에르고미터', title_en:'Cycles & Ergometers',
+       ko:'고정식 자전거와 상하지 에르고미터로 지구력과 관절 움직임을 기릅니다. 앉은 자세나 누운 자세에서도 할 수 있어 걷기 어려운 환자도 유산소 운동을 할 수 있습니다.',
+       en:'Stationary cycles and arm-leg ergometers build endurance and joint motion. They can be used sitting or reclined, so patients who cannot walk can still do aerobic exercise.'},
+      {draft:true, title_ko:'근력 운동기구와 지속적 수동운동기', title_en:'Strength Devices & CPM',
+       ko:'도르래, 탄력밴드, 중량 기구로 저항을 단계적으로 늘립니다. 지속적 수동운동기(CPM)는 수술 후 처방에 따라 정해진 각도 안에서 관절을 천천히 움직여 줍니다.',
+       en:'Pulleys, elastic bands, and weights provide gradually increasing resistance. A continuous passive motion (CPM) device slowly moves a joint within a prescribed range after surgery.'},
     ],
     treatment: [
-      {draft:true, title_ko:'관절가동범위 운동', title_en:'Range-of-motion exercise',
-       ko:'관절이 굳지 않도록 치료사가 움직임을 돕거나, 환자가 스스로 움직이는 연습을 합니다.',
-       en:'To limit joint stiffness, the therapist assists the movement or the patient practices moving independently.'},
+      {draft:true, title_ko:'관절가동범위 운동', title_en:'Range-of-Motion Exercise',
+       ko:'관절이 굳지 않도록 치료사가 움직여 주는 수동 운동, 도와주며 하는 능동보조 운동, 스스로 하는 능동 운동을 합니다. 통증과 수술 후 제한 각도를 지킵니다.',
+       en:'Passive, active-assisted, and active exercises prevent joint stiffness. Pain limits and post-surgical motion restrictions are respected.'},
+      {draft:true, title_ko:'근력 강화 운동', title_en:'Strengthening Exercise',
+       ko:'근력 평가 결과에 따라 맨몸, 탄력밴드, 중량으로 저항을 조절합니다. 앉았다 일어서기나 계단 오르기처럼 일상 동작과 연결된 운동을 함께 합니다.',
+       en:'Resistance from body weight, bands, or weights is chosen from strength testing. Functional tasks such as sit-to-stand and stair climbing are included.'},
+      {draft:true, title_ko:'균형 훈련', title_en:'Balance Training',
+       ko:'앉은 자세에서 시작해 선 자세, 한 발 서기, 불안정한 바닥으로 난이도를 높입니다. 걷거나 방향을 바꾸면서 균형을 잡는 연습으로 낙상 위험을 줄입니다.',
+       en:'Training progresses from sitting to standing, single-leg stance, and unstable surfaces. Balancing while walking and turning is practiced to reduce fall risk.'},
+      {draft:true, title_ko:'보행 훈련', title_en:'Gait Training',
+       ko:'보행 양상을 관찰하고 체중 이동, 발 딛기, 걸음 길이와 속도를 교정합니다. 평지에서 시작해 장애물, 경사로, 계단으로 넓혀 갑니다.',
+       en:'We observe the gait pattern and work on weight shift, foot placement, step length, and speed. Practice moves from level ground to obstacles, ramps, and stairs.'},
+      {draft:true, title_ko:'조기 가동', title_en:'Early Mobilization',
+       ko:'수술이나 중증 질환 이후 상태가 안정되면 가능한 한 일찍 앉기, 서기, 걷기를 시작합니다. 근력 저하와 폐 합병증, 침상 안정으로 인한 문제를 줄이는 것이 목적입니다.',
+       en:'Once the patient is stable after surgery or critical illness, sitting, standing, and walking begin as early as possible. The aim is to limit weakness, lung complications, and other effects of bed rest.'},
+      {draft:true, title_ko:'수술 후 근골격계 재활', title_en:'Post-Surgical Musculoskeletal Rehab',
+       ko:'인공관절, 골절, 척추 수술 후에는 수술 방법과 회복 시기에 따른 체중부하와 움직임 제한을 지킵니다. 부종과 통증을 조절하면서 관절 움직임과 근력을 단계적으로 회복합니다.',
+       en:'After joint replacement, fracture, or spine surgery, weight-bearing and movement restrictions are followed for each procedure and stage. Motion and strength are restored step by step while controlling swelling and pain.'},
+    ],
+    system: [
+      {draft:true, title_ko:'물리치료 평가', title_en:'Physical Therapy Assessment',
+       ko:'관절가동범위, 근력, 통증, 감각, 균형, 보행을 평가합니다. 버그균형척도, 일어나 걷기 검사(TUG), 10미터 보행, 6분 보행 같은 표준 검사를 환자에게 맞게 사용합니다.',
+       en:'Range of motion, strength, pain, sensation, balance, and gait are assessed. Standard tests such as the Berg Balance Scale, Timed Up and Go, 10-meter walk, and 6-minute walk are chosen for each patient.'},
+      {draft:true, title_ko:'병동과의 연계', title_en:'Coordination With the Ward',
+       ko:'치료실에서 가능해진 동작을 병동에서도 이어 가도록 간호팀, 보호자와 이동 방법과 주의사항을 공유합니다. 담당 의사와는 체중부하와 운동 제한을 확인합니다.',
+       en:'Transfer methods and precautions are shared with nurses and caregivers so that skills gained in therapy continue on the ward. Weight-bearing and exercise limits are confirmed with the physician.'},
+    ],
+  },
+  ot: {
+    facility: [
+      {draft:true, title_ko:'작업치료실의 역할', title_en:'Role of the OT Room',
+       ko:'질병이나 손상으로 어려워진 식사, 옷 입기, 씻기, 글쓰기 같은 의미 있는 활동을 다시 할 수 있도록 돕습니다. 상지 기능, 인지, 시지각, 일상생활을 함께 다룹니다.',
+       en:'Occupational therapy helps patients return to meaningful activities such as eating, dressing, washing, and writing. It addresses upper-limb function, cognition, visual perception, and daily living together.'},
+      {draft:true, title_ko:'일상생활 훈련 공간', title_en:'Daily Living Training Area',
+       ko:'침실, 욕실, 주방과 비슷한 환경에서 실제 생활 동작을 연습합니다. 손잡이 위치와 의자 높이 등을 바꾸어 보며 집에서 필요한 조건을 미리 확인합니다.',
+       en:'Real-life tasks are practiced in settings similar to a bedroom, bathroom, and kitchen. Grab-bar positions and seat heights are tried to plan what the patient needs at home.'},
+      {draft:true, title_ko:'인지·지각 치료 공간', title_en:'Cognitive & Perceptual Area',
+       ko:'주의 집중이 필요한 치료는 소음과 자극이 적은 조용한 공간에서 진행합니다. 환자의 집중 시간과 피로에 맞추어 과제의 길이와 난이도를 조절합니다.',
+       en:'Therapy that needs concentration takes place in a quiet space with few distractions. Task length and difficulty are matched to attention span and fatigue.'},
+    ],
+    equipment: [
+      {draft:true, title_ko:'일상생활동작 훈련 도구', title_en:'ADL Training Tools',
+       ko:'단추 끼우기 도구, 신발 신기 보조도구, 손잡이를 굵게 만든 식기, 한 손용 도마 등을 사용합니다. 남아 있는 기능으로 스스로 할 수 있는 방법을 찾습니다.',
+       en:'Button hooks, long shoehorns, built-up utensils, and one-handed cutting boards are used. The goal is to find ways for patients to do tasks with their remaining abilities.'},
+      {draft:true, title_ko:'상지 기능 훈련 도구', title_en:'Upper-Limb Training Tools',
+       ko:'페그보드, 블록, 원뿔, 집게, 경사판으로 뻗기, 잡기, 놓기를 반복합니다. 크기와 무게, 높이를 바꾸어 난이도를 조절합니다.',
+       en:'Pegboards, blocks, cones, pinch tools, and inclined boards are used to repeat reaching, grasping, and releasing. Size, weight, and height change the difficulty.'},
+      {draft:true, title_ko:'로봇·가상현실 보조 훈련', title_en:'Robot & Virtual Reality Training',
+       ko:'로봇은 팔과 손의 움직임을 도와 반복량을 늘리고, 가상현실은 게임처럼 즐기면서 참여하게 합니다. 치료사의 직접 치료를 보완하는 방법으로 사용합니다.',
+       en:'Robots assist arm and hand movement to increase repetition, and virtual reality makes practice engaging. Both complement hands-on therapy.'},
+      {draft:true, title_ko:'전산화 인지재활 프로그램', title_en:'Computerized Cognitive Training',
+       ko:'주의력, 기억력, 문제 해결, 시지각 과제를 컴퓨터로 훈련합니다. 수행 결과가 기록되어 난이도를 조절하고 변화를 살필 수 있습니다.',
+       en:'Attention, memory, problem solving, and visual perception are trained on a computer. Recorded results guide the difficulty and show change over time.'},
+      {draft:true, title_ko:'보조기와 스플린트 재료', title_en:'Orthoses & Splint Materials',
+       ko:'손과 손목을 보호하고 변형을 예방하기 위해 열가소성 재료 등으로 스플린트를 만들거나 조정합니다. 착용 시간과 피부 상태 확인 방법을 교육합니다.',
+       en:'Splints are made or adjusted, often from thermoplastic material, to protect the hand and wrist and prevent deformity. Patients learn wearing times and how to check the skin.'},
+    ],
+    treatment: [
+      {draft:true, title_ko:'일상생활동작 훈련', title_en:'Activities of Daily Living Training',
+       ko:'식사, 세수, 옷 입기, 화장실 이용, 목욕, 이동을 단계로 나누어 연습합니다. 가능한 부분은 환자가 직접 하고 도움은 조금씩 줄여 갑니다.',
+       en:'Eating, grooming, dressing, toileting, bathing, and transfers are broken into steps. Patients do what they can, and assistance is gradually reduced.'},
+      {draft:true, title_ko:'상지·손 기능 훈련', title_en:'Arm & Hand Function Training',
+       ko:'어깨 안정성, 팔 뻗기, 쥐기, 손가락의 정교한 움직임을 과제 중심으로 반복합니다. 실제 물건을 사용해 생활 동작으로 이어지게 합니다.',
+       en:'Shoulder stability, reaching, grip, and fine finger movement are repeated in task-oriented practice. Real objects help the gains carry over to daily life.'},
+      {draft:true, title_ko:'과제 지향 훈련과 강제유도운동', title_en:'Task-Oriented & Constraint-Induced Training',
+       ko:'의미 있는 과제를 반복해 뇌의 회복을 돕습니다. 손목과 손가락을 어느 정도 움직일 수 있는 환자는 힘이 더 좋은 손의 사용을 제한하고 약한 손을 집중적으로 쓰는 방법을 적용하기도 합니다.',
+       en:'Repeating meaningful tasks supports recovery of the brain. Selected patients with some wrist and finger movement may limit use of the stronger hand and practice intensively with the weaker one.'},
+      {draft:true, title_ko:'인지재활', title_en:'Cognitive Rehabilitation',
+       ko:'주의력, 기억력, 실행 기능을 훈련하고 메모, 알람, 일정표 같은 보상 전략을 함께 익힙니다. 무시증이 있는 환자는 무시되는 쪽을 살피는 연습을 합니다.',
+       en:'Attention, memory, and executive function are trained along with strategies such as notes, alarms, and planners. Patients with neglect practice scanning toward the neglected side.'},
+      {draft:true, title_ko:'가정환경과 보조도구 상담', title_en:'Home Environment & Assistive Devices',
+       ko:'문턱, 욕실, 침대 높이 등 집의 환경을 살피고 필요한 손잡이와 보조도구를 제안합니다. 보호자에게 안전한 이동과 도움 방법을 교육합니다.',
+       en:'Thresholds, bathroom, and bed height at home are reviewed, and grab bars or assistive devices are suggested. Caregivers learn safe ways to transfer and assist.'},
+    ],
+    system: [
+      {draft:true, title_ko:'작업치료 평가', title_en:'Occupational Therapy Assessment',
+       ko:'수정바델지수 등으로 일상생활 수준을, 악력과 손 기능 검사로 상지 기능을 평가합니다. 인지와 시지각은 선별검사 후 필요하면 자세히 평가합니다.',
+       en:'Daily living is assessed with tools such as the Modified Barthel Index, and the upper limb with grip and hand function tests. Cognition and visual perception are screened first, then examined in detail if needed.'},
+      {draft:true, title_ko:'일상과 사회 복귀 준비', title_en:'Return to Daily Life & Society',
+       ko:'환자의 역할과 직업, 취미를 파악해 치료 목표에 반영합니다. 운전이나 직장 복귀처럼 안전이 중요한 활동은 의사와 관련 기관의 평가를 함께 고려합니다.',
+       en:'The patient\'s roles, work, and hobbies shape the goals. For safety-critical activities such as driving or returning to work, evaluations by physicians and related agencies are also considered.'},
     ],
   },
   speech: {
+    facility: [
+      {draft:true, title_ko:'언어치료실의 역할', title_en:'Role of the Speech Room',
+       ko:'뇌손상이나 신경계 질환, 두경부 질환, 발달 문제로 말하기, 이해하기, 발음, 목소리, 삼킴에 어려움이 있는 환자를 평가하고 치료합니다.',
+       en:'Speech-language therapists assess and treat difficulties with speaking, understanding, articulation, voice, and swallowing caused by brain injury, neurological disease, head and neck conditions, or developmental problems.'},
+      {draft:true, title_ko:'조용한 개별 치료 공간', title_en:'Quiet Individual Rooms',
+       ko:'말소리를 정확히 듣고 집중할 수 있도록 조용한 개별 공간에서 진행합니다. 사적인 대화가 오가므로 참관할 때는 환자의 동의와 비밀 보호가 특히 중요합니다.',
+       en:'Sessions take place in quiet individual rooms so that speech can be heard clearly. Because conversations are private, consent and confidentiality are especially important during observation.'},
+      {draft:true, title_ko:'삼킴 치료의 안전 준비', title_en:'Safety for Swallowing Therapy',
+       ko:'음식이나 물을 사용하는 치료 전에는 의식 상태, 앉은 자세, 구강 위생, 호흡 상태를 확인합니다. 사레나 호흡 변화가 있으면 멈추고 의료진에게 알립니다.',
+       en:'Before using food or liquid, we check alertness, sitting posture, oral hygiene, and breathing. If coughing, choking, or a change in breathing occurs, we stop and inform the medical team.'},
+    ],
+    equipment: [
+      {draft:true, title_ko:'언어 평가와 훈련 자료', title_en:'Language Assessment & Training Materials',
+       ko:'그림 카드, 글자 카드, 표준화된 검사 도구, 생활 사진을 사용합니다. 환자의 관심사와 생활 단어를 반영하면 참여가 좋아집니다.',
+       en:'Picture cards, word cards, standardized tests, and everyday photos are used. Materials based on the patient\'s interests and daily vocabulary improve engagement.'},
+      {draft:true, title_ko:'음성 분석 장비', title_en:'Voice Analysis Equipment',
+       ko:'목소리의 높이, 크기, 떨림, 발성 지속 시간을 측정하고 화면으로 보여 줍니다. 환자는 자신의 소리를 눈으로 보며 조절하는 연습을 합니다.',
+       en:'Pitch, loudness, stability, and how long a sound can be held are measured and displayed. Patients learn to adjust their voice with visual feedback.'},
+      {draft:true, title_ko:'보완대체의사소통 도구', title_en:'Augmentative & Alternative Communication',
+       ko:'말이 어려운 환자는 그림판, 글자판, 태블릿 앱, 시선 추적 장치 등으로 의사를 전합니다. 환자의 움직임과 인지 수준에 맞는 방법을 고릅니다.',
+       en:'Patients who cannot speak well may use picture boards, letter boards, tablet apps, or eye-tracking devices. The method is matched to movement and cognitive ability.'},
+      {draft:true, title_ko:'삼킴 전기자극과 생체되먹임', title_en:'Swallowing Stimulation & Biofeedback',
+       ko:'목 앞쪽 근육에 전기자극을 주거나 근육의 활동을 화면으로 보여 주며 삼킴 연습을 돕습니다. 적응증을 확인한 뒤 삼킴 운동과 함께 사용합니다.',
+       en:'Electrical stimulation of the front neck muscles, or a display of muscle activity, can support swallowing practice. After confirming indications, it is combined with swallowing exercise.'},
+      {draft:true, title_ko:'구강운동과 호흡 훈련 도구', title_en:'Oral Motor & Breathing Tools',
+       ko:'혀 압력 측정기, 입술과 혀 운동 도구, 호흡근 훈련기를 사용합니다. 말하기와 삼킴에 필요한 힘과 조절 능력을 기릅니다.',
+       en:'Tongue pressure devices, lip and tongue exercise tools, and respiratory muscle trainers are used. They build the strength and control needed for speech and swallowing.'},
+    ],
     treatment: [
-      {draft:true, title_ko:'삼킴과 식사 안전', title_en:'Swallowing and meal safety',
-       ko:'삼킴을 살펴보고, 자세나 음식 농도를 조정하는 연습을 할 수 있습니다. 사레들림을 줄이는 것이 목적입니다.',
-       en:'Swallowing can be assessed, and posture or food texture may be adjusted in practice. The aim is to reduce aspiration.'},
-      {draft:true, title_ko:'의사소통 연습', title_en:'Communication practice',
-       ko:'말하기, 이해하기, 다른 방법으로 의사를 전하는 연습을 합니다.',
-       en:'Practice can include speaking, understanding, and other ways of conveying meaning.'},
+      {draft:true, title_ko:'실어증 치료', title_en:'Aphasia Therapy',
+       ko:'듣기, 말하기, 읽기, 쓰기 가운데 어려운 영역을 찾아 단어에서 문장, 대화로 넓혀 갑니다. 가족에게는 짧게 말하기와 기다리기 같은 대화 방법을 안내합니다.',
+       en:'Difficulties in listening, speaking, reading, or writing are identified, and practice grows from words to sentences and conversation. Families learn to use short sentences and to wait.'},
+      {draft:true, title_ko:'마비말장애와 말실행증 치료', title_en:'Dysarthria & Apraxia Therapy',
+       ko:'호흡, 발성, 발음, 말 속도를 조절해 더 알아듣기 쉽게 말하도록 합니다. 말실행증은 소리와 입 움직임의 순서를 천천히 반복해 익힙니다.',
+       en:'Breathing, voice, articulation, and rate are trained to make speech clearer. In apraxia of speech, the sequence of sounds and mouth movements is practiced slowly and repeatedly.'},
+      {draft:true, title_ko:'삼킴 재활', title_en:'Swallowing Rehabilitation',
+       ko:'자세와 한 입의 양을 조절하고 음식과 물의 농도를 바꾸어 안전하게 먹도록 돕습니다. 혀와 목 근육 운동, 삼킴 기법을 연습하며 식사 단계는 평가 결과에 따라 올립니다.',
+       en:'Posture, bite size, and food or liquid thickness are adjusted for safe eating. Tongue and throat exercises and swallowing maneuvers are practiced, and diet levels advance based on assessment.'},
+      {draft:true, title_ko:'인지-의사소통 치료', title_en:'Cognitive-Communication Therapy',
+       ko:'주의력, 기억력, 추론의 문제로 대화가 어려운 환자에게 순서 지키기, 주제 유지, 이야기 정리를 연습합니다. 실제 생활 상황을 이용합니다.',
+       en:'Patients whose conversation is affected by attention, memory, or reasoning practice turn-taking, staying on topic, and organizing a story. Real-life situations are used.'},
+      {draft:true, title_ko:'음성 치료', title_en:'Voice Therapy',
+       ko:'목소리의 남용을 줄이고 편안한 호흡과 발성을 익힙니다. 파킨슨병처럼 소리가 작아지는 환자에게는 크고 분명하게 말하는 집중 훈련을 하기도 합니다.',
+       en:'Patients learn comfortable breathing and voicing and reduce vocal strain. Those with a soft voice, as in Parkinson\'s disease, may receive intensive training to speak loudly and clearly.'},
+    ],
+    system: [
+      {draft:true, title_ko:'언어·삼킴 평가', title_en:'Speech & Swallowing Assessment',
+       ko:'표준화된 언어검사와 대화 관찰로 의사소통을 평가합니다. 삼킴은 침상 선별검사로 시작하고, 필요하면 의사가 비디오투시 삼킴검사나 내시경 삼킴검사를 시행합니다.',
+       en:'Communication is assessed with standardized tests and conversation. Swallowing begins with bedside screening, and physicians perform a videofluoroscopic or endoscopic swallowing study when needed.'},
+      {draft:true, title_ko:'영양팀·간호팀과의 협력', title_en:'Working With Nutrition & Nursing',
+       ko:'평가 결과에 따라 식사 형태와 자세, 주의사항을 의사, 간호사, 영양사와 공유합니다. 병동 식사에서도 같은 방법을 지키는 것이 흡인을 예방하는 데 중요합니다.',
+       en:'Diet texture, posture, and precautions are shared with physicians, nurses, and dietitians. Using the same method at ward meals is important to prevent aspiration.'},
+    ],
+  },
+  thermo: {
+    facility: [
+      {draft:true, title_ko:'열전기치료실의 역할', title_en:'Role of the Thermal & Electrotherapy Room',
+       ko:'온열, 냉, 전기, 빛, 기계적 자극을 이용해 통증과 근육 긴장을 줄이고 조직 회복을 돕습니다. 운동치료를 더 편안하게 하기 위한 준비로도 사용합니다.',
+       en:'Heat, cold, electricity, light, and mechanical stimulation reduce pain and muscle tension and support tissue recovery. They also prepare patients for more comfortable exercise.'},
+      {draft:true, title_ko:'개별 치료 침상과 사생활 보호', title_en:'Individual Beds & Privacy',
+       ko:'치료 부위를 드러내야 하므로 커튼 등으로 나뉜 개별 침상에서 진행합니다. 필요한 부위만 노출하고, 환자가 언제든 직원을 부를 수 있게 합니다.',
+       en:'Because the treatment area must be uncovered, therapy takes place on individual beds separated by curtains. Only the necessary area is exposed, and patients can call staff at any time.'},
+      {draft:true, title_ko:'치료 전 금기 확인', title_en:'Checking Contraindications',
+       ko:'심박동기 같은 체내 기기, 임신, 악성 종양, 감각 저하, 혈액순환 장애, 급성 염증, 피부 상처를 치료 전에 확인합니다. 해당하면 치료 방법을 바꾸거나 시행하지 않습니다.',
+       en:'Implanted devices such as pacemakers, pregnancy, cancer, reduced sensation, poor circulation, acute inflammation, and skin wounds are checked first. If present, the treatment is changed or not given.'},
+    ],
+    equipment: [
+      {draft:true, title_ko:'온습포와 파라핀', title_en:'Hot Packs & Paraffin',
+       ko:'온습포는 넓은 부위의 근육을 이완하고, 파라핀은 손처럼 굴곡이 많은 부위를 고르게 데웁니다. 화상을 막기 위해 온도와 피부 상태를 확인합니다.',
+       en:'Hot packs relax muscles over a wide area, and paraffin evenly warms irregular areas such as the hand. Temperature and skin are checked to prevent burns.'},
+      {draft:true, title_ko:'냉치료', title_en:'Cold Therapy',
+       ko:'냉찜질이나 냉기 장치로 급성 통증과 부종, 열감을 줄입니다. 냉과민이나 혈액순환 장애가 있는 환자에게는 주의하거나 사용하지 않습니다.',
+       en:'Cold packs or cold-air devices reduce acute pain, swelling, and heat. They are used with caution or avoided in patients with cold sensitivity or poor circulation.'},
+      {draft:true, title_ko:'전기치료기', title_en:'Electrotherapy Units',
+       ko:'경피신경전기자극(TENS)과 간섭전류는 통증 조절에, 신경근전기자극은 약해진 근육의 수축에 사용합니다. 목적에 따라 전극 위치와 강도를 조절합니다.',
+       en:'TENS and interferential current are used for pain control, and neuromuscular electrical stimulation helps weak muscles contract. Electrode position and intensity depend on the purpose.'},
+      {draft:true, title_ko:'심부열과 초음파 치료기', title_en:'Deep Heat & Therapeutic Ultrasound',
+       ko:'초음파와 전자기파로 피부 아래 깊은 조직에 열이나 기계적 자극을 줍니다. 금속 삽입물, 성장판, 눈, 임신한 자궁 부위 등은 기기별 금기를 확인합니다.',
+       en:'Ultrasound and electromagnetic energy deliver heat or mechanical effects to deeper tissue. Device-specific contraindications such as metal implants, growth plates, eyes, or a pregnant uterus are checked.'},
+      {draft:true, title_ko:'견인치료기', title_en:'Traction Devices',
+       ko:'목이나 허리를 일정한 힘으로 당겨 신경 압박 증상을 줄이는 데 사용할 수 있습니다. 골다공증, 척추 불안정, 골절 등이 있으면 시행하지 않습니다.',
+       en:'Traction applies controlled pull to the neck or lower back and may ease symptoms of nerve compression. It is not used with osteoporosis, spinal instability, or fracture.'},
+      {draft:true, title_ko:'체외충격파와 레이저', title_en:'Shockwave & Laser Therapy',
+       ko:'체외충격파는 만성 힘줄 질환 등에, 저출력 레이저는 통증과 조직 회복에 사용할 수 있습니다. 의사의 처방에 따르며 레이저를 쓸 때는 보호안경을 착용합니다.',
+       en:'Shockwave therapy may be used for chronic tendon disorders, and low-level laser for pain and tissue recovery. They follow a physician\'s order, and protective eyewear is worn for laser.'},
+    ],
+    treatment: [
+      {draft:true, title_ko:'통증 조절 치료', title_en:'Pain Management',
+       ko:'통증의 위치, 세기, 양상을 확인하고 온열, 냉, 전기치료를 알맞게 고릅니다. 통증 점수를 치료 전후에 비교해 효과를 확인합니다.',
+       en:'Location, intensity, and type of pain guide the choice of heat, cold, or electrotherapy. Pain scores before and after treatment are compared.'},
+      {draft:true, title_ko:'근육 이완과 혈류 개선', title_en:'Muscle Relaxation & Circulation',
+       ko:'온열로 근육 긴장을 줄이고 혈류를 늘린 뒤 스트레칭이나 관절 운동을 이어서 합니다. 열이 남아 있을 때 움직이면 관절이 더 부드럽게 움직입니다.',
+       en:'Heat reduces muscle tension and increases blood flow, followed by stretching or joint exercise. Moving while tissue is warm allows easier joint motion.'},
+      {draft:true, title_ko:'급성기 부종과 염증 관리', title_en:'Acute Swelling Care',
+       ko:'급성 손상이나 수술 직후에는 냉치료, 압박, 높이 올리기, 부담 줄이기를 함께 적용합니다. 이 시기에는 부은 부위에 강한 열을 피합니다.',
+       en:'After acute injury or surgery, cold, compression, elevation, and load reduction are combined. Strong heat on a swollen area is avoided at this stage.'},
+      {draft:true, title_ko:'근육 재교육과 기능적 전기자극', title_en:'Muscle Re-education & FES',
+       ko:'신경 손상이나 수술 후 약해진 근육에 전기자극을 주면서 환자가 함께 힘을 주게 합니다. 걷기나 쥐기 같은 동작 중에 자극을 주는 기능적 전기자극도 있습니다.',
+       en:'Weak muscles after nerve injury or surgery are stimulated while the patient contracts along. Functional electrical stimulation is applied during tasks such as walking or grasping.'},
+      {draft:true, title_ko:'운동치료와의 병행', title_en:'Combining With Exercise',
+       ko:'물리적 인자 치료만으로 끝내지 않고 운동과 자세 교육을 이어서 합니다. 통증이 줄어든 시간을 활용해 스스로 움직이는 능력을 키우는 것이 중요합니다.',
+       en:'Physical agents are followed by exercise and posture education rather than used alone. The pain-relief period is used to build the patient\'s own movement.'},
+    ],
+    system: [
+      {draft:true, title_ko:'처방과 강도 기록', title_en:'Orders & Dosage Records',
+       ko:'의사의 처방에 따라 치료 종류, 부위, 시간, 강도를 확인하고 기록합니다. 피부 반응과 통증 변화를 함께 남겨 다음 치료에 반영합니다.',
+       en:'The type, site, duration, and intensity are confirmed against the physician\'s order and recorded. Skin response and pain changes guide the next session.'},
+      {draft:true, title_ko:'장비 점검과 감염관리', title_en:'Equipment Checks & Infection Control',
+       ko:'전극, 케이블, 온도, 누전 여부를 정기적으로 점검합니다. 피부에 닿는 물품은 사용할 때마다 소독하거나 교체합니다.',
+       en:'Electrodes, cables, temperature, and electrical safety are checked regularly. Items that touch the skin are disinfected or replaced after each use.'},
+    ],
+  },
+  lymphedema: {
+    facility: [
+      {draft:true, title_ko:'림프부종치료실의 역할', title_en:'Role of the Lymphedema Room',
+       ko:'암 수술, 림프절 절제, 방사선 치료 등으로 림프 흐름이 막혀 생긴 부종을 관리합니다. 부종을 줄이고 감염을 예방하며 환자가 스스로 관리하도록 돕습니다.',
+       en:'This room manages swelling caused by blocked lymph flow after cancer surgery, lymph node removal, or radiation. The goals are to reduce swelling, prevent infection, and support self-care.'},
+      {draft:true, title_ko:'개인 치료 공간', title_en:'Private Treatment Space',
+       ko:'몸통이나 팔다리를 드러내고 오래 치료하므로 사생활이 보호되는 공간에서 진행합니다. 편안한 자세와 온도를 유지하고 환자의 정서도 함께 살핍니다.',
+       en:'Treatment can be long and exposes the trunk or limbs, so it takes place in a private space. Comfortable posture and temperature are kept, with attention to emotional needs.'},
+      {draft:true, title_ko:'피부와 감염 위험 확인', title_en:'Skin & Infection Check',
+       ko:'치료 전에 피부의 붉어짐, 열감, 상처, 통증을 확인합니다. 봉와직염이 의심되거나 갑자기 붓고 열이 나면 치료를 미루고 의사에게 알립니다.',
+       en:'Redness, heat, wounds, and pain are checked before treatment. If cellulitis is suspected, or sudden swelling or fever occurs, treatment is postponed and the physician is informed.'},
+    ],
+    equipment: [
+      {draft:true, title_ko:'저신축 압박붕대', title_en:'Short-Stretch Bandages',
+       ko:'움직일 때 근육의 펌프 작용을 돕는 저신축 붕대를 여러 겹으로 감습니다. 손끝과 발끝의 색, 감각, 통증을 확인해 너무 조이지 않게 합니다.',
+       en:'Multilayer short-stretch bandages support the muscle pump during movement. Color, sensation, and pain in fingers or toes are checked to avoid excess pressure.'},
+      {draft:true, title_ko:'압박스타킹과 압박소매', title_en:'Compression Garments',
+       ko:'부종이 줄어든 뒤 유지하기 위해 팔소매, 장갑, 스타킹을 착용합니다. 정확히 재서 알맞은 크기와 압력을 고르고 정기적으로 교체합니다.',
+       en:'Sleeves, gloves, or stockings maintain the reduction after swelling decreases. Accurate measurement guides size and pressure, and garments are replaced regularly.'},
+      {draft:true, title_ko:'간헐적 공기압박 장치', title_en:'Intermittent Pneumatic Compression',
+       ko:'공기주머니가 순서대로 부풀어 팔다리의 체액 이동을 돕습니다. 심부정맥혈전증, 조절되지 않는 심부전, 급성 감염이 있으면 사용하지 않습니다.',
+       en:'Air chambers inflate in sequence to help move fluid in the limb. It is not used with deep vein thrombosis, uncontrolled heart failure, or acute infection.'},
+      {draft:true, title_ko:'둘레와 부피 측정 도구', title_en:'Girth & Volume Measurement Tools',
+       ko:'줄자로 정해진 지점의 둘레를 재어 부피를 계산하거나 부피 측정 장비를 사용합니다. 같은 자세와 지점에서 재야 변화를 정확히 비교할 수 있습니다.',
+       en:'Limb girth is measured at fixed points to calculate volume, or a volume device is used. The same posture and points allow accurate comparison.'},
+      {draft:true, title_ko:'생체전기임피던스 분석', title_en:'Bioimpedance Analysis',
+       ko:'약한 전류로 조직의 수분을 측정해 초기의 변화를 살피는 데 도움을 줍니다. 심박동기 등 체내 전자기기가 있는 환자는 사용 여부를 먼저 확인합니다.',
+       en:'A very small current estimates tissue fluid and can help detect early change. Suitability is confirmed first for patients with pacemakers or other implanted electronics.'},
+    ],
+    treatment: [
+      {draft:true, title_ko:'복합림프물리치료', title_en:'Complete Decongestive Therapy',
+       ko:'도수림프배출, 압박, 운동, 피부 관리를 함께 하는 표준 치료입니다. 부종을 줄이는 집중기와 줄어든 상태를 지키는 유지기로 나누어 진행합니다.',
+       en:'This standard approach combines manual lymph drainage, compression, exercise, and skin care. It has an intensive phase to reduce swelling and a maintenance phase to keep the result.'},
+      {draft:true, title_ko:'도수림프배출법', title_en:'Manual Lymphatic Drainage',
+       ko:'부드럽고 느린 손동작으로 피부를 움직여 막히지 않은 쪽으로 림프가 흐르도록 돕습니다. 강하게 누르는 마사지와는 다르며 방향과 순서가 중요합니다.',
+       en:'Gentle, slow strokes move the skin to guide lymph toward working pathways. It differs from deep massage, and direction and sequence are important.'},
+      {draft:true, title_ko:'압박 치료', title_en:'Compression Therapy',
+       ko:'집중기에는 붕대를, 유지기에는 맞춤 압박의류를 주로 사용합니다. 동맥 순환 장애가 있는지 먼저 확인하고 통증과 저림이 없게 조절합니다.',
+       en:'Bandages are mainly used in the intensive phase and fitted garments in maintenance. Arterial circulation is checked first, and pressure is adjusted to avoid pain or numbness.'},
+      {draft:true, title_ko:'림프부종 운동', title_en:'Lymphedema Exercise',
+       ko:'압박한 상태에서 호흡, 관절 운동, 가벼운 근력 운동을 합니다. 낮은 강도에서 시작해 부종과 피로를 보면서 천천히 늘립니다.',
+       en:'Breathing, joint movement, and light strengthening are done with compression on. Exercise starts at low intensity and increases slowly while watching swelling and fatigue.'},
+      {draft:true, title_ko:'피부 관리와 자가관리 교육', title_en:'Skin Care & Self-Management',
+       ko:'보습, 상처 예방, 손발톱 관리, 감염 증상을 교육합니다. 스스로 하는 림프배출과 압박의류 착용, 체중 관리가 장기적으로 중요합니다.',
+       en:'Moisturizing, preventing wounds, nail care, and signs of infection are taught. Self-drainage, garment use, and weight control are important in the long term.'},
+    ],
+    system: [
+      {draft:true, title_ko:'림프부종 평가와 병기', title_en:'Assessment & Staging',
+       ko:'양쪽의 둘레와 부피, 피부 단단함, 눌린 자국, 통증, 관절 움직임을 비교합니다. 국제림프학회 병기를 참고해 치료 강도를 정합니다.',
+       en:'Girth, volume, skin firmness, pitting, pain, and motion are compared between sides. Staging by the International Society of Lymphology helps guide treatment.'},
+      {draft:true, title_ko:'암 진료과와의 협력', title_en:'Working With Cancer Care Teams',
+       ko:'수술과 항암, 방사선 치료 일정을 확인하고 새로운 부종이 생기면 재발이나 혈전 여부를 먼저 확인합니다. 조기 교육은 부종을 일찍 발견하는 데 도움이 됩니다.',
+       en:'Surgery, chemotherapy, and radiation schedules are reviewed, and new swelling is first checked for recurrence or thrombosis. Early education helps detect swelling sooner.'},
+    ],
+  },
+  neuro: {
+    facility: [
+      {draft:true, title_ko:'뇌신경재활치료실의 역할', title_en:'Role of the Neuro Rehab Room',
+       ko:'뇌졸중, 외상성 뇌손상, 척수손상, 파킨슨병 등으로 움직임과 감각, 균형에 문제가 생긴 환자를 치료합니다. 뇌와 신경의 회복 능력을 살려 실제 생활 동작으로 이어지게 합니다.',
+       en:'Patients with movement, sensory, or balance problems after stroke, brain injury, spinal cord injury, or Parkinson\'s disease are treated here. Therapy uses the nervous system\'s ability to recover and links it to daily activities.'},
+      {draft:true, title_ko:'일대일 치료 환경', title_en:'One-to-One Treatment Setting',
+       ko:'환자 상태가 다양하고 보조가 많이 필요해 치료사가 가까이에서 일대일로 치료하는 경우가 많습니다. 넓은 매트와 보행 공간, 낙상에 대비한 공간을 확보합니다.',
+       en:'Because patients differ widely and often need much assistance, therapy is often one-to-one. Wide mats, walking space, and room to protect against falls are provided.'},
+      {draft:true, title_ko:'중증 환자 안전 관리', title_en:'Safety for Severe Patients',
+       ko:'혈압 변화, 경련, 의식 변화, 어깨 통증, 피부 상태를 살핍니다. 척수손상 환자는 기립성 저혈압과 자율신경 반사부전에 특히 주의합니다.',
+       en:'Blood pressure changes, seizures, alertness, shoulder pain, and skin are monitored. In spinal cord injury, special care is taken for orthostatic hypotension and autonomic dysreflexia.'},
+    ],
+    equipment: [
+      {draft:true, title_ko:'전동 매트와 이동 보조 장비', title_en:'Powered Mats & Transfer Equipment',
+       ko:'높이 조절 매트, 이동 보드, 리프트, 보행벨트로 침대와 휠체어 사이를 안전하게 이동합니다. 환자의 참여를 이끌어 내면서 치료사의 부상도 예방합니다.',
+       en:'Height-adjustable mats, transfer boards, lifts, and gait belts allow safe transfers between bed and wheelchair. They encourage patient participation and prevent therapist injury.'},
+      {draft:true, title_ko:'로봇 보행 훈련 장비', title_en:'Robotic Gait Trainers',
+       ko:'외골격이나 발판 방식의 로봇이 다리 움직임을 도와 보행을 반복하게 합니다. 걷기 어려운 환자도 많은 걸음을 연습할 수 있으며 일반 보행 훈련과 함께 사용합니다.',
+       en:'Exoskeleton or footplate robots assist leg movement for repeated stepping. Patients who cannot yet walk can practice many steps, together with conventional gait training.'},
+      {draft:true, title_ko:'체중지지 보행 장치', title_en:'Overground Body-Weight Support',
+       ko:'천장 레일이나 이동식 틀의 하네스로 넘어짐을 막으면서 걷기, 방향 전환, 계단을 연습합니다. 환자는 낙상 걱정 없이 어려운 동작에 도전할 수 있습니다.',
+       en:'A harness on a ceiling rail or mobile frame prevents falls during walking, turning, and stairs. Patients can attempt harder tasks with less fear.'},
+      {draft:true, title_ko:'기능적 전기자극기', title_en:'Functional Electrical Stimulation',
+       ko:'발이 처지는 환자의 발목이나 손을 펴기 어려운 환자의 팔에 동작에 맞추어 자극을 줍니다. 근육의 수축과 움직임 학습을 함께 돕습니다.',
+       en:'Stimulation is timed with movement, for example at the ankle for foot drop or the arm for hand opening. It supports both muscle contraction and motor learning.'},
+      {draft:true, title_ko:'균형 측정·훈련 장비', title_en:'Balance Assessment & Training System',
+       ko:'힘판 위에서 체중이 어디에 실리는지 화면으로 보여 주고 목표 지점으로 중심을 옮기게 합니다. 좌우 체중 분배와 변화를 수치로 확인할 수 있습니다.',
+       en:'A force plate shows where body weight is placed and guides shifting toward targets. Left-right loading and progress can be measured.'},
+      {draft:true, title_ko:'보조기와 휠체어', title_en:'Orthoses & Wheelchairs',
+       ko:'발목발보조기, 어깨 지지대, 휠체어를 환자의 상태에 맞게 고르고 조정합니다. 피부 눌림과 착용법, 휠체어 조작을 함께 교육합니다.',
+       en:'Ankle-foot orthoses, shoulder supports, and wheelchairs are selected and adjusted for each patient. Skin pressure, proper wearing, and wheelchair skills are taught.'},
+    ],
+    treatment: [
+      {draft:true, title_ko:'신경발달치료', title_en:'Neurodevelopmental Treatment',
+       ko:'치료사가 손으로 자세와 움직임을 이끌어 비정상적인 움직임을 줄이고 효율적인 동작을 배우게 합니다. 실제 과제와 연결해 적용합니다.',
+       en:'Therapists guide posture and movement by hand to reduce inefficient patterns and teach effective movement. It is linked to real tasks.'},
+      {draft:true, title_ko:'과제 지향 반복 훈련', title_en:'Task-Oriented Repetitive Training',
+       ko:'일어서기, 걷기, 물건 잡기처럼 목표가 분명한 과제를 충분히 반복합니다. 난이도와 환경을 조금씩 바꾸어 실제 생활에서 쓸 수 있게 합니다.',
+       en:'Clear goal tasks such as standing up, walking, and grasping are repeated many times. Difficulty and setting are varied so skills carry over to daily life.'},
+      {draft:true, title_ko:'자세 조절과 균형 훈련', title_en:'Postural Control & Balance',
+       ko:'몸통 조절과 앉은 자세의 균형에서 시작해 서기와 걷기로 발전시킵니다. 감각, 시각, 전정 감각을 활용한 훈련을 함께 합니다.',
+       en:'Training begins with trunk control and sitting balance, then moves to standing and walking. Sensory, visual, and vestibular inputs are used.'},
+      {draft:true, title_ko:'보행 재활', title_en:'Gait Rehabilitation',
+       ko:'다리의 지지, 무릎과 발목 조절, 걸음의 대칭, 속도를 훈련합니다. 보조기와 전기자극, 로봇, 트레드밀을 환자에 맞게 선택합니다.',
+       en:'Leg support, knee and ankle control, symmetry, and speed are trained. Orthoses, stimulation, robots, or treadmills are chosen for each patient.'},
+      {draft:true, title_ko:'경직 관리', title_en:'Spasticity Management',
+       ko:'스트레칭, 자세 유지, 보조기, 움직임 훈련으로 관절이 굳는 것을 막습니다. 필요하면 의사의 약물이나 주사 치료와 시기를 맞추어 집중 훈련을 합니다.',
+       en:'Stretching, positioning, orthoses, and movement training prevent contracture. Intensive therapy may be timed with medication or injections given by physicians.'},
+      {draft:true, title_ko:'척수손상 재활', title_en:'Spinal Cord Injury Rehabilitation',
+       ko:'남아 있는 근력을 키우고 돌아눕기, 앉기, 이동, 휠체어 사용을 익힙니다. 욕창 예방을 위한 압력 줄이기와 호흡 관리를 교육합니다.',
+       en:'Remaining strength is developed along with rolling, sitting, transfers, and wheelchair skills. Pressure relief to prevent skin injury and breathing care are taught.'},
+    ],
+    system: [
+      {draft:true, title_ko:'신경계 평가 도구', title_en:'Neurological Assessment Tools',
+       ko:'의식, 인지, 근력, 감각, 경직, 균형, 보행을 평가합니다. 푸글마이어 평가, 버그균형척도, 척수손상 국제분류(ISNCSCI) 등을 질환에 맞게 사용합니다.',
+       en:'Alertness, cognition, strength, sensation, spasticity, balance, and gait are assessed. Tools such as the Fugl-Meyer Assessment, Berg Balance Scale, and ISNCSCI are chosen by condition.'},
+      {draft:true, title_ko:'급성기부터 이어지는 재활', title_en:'Rehabilitation From the Acute Stage',
+       ko:'상태가 안정되면 병실에서 자세 관리와 조기 가동을 시작하고 치료실 훈련으로 이어 갑니다. 재활의학과, 신경과, 신경외과가 회복 단계에 따라 함께 계획합니다.',
+       en:'Once stable, positioning and early mobilization begin at the bedside and continue in the therapy room. Rehabilitation medicine, neurology, and neurosurgery plan together by stage of recovery.'},
+    ],
+  },
+  pulmonary: {
+    facility: [
+      {draft:true, title_ko:'호흡재활치료실의 역할', title_en:'Role of the Pulmonary Rehab Room',
+       ko:'만성폐질환, 폐 수술, 신경근육질환, 중환자 치료 이후 숨이 차거나 기침이 약한 환자를 돕습니다. 운동 능력과 가래 배출, 호흡 조절을 향상시킵니다.',
+       en:'Patients with breathlessness or weak cough after chronic lung disease, lung surgery, neuromuscular disease, or intensive care are supported. Exercise capacity, airway clearance, and breathing control are improved.'},
+      {draft:true, title_ko:'산소와 감시 장비가 있는 환경', title_en:'Oxygen & Monitoring',
+       ko:'운동하는 동안 산소포화도, 맥박, 호흡곤란 정도를 확인합니다. 처방에 따라 산소를 사용하고 응급 상황에 대비합니다.',
+       en:'Oxygen saturation, heart rate, and breathlessness are monitored during exercise. Oxygen is used as prescribed, and the team is prepared for emergencies.'},
+      {draft:true, title_ko:'호흡기 감염 예방', title_en:'Respiratory Infection Prevention',
+       ko:'기침과 가래 배출 때 비말이 생길 수 있어 환기, 마스크, 손 위생, 장비 소독을 철저히 합니다. 격리가 필요한 환자는 병실이나 분리된 공간에서 치료합니다.',
+       en:'Because coughing can produce droplets, ventilation, masks, hand hygiene, and equipment disinfection are strictly followed. Patients needing isolation are treated in their rooms or a separate space.'},
+    ],
+    equipment: [
+      {draft:true, title_ko:'산소포화도 측정기와 감시 장비', title_en:'Pulse Oximeter & Monitors',
+       ko:'손가락이나 귀에 센서를 붙여 산소포화도와 맥박을 확인합니다. 움직임, 차가운 손, 매니큐어는 수치에 영향을 줄 수 있어 증상과 함께 판단합니다.',
+       en:'A finger or ear sensor shows oxygen saturation and pulse. Movement, cold hands, or nail polish can affect readings, so symptoms are considered together.'},
+      {draft:true, title_ko:'호흡근 훈련기', title_en:'Respiratory Muscle Trainers',
+       ko:'들이쉬거나 내쉴 때 저항을 주어 호흡에 쓰는 근육을 강화합니다. 최대 호흡압 평가를 바탕으로 저항을 정하고 어지럼을 살핍니다.',
+       en:'These devices add resistance to breathing in or out to strengthen breathing muscles. Resistance is based on maximal pressure testing, and dizziness is monitored.'},
+      {draft:true, title_ko:'기도 청결 보조 장비', title_en:'Airway Clearance Devices',
+       ko:'진동 호기압 기구나 고빈도 흉벽진동 장비가 가래를 움직이게 돕습니다. 기침이 약한 환자에게는 기침유발기를 사용할 수 있습니다.',
+       en:'Oscillating expiratory devices and high-frequency chest wall oscillation help move mucus. A cough-assist device may be used for patients with a weak cough.'},
+      {draft:true, title_ko:'인센티브 스파이로미터', title_en:'Incentive Spirometer',
+       ko:'환자가 천천히 깊게 들이쉬는 정도를 눈으로 확인하는 기구입니다. 수술 후 깊은 호흡, 기침, 조기 보행과 함께 사용합니다.',
+       en:'This device shows how slowly and deeply the patient breathes in. It is used after surgery together with deep breathing, coughing, and early walking.'},
+      {draft:true, title_ko:'트레드밀·자전거와 보행 검사', title_en:'Treadmill, Cycle & Walk Tests',
+       ko:'걷기와 자전거로 지구력을 기르고 6분 보행 검사로 운동 능력과 산소포화도 변화를 확인합니다. 숨찬 정도는 보그 척도로 기록합니다.',
+       en:'Walking and cycling build endurance, and the 6-minute walk test shows exercise capacity and oxygen changes. Breathlessness is recorded with the Borg scale.'},
+    ],
+    treatment: [
+      {draft:true, title_ko:'호흡 조절 훈련', title_en:'Breathing Control',
+       ko:'입술을 오므려 천천히 내쉬기와 편안한 자세로 숨찬 느낌을 조절합니다. 동작에 맞추어 호흡하는 방법도 익힙니다.',
+       en:'Pursed-lip breathing and comfortable positions help control breathlessness. Patients also learn to match breathing with movement.'},
+      {draft:true, title_ko:'기도 청결법', title_en:'Airway Clearance Techniques',
+       ko:'능동적 호흡주기법, 자세 이용, 진동, 효과적인 기침으로 가래를 내보냅니다. 환자 상태에 맞는 방법을 고르고 스스로 하는 방법을 교육합니다.',
+       en:'The active cycle of breathing, positioning, vibration, and effective coughing help clear mucus. A suitable method is chosen and taught for self-use.'},
+      {draft:true, title_ko:'유산소와 근력 운동', title_en:'Aerobic & Strength Exercise',
+       ko:'걷기, 자전거, 상하지 근력 운동을 환자의 능력에 맞게 시행합니다. 쉬었다가 반복하는 간격 운동은 숨이 많이 찬 환자에게 도움이 됩니다.',
+       en:'Walking, cycling, and arm and leg strengthening are matched to ability. Interval exercise with rests helps patients with severe breathlessness.'},
+      {draft:true, title_ko:'흉곽 가동과 자세 운동', title_en:'Chest Mobility & Posture',
+       ko:'가슴, 어깨, 척추의 움직임을 늘려 숨쉬기 편하게 합니다. 수술 부위가 있으면 통증과 상처를 보호하면서 시행합니다.',
+       en:'Chest, shoulder, and spine mobility exercises make breathing easier. If there is a surgical site, pain and the wound are protected.'},
+      {draft:true, title_ko:'에너지 절약과 생활 교육', title_en:'Energy Conservation & Education',
+       ko:'일상 동작을 나누고 쉬어 가며 하는 방법, 흡입기 사용법, 악화 증상을 교육합니다. 금연과 예방접종, 꾸준한 운동을 권합니다.',
+       en:'Patients learn pacing, inhaler technique, and signs of worsening. Smoking cessation, vaccination, and regular exercise are encouraged.'},
+    ],
+    system: [
+      {draft:true, title_ko:'호흡 기능과 운동 능력 평가', title_en:'Lung Function & Exercise Assessment',
+       ko:'폐기능검사, 호흡근력, 기침 유량, 6분 보행 검사, 호흡곤란 척도를 참고합니다. 결과에 따라 운동 강도와 산소 사용을 의사와 정합니다.',
+       en:'Lung function, respiratory muscle strength, cough flow, the 6-minute walk test, and breathlessness scales are reviewed. Exercise intensity and oxygen use are set with the physician.'},
+      {draft:true, title_ko:'수술 전후와 중환자 연계', title_en:'Perioperative & ICU Coordination',
+       ko:'폐나 복부 수술 전에는 호흡법과 기침을 미리 배우고, 수술 후에는 조기 보행으로 이어 갑니다. 중환자실에서는 의료진과 함께 안정된 상태인지 확인한 뒤 시작합니다.',
+       en:'Before lung or abdominal surgery, patients learn breathing and coughing, followed by early walking after surgery. In intensive care, therapy starts after stability is confirmed with the medical team.'},
+    ],
+  },
+  cardiac: {
+    facility: [
+      {draft:true, title_ko:'심장재활치료실의 역할', title_en:'Role of the Cardiac Rehab Room',
+       ko:'심근경색, 심장 시술과 수술, 심부전 이후 안전하게 운동 능력을 회복하고 재발 위험을 줄이도록 돕습니다. 운동, 교육, 위험요인 관리를 함께 합니다.',
+       en:'After myocardial infarction, cardiac procedures, surgery, or heart failure, patients safely regain exercise capacity and lower the risk of recurrence. Exercise, education, and risk-factor control are combined.'},
+      {draft:true, title_ko:'심전도 감시 운동 공간', title_en:'ECG-Monitored Exercise Area',
+       ko:'운동하는 동안 심전도, 혈압, 증상을 확인할 수 있도록 중앙 감시 환경에서 진행합니다. 환자의 위험도에 따라 감시 수준을 조절합니다.',
+       en:'Exercise takes place under monitoring of ECG, blood pressure, and symptoms. The level of monitoring depends on the patient\'s risk.'},
+      {draft:true, title_ko:'응급 대응 준비', title_en:'Emergency Readiness',
+       ko:'제세동기, 산소, 응급 약품과 연락 체계를 준비하고 정기적으로 점검합니다. 가슴 통증, 실신, 위험한 부정맥이 생기면 즉시 운동을 멈추고 대응합니다.',
+       en:'A defibrillator, oxygen, emergency drugs, and a call system are prepared and checked regularly. Exercise stops immediately for chest pain, fainting, or dangerous arrhythmia.'},
+    ],
+    equipment: [
+      {draft:true, title_ko:'심폐운동부하검사 장비', title_en:'Cardiopulmonary Exercise Testing',
+       ko:'트레드밀이나 자전거로 운동하면서 심전도, 혈압, 산소 섭취량을 측정합니다. 안전한 운동 강도를 정하고 치료 전후의 변화를 비교하는 데 사용합니다.',
+       en:'ECG, blood pressure, and oxygen uptake are measured during treadmill or cycle exercise. Results guide safe exercise intensity and show change over time.'},
+      {draft:true, title_ko:'원격 심전도 감시 장치', title_en:'Telemetry ECG Monitoring',
+       ko:'환자가 착용한 무선 송신기로 여러 명의 심전도를 실시간으로 확인합니다. 맥박, 리듬 변화, 운동 반응을 함께 살핍니다.',
+       en:'Wireless transmitters show the ECG of several patients in real time. Heart rate, rhythm changes, and exercise response are observed.'},
+      {draft:true, title_ko:'트레드밀과 자전거 에르고미터', title_en:'Treadmills & Cycle Ergometers',
+       ko:'속도와 경사, 저항을 조금씩 바꾸어 처방된 강도를 유지합니다. 균형이 불안한 환자는 자전거나 앉아서 하는 기구를 사용합니다.',
+       en:'Speed, slope, and resistance are adjusted to keep the prescribed intensity. Patients with poor balance use a cycle or seated device.'},
+      {draft:true, title_ko:'저항 운동기구', title_en:'Resistance Training Equipment',
+       ko:'탄력밴드, 가벼운 중량, 기구로 큰 근육을 중심으로 운동합니다. 숨을 참지 않게 하고 흉골 절개 수술 후에는 상지 사용 제한을 지킵니다.',
+       en:'Bands, light weights, and machines train large muscles. Patients avoid holding their breath, and arm restrictions are followed after sternotomy.'},
+      {draft:true, title_ko:'혈압계와 운동자각도 척도', title_en:'Blood Pressure Monitor & RPE Scale',
+       ko:'운동 전후와 운동 중에 혈압을 재고, 환자가 느끼는 힘든 정도를 보그 척도로 확인합니다. 심박수를 낮추는 약을 쓰는 환자에게 특히 유용합니다.',
+       en:'Blood pressure is measured before, during, and after exercise, and effort is rated with the Borg scale. The scale is especially useful for patients taking drugs that slow the heart rate.'},
+    ],
+    treatment: [
+      {draft:true, title_ko:'단계별 심장재활', title_en:'Phases of Cardiac Rehabilitation',
+       ko:'입원 중 조기 활동, 퇴원 후 감시하에 하는 외래 운동, 장기적인 자가 운동으로 이어집니다. 각 단계의 목표와 감시 수준이 다릅니다.',
+       en:'Care moves from early activity in hospital to supervised outpatient exercise and long-term self-exercise. Goals and monitoring differ by phase.'},
+      {draft:true, title_ko:'유산소 운동', title_en:'Aerobic Exercise',
+       ko:'준비운동, 본운동, 정리운동으로 구성하고 심박수와 운동자각도로 강도를 조절합니다. 중강도 지속 운동이나 선별된 환자의 간격 운동을 시행합니다.',
+       en:'Sessions include warm-up, main exercise, and cool-down, guided by heart rate and perceived effort. Moderate continuous exercise, or interval exercise for selected patients, is used.'},
+      {draft:true, title_ko:'저항 운동', title_en:'Resistance Exercise',
+       ko:'상태가 안정된 환자에게 가벼운 저항부터 시작해 일상에 필요한 근력을 기릅니다. 혈압과 증상을 확인하며 천천히 늘립니다.',
+       en:'Stable patients begin with light resistance to build strength for daily life. Loads increase slowly while checking blood pressure and symptoms.'},
+      {draft:true, title_ko:'위험요인 관리 교육', title_en:'Risk-Factor Education',
+       ko:'혈압, 혈당, 콜레스테롤, 체중, 흡연을 관리하고 약을 꾸준히 복용하도록 교육합니다. 식사와 스트레스 관리도 함께 다룹니다.',
+       en:'Patients learn to manage blood pressure, glucose, cholesterol, weight, and smoking, and to take medication regularly. Diet and stress are also addressed.'},
+      {draft:true, title_ko:'심부전 환자 운동', title_en:'Exercise in Heart Failure',
+       ko:'안정된 상태인지 확인하고 낮은 강도에서 짧게 시작합니다. 갑자기 체중이 늘거나 붓고 숨이 더 차면 운동을 미루고 의료진에게 알립니다.',
+       en:'Stability is confirmed, and exercise starts short and at low intensity. Sudden weight gain, swelling, or worse breathlessness means postponing exercise and informing the team.'},
+    ],
+    system: [
+      {draft:true, title_ko:'위험도 분류와 운동 처방', title_en:'Risk Stratification & Prescription',
+       ko:'병력, 심장 기능, 부정맥, 운동부하검사 결과로 위험도를 나눕니다. 운동의 빈도, 강도, 시간, 종류를 정하고 정기적으로 다시 평가합니다.',
+       en:'History, heart function, arrhythmia, and exercise test results determine risk. Frequency, intensity, time, and type of exercise are prescribed and reviewed regularly.'},
+      {draft:true, title_ko:'심장내과·흉부외과와의 협력', title_en:'Working With Cardiology & Cardiac Surgery',
+       ko:'시술과 수술 내용, 약물, 활동 제한을 공유하고 치료 중 이상 소견을 바로 알립니다. 영양, 간호, 약제 전문가도 교육에 참여할 수 있습니다.',
+       en:'Procedures, medication, and activity limits are shared, and abnormal findings are reported promptly. Nutrition, nursing, and pharmacy experts may join patient education.'},
+    ],
+  },
+  pediatric: {
+    facility: [
+      {draft:true, title_ko:'소아재활치료실의 역할', title_en:'Role of the Pediatric Rehab Room',
+       ko:'뇌성마비, 발달 지연, 미숙아, 유전·근육 질환, 사경 등이 있는 아이의 운동과 놀이, 일상 참여를 돕습니다. 아이의 발달 단계와 가족의 목표에 맞추어 치료합니다.',
+       en:'Children with cerebral palsy, developmental delay, prematurity, genetic or muscle disease, or torticollis are supported in movement, play, and daily participation. Care follows the child\'s stage and family goals.'},
+      {draft:true, title_ko:'놀이 중심 환경', title_en:'Play-Based Environment',
+       ko:'매트와 장난감, 공을 이용해 아이가 스스로 움직이고 싶어지게 합니다. 색과 소리, 자극의 양을 아이의 반응에 맞게 조절합니다.',
+       en:'Mats, toys, and balls encourage children to move on their own. Color, sound, and stimulation are adjusted to each child\'s response.'},
+      {draft:true, title_ko:'소아 안전과 감염관리', title_en:'Child Safety & Infection Control',
+       ko:'작은 부품과 모서리, 낙상 위험을 확인하고 아이를 혼자 두지 않습니다. 장난감은 입에 닿을 수 있어 사용할 때마다 세척하거나 소독합니다.',
+       en:'Small parts, sharp edges, and fall risks are checked, and children are never left alone. Toys may go in the mouth, so they are cleaned or disinfected after use.'},
+    ],
+    equipment: [
+      {draft:true, title_ko:'매트와 치료용 공', title_en:'Mats & Therapy Balls',
+       ko:'엎드리기, 구르기, 앉기, 네발기기를 안전하게 연습합니다. 치료용 공은 균형과 몸통 조절을 놀이처럼 훈련하게 해 줍니다.',
+       en:'Tummy time, rolling, sitting, and crawling are practiced safely. Therapy balls make balance and trunk control training playful.'},
+      {draft:true, title_ko:'소아 보행기와 기립기', title_en:'Pediatric Walkers & Standers',
+       ko:'서기 어려운 아이는 기립기로 선 자세를 경험하고, 걷기를 배우는 아이는 보행기를 사용합니다. 성장에 따라 크기와 지지 정도를 자주 조정합니다.',
+       en:'Standers let children who cannot stand experience upright posture, and walkers help those learning to walk. Size and support are adjusted often as the child grows.'},
+      {draft:true, title_ko:'감각통합 도구', title_en:'Sensory Integration Equipment',
+       ko:'그네, 트램펄린, 촉감 재료, 균형판으로 감각을 받아들이고 조절하는 경험을 제공합니다. 불편해하는 자극은 강요하지 않고 천천히 늘립니다.',
+       en:'Swings, trampolines, textured materials, and balance boards offer experiences in receiving and regulating sensation. Uncomfortable input is not forced and is increased slowly.'},
+      {draft:true, title_ko:'소아 보조기와 자세 유지 도구', title_en:'Pediatric Orthoses & Seating',
+       ko:'발목발보조기와 자세 유지 의자는 안정된 자세와 변형 예방을 돕습니다. 성장과 피부 눌림을 정기적으로 확인합니다.',
+       en:'Ankle-foot orthoses and adapted seating support stable posture and help prevent deformity. Growth and skin pressure are checked regularly.'},
+      {draft:true, title_ko:'발달 평가 도구와 놀이 자료', title_en:'Developmental Assessment & Play Tools',
+       ko:'표준화된 발달검사와 블록, 퍼즐, 그림책을 사용합니다. 놀이 속에서 움직임, 손 사용, 의사소통을 자연스럽게 관찰합니다.',
+       en:'Standardized developmental tests, blocks, puzzles, and picture books are used. Movement, hand use, and communication are observed naturally in play.'},
+    ],
+    treatment: [
+      {draft:true, title_ko:'신경발달치료', title_en:'Neurodevelopmental Treatment for Children',
+       ko:'자세 조절과 정상에 가까운 움직임 경험을 이끌어 냅니다. 아이가 능동적으로 참여하는 놀이와 일상 동작으로 연결합니다.',
+       en:'Therapists guide postural control and efficient movement experiences. These are linked to play and daily activities in which the child takes an active part.'},
+      {draft:true, title_ko:'대근육 운동 발달 훈련', title_en:'Gross Motor Training',
+       ko:'목 가누기, 뒤집기, 앉기, 기기, 서기, 걷기를 발달 순서와 아이의 강점에 맞추어 연습합니다. 목표 과제를 짧게 자주 반복합니다.',
+       en:'Head control, rolling, sitting, crawling, standing, and walking are practiced according to development and strengths. Goal tasks are repeated often in short periods.'},
+      {draft:true, title_ko:'소근육과 일상생활 훈련', title_en:'Fine Motor & Daily Skills',
+       ko:'잡기, 놓기, 그리기, 숟가락 사용, 옷 입기를 놀이로 연습합니다. 가정과 어린이집, 학교에서 필요한 동작을 목표로 합니다.',
+       en:'Grasping, releasing, drawing, using a spoon, and dressing are practiced through play. Goals reflect skills needed at home, daycare, or school.'},
+      {draft:true, title_ko:'경직과 변형 예방', title_en:'Spasticity & Deformity Prevention',
+       ko:'스트레칭, 자세 관리, 보조기, 근력 운동을 함께 합니다. 주사나 수술 치료 전후에는 회복 단계에 맞춘 집중 훈련을 합니다.',
+       en:'Stretching, positioning, orthoses, and strengthening are combined. Before and after injections or surgery, training is matched to the recovery stage.'},
+      {draft:true, title_ko:'섭식과 의사소통 지원', title_en:'Feeding & Communication Support',
+       ko:'빨기, 씹기, 삼키기와 의사소통에 어려움이 있으면 관련 치료사와 함께 돕습니다. 먹는 자세와 속도, 음식의 형태를 안전하게 조절합니다.',
+       en:'Difficulties with sucking, chewing, swallowing, or communication are supported with related therapists. Posture, pace, and food texture are adjusted for safety.'},
+    ],
+    system: [
+      {draft:true, title_ko:'소아 발달 평가', title_en:'Pediatric Developmental Assessment',
+       ko:'대근육운동기능평가(GMFM), 대근육운동기능분류(GMFCS), 발달검사로 현재 수준을 확인합니다. 조산아는 교정 나이를 고려합니다.',
+       en:'The Gross Motor Function Measure, the GMFCS, and developmental tests show the current level. Corrected age is considered for preterm infants.'},
+      {draft:true, title_ko:'가족 중심 치료', title_en:'Family-Centered Care',
+       ko:'부모와 함께 목표를 정하고 집에서 할 수 있는 놀이와 자세를 교육합니다. 소아청소년과, 정형외과, 교육기관과도 필요한 정보를 공유합니다.',
+       en:'Goals are set with parents, who learn play and positioning for home. Relevant information is shared with pediatrics, orthopedics, and schools when needed.'},
+    ],
+  },
+  function_test: {
+    facility: [
+      {draft:true, title_ko:'임상재활기능검사실의 역할', title_en:'Role of the Function Test Room',
+       ko:'근육과 신경, 균형, 보행, 근력을 객관적으로 측정합니다. 결과는 진단을 돕고 치료 계획을 세우며 변화를 비교하는 데 사용합니다.',
+       en:'Muscle, nerve, balance, gait, and strength are measured objectively. Results support diagnosis, treatment planning, and comparison over time.'},
+      {draft:true, title_ko:'검사 환경 관리', title_en:'Controlled Test Environment',
+       ko:'정확한 결과를 위해 실내 온도와 소음, 전기 잡음을 관리합니다. 피부 온도와 자세, 긴장 상태도 검사 결과에 영향을 줄 수 있습니다.',
+       en:'Temperature, noise, and electrical interference are controlled for accurate results. Skin temperature, posture, and tension can also affect testing.'},
+      {draft:true, title_ko:'검사 전 안전 확인', title_en:'Safety Checks Before Testing',
+       ko:'항응고제 복용, 출혈 경향, 심박동기, 감염, 낙상 위험을 미리 확인합니다. 검사 목적과 불편감을 설명하고 동의를 얻습니다.',
+       en:'Anticoagulant use, bleeding tendency, pacemakers, infection, and fall risk are checked first. The purpose and possible discomfort are explained, and consent is obtained.'},
+    ],
+    equipment: [
+      {draft:true, title_ko:'근전도·신경전도 검사기', title_en:'EMG & Nerve Conduction Equipment',
+       ko:'신경에 짧은 전기자극을 주어 전달 속도와 반응 크기를 보고, 바늘 전극으로 근육의 전기 활동을 확인합니다. 말초신경과 근육 질환을 평가합니다.',
+       en:'Short electrical pulses measure nerve conduction speed and response size, and needle electrodes record muscle activity. Peripheral nerve and muscle disorders are evaluated.'},
+      {draft:true, title_ko:'유발전위 검사기', title_en:'Evoked Potential Equipment',
+       ko:'감각 자극에 대한 뇌와 척수의 반응을 기록하거나 자기자극으로 운동 신경길을 평가합니다. 체내 금속이나 전자기기, 경련 병력을 먼저 확인합니다.',
+       en:'Brain and spinal responses to sensory input are recorded, or motor pathways are tested with magnetic stimulation. Metal or electronic implants and seizure history are checked first.'},
+      {draft:true, title_ko:'보행 분석 장비', title_en:'Gait Analysis System',
+       ko:'카메라, 힘판, 보행 매트, 센서로 걸음의 속도, 길이, 관절 움직임, 힘을 측정합니다. 눈으로 보기 어려운 좌우 차이와 변화를 확인합니다.',
+       en:'Cameras, force plates, walkways, or sensors measure speed, step length, joint motion, and force. Small differences between sides and over time can be seen.'},
+      {draft:true, title_ko:'균형 검사 장비', title_en:'Posturography',
+       ko:'힘판 위에서 몸의 흔들림을 측정하고 시각과 감각 조건을 바꾸어 균형 전략을 평가합니다. 낙상을 막기 위해 안전띠와 보조 인력을 준비합니다.',
+       en:'Body sway is measured on a force plate under different visual and sensory conditions. A safety harness and assistance prevent falls.'},
+      {draft:true, title_ko:'등속성 근력 검사기', title_en:'Isokinetic Dynamometer',
+       ko:'정해진 속도로 관절을 움직이며 근력과 좌우 차이, 근육 간 비율을 측정합니다. 스포츠 손상이나 수술 후 회복을 비교하는 데 도움이 됩니다.',
+       en:'Strength, side-to-side difference, and muscle balance are measured at a set speed. It helps compare recovery after sports injury or surgery.'},
+      {draft:true, title_ko:'삼킴 검사 장비', title_en:'Swallowing Study Equipment',
+       ko:'비디오투시나 내시경으로 음식이 넘어가는 과정과 흡인을 확인합니다. 의사와 관련 전문가가 함께 검사하고 안전한 식사 방법을 정합니다.',
+       en:'Videofluoroscopy or endoscopy shows how food passes and whether aspiration occurs. Physicians and related specialists test together and decide safe eating methods.'},
+    ],
+    treatment: [
+      {draft:true, title_ko:'검사 결과를 이용한 치료 계획', title_en:'Test-Guided Treatment Planning',
+       ko:'약한 근육, 균형 문제, 비대칭 보행을 수치로 확인해 치료 목표를 정합니다. 같은 조건에서 다시 검사해 효과를 비교합니다.',
+       en:'Weak muscles, balance problems, and asymmetric gait are measured to set goals. Retesting under the same conditions shows the effect of treatment.'},
+      {draft:true, title_ko:'생체되먹임 훈련', title_en:'Biofeedback Training',
+       ko:'근육의 활동이나 체중의 위치를 화면과 소리로 알려 주어 스스로 조절하게 합니다. 과한 긴장을 줄이거나 약한 근육을 쓰는 연습에 사용합니다.',
+       en:'Muscle activity or body weight position is shown by screen or sound so patients can adjust it. It helps reduce excess tension or activate weak muscles.'},
+      {draft:true, title_ko:'균형 되먹임 훈련', title_en:'Balance Feedback Training',
+       ko:'검사에서 확인한 문제 방향으로 체중을 옮기고 감각 조건을 바꾸어 연습합니다. 난이도는 안전한 범위 안에서 단계적으로 높입니다.',
+       en:'Patients practice shifting weight toward problem directions and under changing sensory conditions. Difficulty increases gradually within a safe range.'},
+      {draft:true, title_ko:'보행 교정 훈련과의 연계', title_en:'Linking Results to Gait Training',
+       ko:'분석 결과를 치료사와 공유해 보조기, 근력 운동, 보행 훈련에 반영합니다. 영상은 환자가 자신의 걸음을 이해하는 데 도움이 됩니다.',
+       en:'Findings are shared with therapists and applied to orthoses, strengthening, and gait training. Video helps patients understand how they walk.'},
+      {draft:true, title_ko:'복귀 시점 판단 지원', title_en:'Supporting Return Decisions',
+       ko:'수술이나 손상 후 근력과 균형, 기능 검사 결과를 운동이나 직장 복귀 판단에 참고합니다. 최종 판단은 증상과 진찰을 함께 고려해 의사가 합니다.',
+       en:'Strength, balance, and function tests help inform return to sport or work after injury or surgery. The physician makes the final decision with symptoms and examination.'},
+    ],
+    system: [
+      {draft:true, title_ko:'검사 의뢰와 판독', title_en:'Test Orders & Interpretation',
+       ko:'의사의 의뢰 목적에 맞게 검사를 준비하고 정해진 절차로 시행합니다. 결과는 병력과 진찰 소견을 함께 보고 해석합니다.',
+       en:'Tests are prepared for the physician\'s question and performed by standard procedures. Results are interpreted together with history and examination.'},
+      {draft:true, title_ko:'검사 품질 관리', title_en:'Quality Control',
+       ko:'장비 보정, 전극 상태, 자세와 검사 순서를 일정하게 유지합니다. 같은 기준을 지켜야 이전 결과와 믿을 만하게 비교할 수 있습니다.',
+       en:'Calibration, electrodes, posture, and test order are kept consistent. The same standards allow reliable comparison with previous results.'},
+    ],
+  },
+  ultrasound: {
+    facility: [
+      {draft:true, title_ko:'초음파실의 역할', title_en:'Role of the Ultrasound Room',
+       ko:'힘줄, 인대, 근육, 관절, 말초신경을 실시간으로 보며 손상과 염증을 평가합니다. 움직이면서 확인할 수 있고 방사선을 사용하지 않습니다.',
+       en:'Tendons, ligaments, muscles, joints, and peripheral nerves are viewed in real time for injury and inflammation. Structures can be examined during movement, without radiation.'},
+      {draft:true, title_ko:'검사와 시술 공간', title_en:'Examination & Procedure Space',
+       ko:'조명을 낮추어 화면을 잘 보이게 하고 환자가 편한 자세를 취하게 합니다. 시술할 때는 청결 구역과 응급 물품을 함께 준비합니다.',
+       en:'Lights are dimmed for a clear image, and the patient is positioned comfortably. A clean field and emergency supplies are prepared for procedures.'},
+      {draft:true, title_ko:'설명과 동의', title_en:'Explanation & Consent',
+       ko:'검사의 목적과 시술의 이득, 위험, 대안을 설명하고 동의를 얻습니다. 환자가 화면을 함께 보면 자신의 상태를 이해하기 쉽습니다.',
+       en:'The purpose of the scan and the benefits, risks, and alternatives of a procedure are explained, and consent is obtained. Viewing the screen together helps patients understand.'},
+    ],
+    equipment: [
+      {draft:true, title_ko:'초음파 진단 장비', title_en:'Diagnostic Ultrasound System',
+       ko:'소리의 반사를 이용해 조직의 모습을 화면에 보여 줍니다. 깊이와 밝기, 초점을 조절해 보고 싶은 구조를 선명하게 합니다.',
+       en:'Reflected sound waves create images of tissue. Depth, brightness, and focus are adjusted to show the structure clearly.'},
+      {draft:true, title_ko:'선형·볼록 탐촉자', title_en:'Linear & Convex Probes',
+       ko:'얕은 힘줄과 신경은 주로 고주파 선형 탐촉자로, 엉덩관절처럼 깊은 부위는 저주파 볼록 탐촉자로 봅니다. 부위와 깊이에 따라 고릅니다.',
+       en:'High-frequency linear probes are mainly used for shallow tendons and nerves, and low-frequency convex probes for deep areas such as the hip. The choice depends on site and depth.'},
+      {draft:true, title_ko:'도플러 기능', title_en:'Doppler Imaging',
+       ko:'혈관의 위치와 혈류를 색으로 보여 줍니다. 염증 부위의 혈류 증가를 살피고 주사할 때 혈관을 피하는 데 도움이 됩니다.',
+       en:'Doppler shows vessels and blood flow in color. It helps detect increased flow in inflammation and avoid vessels during injection.'},
+      {draft:true, title_ko:'탄성초음파', title_en:'Ultrasound Elastography',
+       ko:'조직의 단단한 정도를 비교하는 기능으로 힘줄과 근육의 상태를 살피는 데 참고합니다. 다른 영상과 진찰 소견을 함께 봅니다.',
+       en:'Elastography compares tissue stiffness and can add information on tendons and muscles. It is read together with other images and the examination.'},
+      {draft:true, title_ko:'시술 준비 물품', title_en:'Procedure Supplies',
+       ko:'멸균 덮개와 젤, 소독약, 주사기와 바늘을 준비합니다. 감염을 막기 위해 무균 절차를 지키고 사용한 바늘은 바로 안전하게 폐기합니다.',
+       en:'Sterile covers and gel, antiseptic, syringes, and needles are prepared. Aseptic technique is followed, and used needles are discarded safely at once.'},
+    ],
+    treatment: [
+      {draft:true, title_ko:'근골격 초음파 검사', title_en:'Musculoskeletal Ultrasound',
+       ko:'어깨, 팔꿈치, 손, 무릎, 발목 등의 힘줄 파열, 염증, 물혹, 관절액을 확인합니다. 아픈 쪽과 반대쪽을 비교하고 움직이면서 살핍니다.',
+       en:'Tendon tears, inflammation, cysts, and joint fluid in the shoulder, elbow, hand, knee, or ankle are examined. The painful side is compared with the other and viewed during movement.'},
+      {draft:true, title_ko:'말초신경 초음파 검사', title_en:'Peripheral Nerve Ultrasound',
+       ko:'신경이 눌리거나 부은 부위를 확인합니다. 손목굴증후군처럼 눌림이 의심될 때 근전도검사와 함께 판단합니다.',
+       en:'Areas where a nerve is compressed or swollen are identified. In suspected entrapment such as carpal tunnel syndrome, results are considered with nerve testing.'},
+      {draft:true, title_ko:'초음파 유도 주사', title_en:'Ultrasound-Guided Injection',
+       ko:'의사가 화면으로 바늘과 목표 구조를 확인하면서 관절, 힘줄 주위, 신경 주위에 약물을 주사합니다. 주변 혈관과 신경을 피하는 데 도움이 됩니다.',
+       en:'Physicians inject into joints or around tendons and nerves while watching the needle and target. Guidance helps avoid nearby vessels and nerves.'},
+      {draft:true, title_ko:'경직 근육 주사 유도', title_en:'Guided Injection for Spasticity',
+       ko:'경직이 심한 근육을 찾아 보툴리눔 독소를 정확히 주사하는 데 초음파를 사용할 수 있습니다. 주사 후에는 스트레칭과 기능 훈련을 이어서 합니다.',
+       en:'Ultrasound can guide botulinum toxin injection into spastic muscles. Stretching and functional training follow the injection.'},
+      {draft:true, title_ko:'시술 후 관찰과 재활', title_en:'Aftercare & Rehabilitation',
+       ko:'주사 후 통증, 출혈, 어지럼, 감염 증상을 안내하고 잠시 상태를 살핍니다. 통증이 줄면 운동치료로 이어 기능을 회복합니다.',
+       en:'Pain, bleeding, dizziness, and signs of infection are explained, and the patient is observed briefly. As pain eases, exercise therapy restores function.'},
+    ],
+    system: [
+      {draft:true, title_ko:'검사 의뢰와 영상 기록', title_en:'Orders & Image Records',
+       ko:'증상 부위와 질문을 확인하고 표준 단면의 영상을 저장합니다. 결과는 진찰 및 다른 영상 검사와 함께 해석합니다.',
+       en:'The symptom site and clinical question are confirmed, and standard views are saved. Findings are interpreted with the examination and other imaging.'},
+      {draft:true, title_ko:'시술 안전 절차', title_en:'Procedure Safety',
+       ko:'환자와 시술 부위를 다시 확인하고 알레르기, 항응고제, 감염 여부를 점검합니다. 시술 부위와 약물, 반응을 기록해 다음 진료에 이어 갑니다.',
+       en:'Patient identity and site are rechecked along with allergies, anticoagulants, and infection. The site, drug, and response are recorded for follow-up.'},
     ],
   },
 };
@@ -730,14 +1348,14 @@ function migrateFavorites(){
     if(key.includes('::')){ next.push(key); return; }
     const m = key.match(/^(.*?)_(facility|equipment|treatment|system)_(\d+)$/);
     if(m){
-      const topics = topicsFor(m[1], m[2]);
+      const topics = commonTopics(m[2]);
       if(topics[Number(m[3])]) next.push(favKey(m[1], m[2], topics[Number(m[3])]));
       return;
     }
     const m2 = key.match(/^(facility|equipment|treatment|system)_(\d+)$/);
     if(m2){
       const room = state.room || '';
-      const topics = topicsFor(room, m2[1]);
+      const topics = commonTopics(m2[1]);
       if(topics[Number(m2[2])]) next.push(favKey(room, m2[1], topics[Number(m2[2])]));
     }
   });
@@ -745,14 +1363,18 @@ function migrateFavorites(){
   state.favorites = uniq;
   localStorage.setItem('guide_favs', JSON.stringify(uniq));
 }
-function topicsFor(roomId, catId){
-  if(catId==='equipment' || catId==='treatment'){
-    const pack = ROOM_TOPICS[roomId];
-    const list = pack && pack[catId];
-    if(Array.isArray(list) && list.length) return list;
-  }
+function commonTopics(catId){
   const cat = CATEGORIES.find(c=>c.id===catId);
   return cat ? cat.topics : [];
+}
+function topicsFor(roomId, catId){
+  const pack = ROOM_TOPICS[roomId];
+  const list = pack && Array.isArray(pack[catId]) ? pack[catId] : [];
+  const common = commonTopics(catId);
+  if(!list.length) return common;
+  if(catId==='facility') return common.slice(0,1).concat(list, common.slice(1));
+  if(catId==='system') return list.concat(common);
+  return list;
 }
 
 /* =========================================================
@@ -1588,7 +2210,7 @@ async function openDetail(catId, idx){
   const l = langObj(state.lang);
   const body = document.getElementById('detailBody');
   body.innerHTML = `
-    ${topic.draft?'<div class="banner">초안입니다. 이 병원 내용으로 바꾼 뒤 draft 표시를 지우세요.</div>':''}
+    ${topic.draft?'<div class="banner">초안입니다. 대학병원 재활의학과의 일반 내용이라 우리 병원과 다를 수 있습니다.</div>':''}
     <div class="content-card ${l.rtl?'rtl':''}">
       <div class="lbl">${l.flag} ${l.name}<span class="tr-badge" id="targetTrBadge" hidden></span></div>
       <p id="targetText"><span class="loading-dot"></span> <span class="loading-dot"></span> <span class="loading-dot"></span></p>
@@ -2585,8 +3207,9 @@ function allEnglishContent(){
   const list = [];
   ROOMS.forEach(r=>list.push(r.en_desc));
   const seen = new Set(list);
-  CATEGORIES.forEach(cat=>{
-    ROOMS.forEach(room=>{
+  const rooms = ROOMS.slice().sort((a,b)=>(b.id===state.room)-(a.id===state.room));
+  rooms.forEach(room=>{
+    CATEGORIES.forEach(cat=>{
       topicsFor(room.id, cat.id).forEach(t=>{
         if(t && t.en && !seen.has(t.en)){ seen.add(t.en); list.push(t.en); }
       });
