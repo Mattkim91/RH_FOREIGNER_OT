@@ -52,8 +52,8 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .section-title{font-size:0.78rem;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;margin:18px 2px 10px;}
 
 /* ---------- Language picker ---------- */
-.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
-.lang-card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:transform .15s, border-color .15s;}
+.lang-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:6px;}
+.lang-card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:transform .15s, border-color .15s;overflow-wrap:anywhere;}
 .lang-card:active{transform:scale(.96);}
 .lang-card.selected{border-color:var(--primary);background:var(--card-alt);}
 .lang-card .flag{font-size:1.9rem;}
@@ -127,8 +127,8 @@ body{font-size:calc(16px * var(--font-size-scale));}
 @keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(193,68,60,.45)}70%{box-shadow:0 0 0 22px rgba(193,68,60,0)}100%{box-shadow:0 0 0 0 rgba(193,68,60,0)}}
 .mic-hint{margin-top:12px;text-align:center;font-size:13.12px;color:var(--ink-soft);font-weight:600;}
 .type-fallback{display:flex;gap:8px;margin-top:14px;}
-.type-fallback input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-size:16px;font-family:inherit;}
-.type-fallback button{background:var(--primary);color:#fff;border:none;border-radius:12px;padding:0 16px;font-weight:700;cursor:pointer;}
+.type-fallback input{flex:1 1 0;min-width:0;width:0;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-size:16px;font-family:inherit;}
+.type-fallback button{flex-shrink:0;white-space:nowrap;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:0 16px;font-weight:700;cursor:pointer;}
 .transcript{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
 #screen-interp{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0;min-height:0;}
 #transcriptWrap{flex:1;min-height:0;overflow-y:auto;padding-bottom:96px;-webkit-overflow-scrolling:touch;}
@@ -184,8 +184,8 @@ body{font-size:calc(16px * var(--font-size-scale));}
 @media (min-width:600px){
   #app{max-width:680px;}
   .tabbar{max-width:680px;}
-  #settingsFab{right:calc(50% - 340px + 16px);}
-  .lang-grid{grid-template-columns:repeat(3,1fr);}
+  #settingsFab{right:max(16px, calc(50% - 340px + 16px));}
+  .lang-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
   .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .topic-item{padding:16px 18px;}
   body{font-size:calc(16.5px * var(--font-size-scale));}
@@ -242,7 +242,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v1.8</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v1.9</span></div>
       </div>
     </div>
     <div class="section-title">지금 계신(또는 안내할) 치료실을 선택해주세요 · Select the room</div>
@@ -254,7 +254,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v1.8</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v1.9</span></div>
       </div>
     </div>
     <div class="back-row" style="padding-top:0;">
@@ -361,7 +361,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>⚙️ 설정</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v1.8</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v1.9</span></div>
       </div>
     </div>
     <div class="set-row" style="flex-direction:column;align-items:stretch;gap:6px;">
@@ -451,7 +451,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="release-sheet" role="dialog" aria-modal="true" aria-labelledby="updateTitle" style="max-width:380px;">
       <div style="text-align:center;margin-bottom:12px;">
         <div style="font-size:2rem;">🎉</div>
-        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v1.8 업데이트</div>
+        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v1.9 업데이트</div>
         <div style="font-size:0.82rem;color:var(--ink-soft);line-height:1.55;margin-top:6px;">앱이 업데이트되었어요.<br>주요 변경사항을 확인해보세요.</div>
       </div>
       <ul class="release-list" id="updateLatest" style="margin-bottom:16px;"></ul>
@@ -467,8 +467,14 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 /* =========================================================
    1. 언어 정의 · Language definitions
    ========================================================= */
-const APP_VERSION = 'v1.8';
+const APP_VERSION = 'v1.9';
 const CHANGELOG = [
+  {version:'v1.9', date:'2026.11.26', items:[
+    '동시통역 반응이 빨라졌습니다. 말이 끝나기 전에 미리 통역을 준비하고, 번역이 오는 대로 보여 주고 읽습니다.',
+    '동시통역이 시끄러운 곳에서 말이 끝난 것을 더 잘 알아챕니다.',
+    '동시통역 화면에 말이 끝난 뒤 읽기 시작까지 걸린 시간이 나옵니다.',
+    '폭이 좁은 화면(폴드 등)에서 통역 입력칸이 화면 밖으로 나가지 않습니다.'
+  ]},
   {version:'v1.8', date:'2026.11.26', items:[
     '치료실 11곳마다 소개, 장비, 치료법, 시스템 내용을 보강했습니다.',
     '새 내용은 대학병원 재활의학과의 일반 내용을 바탕으로 한 초안입니다.',
@@ -2393,10 +2399,13 @@ function speak(text, langCode, btnEl){
   }
   if(btnEl && ttsButton===btnEl){
     autoQueue = [];
+    autoMuteGen++;
     stopSpeech();
     return;
   }
-  stopSpeech();
+  /* 동시통역에서 아무것도 읽고 있지 않으면 취소를 건너뜁니다. 취소 직후 읽기는 일부 기기에서 늦습니다. */
+  if(autoOn && !ttsActive && !window.speechSynthesis.speaking && !window.speechSynthesis.pending) ttsToken++;
+  else stopSpeech();
   const chunks = ttsChunks(text);
   if(!chunks.length) return;
   const token = ttsToken;
@@ -2405,6 +2414,12 @@ function speak(text, langCode, btnEl){
   chunks.forEach((part, i)=>{
     const u = new SpeechSynthesisUtterance(part);
     u.lang = langCode || '';
+    if(autoOn){
+      u.rate = 1.1;
+      const voice = localVoice(langCode);
+      if(voice) u.voice = voice;
+      if(i===0) u.onstart = autoSpeechHeard;
+    }
     u.onend = ()=>{
       if(token!==ttsToken) return;
       if(i===chunks.length-1){ resetSpeakButton(btnEl); ttsEnded(); }
@@ -2646,28 +2661,131 @@ let geminiModel = '';
 function readKey(name){ try{ return (localStorage.getItem(name)||'').trim(); }catch(e){ return ''; } }
 function geminiKey(){ return readKey(GEMINI_KEY); }
 
+const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
+let geminiStreamOk = true;
+function geminiText(data){
+  const cand = data && data.candidates && data.candidates[0];
+  const parts = cand && cand.content && cand.content.parts || [];
+  return parts.map(p=>p.thought ? '' : (p.text||'')).join('');
+}
+async function geminiError(res){
+  const body = await res.text().catch(()=>'');
+  const err = new Error('gemini '+res.status);
+  err.status = res.status;
+  err.badKey = /API key|API_KEY|PERMISSION_DENIED|unregistered callers/i.test(body);
+  return err;
+}
+function geminiFetch(url, key, request, signal){
+  return fetch(url, {
+    method:'POST',
+    headers:{'Content-Type':'application/json', 'x-goog-api-key':key},
+    signal:signal,
+    body:JSON.stringify(request)
+  });
+}
 async function geminiPost(model, key, request, timeout){
   const ctl = new AbortController();
   const timer = setTimeout(()=>ctl.abort(), timeout);
   try{
-    const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent', {
-      method:'POST',
-      headers:{'Content-Type':'application/json', 'x-goog-api-key':key},
-      signal:ctl.signal,
-      body:JSON.stringify(request)
-    });
-    if(!res.ok){
-      const body = await res.text().catch(()=>'');
-      const err = new Error('gemini '+res.status);
-      err.status = res.status;
-      err.badKey = /API key|API_KEY|PERMISSION_DENIED|unregistered callers/i.test(body);
-      throw err;
-    }
-    const data = await res.json();
-    const cand = data.candidates && data.candidates[0];
-    const parts = cand && cand.content && cand.content.parts || [];
-    return parts.map(p=>p.text||'').join('');
+    const res = await geminiFetch(GEMINI_BASE+model+':generateContent', key, request, ctl.signal);
+    if(!res.ok) throw await geminiError(res);
+    return geminiText(await res.json());
   }finally{ clearTimeout(timer); }
+}
+/* 답이 오는 대로 onText(지금까지의 글)를 부릅니다. 스트리밍이 안 되면 한 번에 받습니다. */
+async function geminiStream(model, key, request, signal, onText){
+  const streaming = geminiStreamOk;
+  const res = await geminiFetch(GEMINI_BASE+model+(streaming ? ':streamGenerateContent?alt=sse' : ':generateContent'), key, request, signal);
+  if(!res.ok){
+    const err = await geminiError(res);
+    if(streaming && err.status===400 && !err.badKey){
+      geminiStreamOk = false;
+      return geminiStream(model, key, request, signal, onText);
+    }
+    throw err;
+  }
+  let out = '';
+  if(!streaming){
+    out = geminiText(await res.json());
+    onText(out);
+    return out;
+  }
+  const line = s=>{
+    if(s.slice(0,5)!=='data:') return;
+    out += geminiText(JSON.parse(s.slice(5)));
+  };
+  if(!res.body || !res.body.getReader){
+    (await res.text()).split('\n').forEach(line);
+    onText(out);
+    return out;
+  }
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+  for(;;){
+    const step = await reader.read();
+    buf += step.done ? '\n' : dec.decode(step.value, {stream:true});
+    const lines = buf.split('\n');
+    buf = lines.pop();
+    const before = out.length;
+    lines.forEach(s=>line(s.trim()));
+    if(out.length>before) onText(out);
+    if(step.done) return out;
+  }
+}
+/* 2.5초 안에 첫 글이 안 오면 다음 모델에도 함께 묻고, 먼저 답한 쪽을 씁니다. */
+function geminiRace(key, request, signal, onText){
+  const HEDGE_MS = 2500;
+  const order = geminiModel ? [geminiModel].concat(GEMINI_MODELS.filter(m=>m!==geminiModel)) : GEMINI_MODELS.slice();
+  return new Promise((resolve, reject)=>{
+    const tries = [];
+    let winner = null, done = false, next = 0, active = 0, last = null, hedge = null;
+    const finish = (err, out)=>{
+      if(done) return;
+      done = true;
+      clearTimeout(hedge);
+      clearTimeout(limit);
+      tries.forEach(ctl=>{ if(err || ctl!==winner) ctl.abort(); });
+      if(err) reject(err); else resolve(out);
+    };
+    const limit = setTimeout(()=>finish(last || new Error('gemini timeout')), AUTO_BUDGET_MS);
+    const launch = ()=>{
+      clearTimeout(hedge);
+      if(done || next>=order.length) return;
+      const model = order[next++];
+      const ctl = new AbortController();
+      tries.push(ctl);
+      active++;
+      if(next<order.length) hedge = setTimeout(launch, HEDGE_MS);
+      geminiStream(model, key, request, ctl.signal, out=>{
+        if(done || (winner && winner!==ctl)) return;
+        if(!winner){
+          winner = ctl;
+          clearTimeout(hedge);
+          tries.forEach(other=>{ if(other!==ctl) other.abort(); });
+        }
+        onText(out);
+      }).then(out=>{
+        if(done || (winner && winner!==ctl)) return;
+        winner = ctl;
+        geminiModel = model;
+        finish(null, out);
+      }, e=>{
+        active--;
+        if(done || (winner && winner!==ctl)) return;
+        if(!(last && last.status===429)) last = e;
+        if(winner===ctl || (e && e.badKey)){ finish(e); return; }
+        if(next<order.length) launch();
+        else if(active===0) finish(last);
+      });
+    };
+    if(signal) signal.addEventListener('abort', ()=>finish(new Error('aborted')));
+    launch();
+  });
+}
+/* 첫 통역이 늦지 않게 연결을 미리 열어 둡니다. 소리나 글은 보내지 않습니다. */
+function geminiWarm(){
+  try{ fetch(GEMINI_BASE+(geminiModel || GEMINI_MODELS[0]), {headers:{'x-goog-api-key':geminiKey()}}).catch(()=>{}); }catch(e){}
 }
 async function geminiTry(key, request, budget, read){
   const order = geminiModel ? [geminiModel].concat(GEMINI_MODELS.filter(m=>m!==geminiModel)) : GEMINI_MODELS;
@@ -2709,7 +2827,8 @@ const AUTO_SCHEMA = {
       heard:{type:'STRING'},
       translation:{type:'STRING'}
     },
-    required:['language','heard','translation']
+    required:['language','heard','translation'],
+    propertyOrdering:['language','heard','translation']
   }}},
   required:['turns']
 };
@@ -2729,34 +2848,65 @@ function parseTurns(json){
   });
   return turns;
 }
-function interpretAudio(wav, l){
-  return geminiTry(geminiKey(), {
+/* 아직 다 오지 않은 답에서 읽을 수 있는 만큼 꺼냅니다. */
+function partialTurns(text){
+  const re = /"language"\s*:\s*"(korean|visitor|none)"\s*,\s*"heard"\s*:\s*"((?:[^"\\]|\\.)*)"\s*,\s*"translation"\s*:\s*"((?:[^"\\]|\\.)*)(")?/g;
+  const read = s=>{
+    try{ return JSON.parse('"'+s.replace(/\\u[0-9a-fA-F]{0,3}$/,'')+'"').replace(/\s+/g,' ').trim(); }catch(e){ return ''; }
+  };
+  const turns = [];
+  let m;
+  while((m = re.exec(text))){
+    const who = m[1]==='korean' ? 'ko' : (m[1]==='visitor' ? 'visitor' : '');
+    const heard = read(m[2]);
+    const translation = read(m[3]);
+    if(!who || !heard || !translation) continue;
+    if(!/[가-힣]/.test(who==='ko' ? heard : translation)) continue;
+    turns.push({who:who, heard:heard, translation:translation, done:!!m[4]});
+  }
+  return turns;
+}
+function interpretAudio(wav, l, signal, onText){
+  return geminiRace(geminiKey(), {
     systemInstruction:{parts:[{text:autoInstruction(l)}]},
     contents:[{role:'user', parts:[{inlineData:{mimeType:'audio/wav', data:wav}}]}],
     generationConfig:{temperature:0, maxOutputTokens:1024, responseMimeType:'application/json', responseSchema:AUTO_SCHEMA}
-  }, AUTO_BUDGET_MS, parseTurns);
+  }, signal, onText);
 }
 
-/* ---------- 소리를 말 단위로 자르기 (0.9초 쉬면 끝, 최대 15초) ---------- */
+/* ---------- 소리를 말 단위로 자르기 ----------
+   0.36초 조용하면 미리 통역을 요청하고(onSpec), 0.75초 조용하면 말이 끝난 것으로 봅니다.
+   그 사이에 다시 말하면 미리 한 요청을 버립니다(onSpecCancel). 미리 요청은 한 번 말할 때 두 번까지입니다. 한 번에 최대 15초입니다. */
 function joinFrames(frames){
   const out = new Float32Array(frames.reduce((n,f)=>n+f.length, 0));
   let at = 0;
   frames.forEach(f=>{ out.set(f, at); at += f.length; });
   return out;
 }
-function createSegmenter(rate, onSegment, onSpeaking){
-  const FRAME_MS = 30, SILENCE_MS = 900, MAX_MS = 15000, PREROLL_MS = 300, MIN_VOICED_MS = 240, START_FRAMES = 4, MIN_LEVEL = 0.01;
+function createSegmenter(rate, cb){
+  const FRAME_MS = 30, SPEC_MS = 360, END_MS = 750, LONG_MS = 6000, LONG_END_MS = 540, MAX_MS = 15000;
+  const PREROLL_MS = 300, TAIL_MS = 210, MIN_VOICED_MS = 240, START_FRAMES = 4, MIN_LEVEL = 0.01, MAX_SPECS = 2;
   const size = Math.round(rate*FRAME_MS/1000);
   let rest = new Float32Array(0), floor = 0.004;
-  let recent = [], loud = [], piece = null, levels = [], voiced = 0, quiet = 0;
+  let recent = [], loud = [], piece = null, levels = [], voiced = 0, quiet = 0, loudRun = 0, peak = 0;
+  let specLive = false, specWaiting = false, specCount = 0;
   const threshold = ()=>Math.max(MIN_LEVEL, floor*3);
+  function samples(){
+    const drop = Math.max(0, quiet-Math.round(TAIL_MS/FRAME_MS));
+    return joinFrames(drop ? piece.slice(0, piece.length-drop) : piece);
+  }
   function finish(){
-    const done = piece;
+    const open = piece!==null;
     const enough = voiced*FRAME_MS >= MIN_VOICED_MS;
-    piece = null; levels = []; voiced = 0; quiet = 0; recent = []; loud = [];
-    if(!done) return;
-    onSpeaking(false);
-    if(enough) onSegment(joinFrames(done));
+    const commit = specLive;
+    const quietMs = quiet*FRAME_MS;
+    const data = open && enough && !commit ? samples() : null;
+    piece = null; levels = []; voiced = 0; quiet = 0; loudRun = 0; peak = 0; recent = []; loud = [];
+    specLive = false; specWaiting = false; specCount = 0;
+    if(!open) return;
+    cb.onSpeaking(false);
+    if(commit) cb.onCommit();
+    else if(data) cb.onSegment(data, quietMs);
   }
   function frame(data){
     let sum = 0;
@@ -2765,10 +2915,28 @@ function createSegmenter(rate, onSegment, onSpeaking){
     if(piece){
       piece.push(data);
       levels.push(level);
-      if(level > threshold()*0.6){ quiet = 0; voiced++; }
-      else quiet++;
-      if(quiet*FRAME_MS >= SILENCE_MS) finish();
-      else if(piece.length*FRAME_MS >= MAX_MS){
+      peak = Math.max(level, peak*0.995);
+      /* 주변이 시끄러워도 말소리보다 훨씬 작으면 조용한 것으로 봅니다. */
+      if(level > Math.max(threshold()*0.6, peak*0.12)){
+        voiced++;
+        loudRun++;
+        if(quiet===0 || loudRun>=2){
+          quiet = 0;
+          specWaiting = false;
+          if(specLive){ specLive = false; cb.onSpecCancel(); }
+        }else quiet++;
+      }else{
+        loudRun = 0;
+        quiet++;
+      }
+      const len = piece.length*FRAME_MS;
+      if(!specWaiting && specCount<MAX_SPECS && quiet*FRAME_MS>=SPEC_MS && voiced*FRAME_MS>=MIN_VOICED_MS){
+        specWaiting = true;
+        specCount++;
+        specLive = cb.onSpec(samples(), quiet*FRAME_MS);
+      }
+      if(quiet*FRAME_MS >= (len>=LONG_MS ? LONG_END_MS : END_MS)) finish();
+      else if(len >= MAX_MS){
         const sorted = levels.sort((a,b)=>a-b);
         floor = Math.max(floor, sorted[Math.floor(sorted.length*0.2)]);
         finish();
@@ -2782,8 +2950,8 @@ function createSegmenter(rate, onSegment, onSpeaking){
     loud.push(isLoud);
     if(loud.length>6) loud.shift();
     if(loud.filter(Boolean).length >= START_FRAMES){
-      piece = recent; voiced = START_FRAMES; quiet = 0;
-      onSpeaking(true);
+      piece = recent; voiced = START_FRAMES; quiet = 0; loudRun = 0; peak = level;
+      cb.onSpeaking(true);
     }
   }
   return {
@@ -2853,9 +3021,18 @@ const autoMic = (function(){
         if(mine!==session){ media.getTracks().forEach(t=>t.stop()); return; }
         stream = media;
         media.getTracks().forEach(t=>{ t.onended = ()=>{ if(mine===session) stopAuto('마이크가 꺼졌습니다. 다시 눌러 주세요.'); }; });
-        seg = createSegmenter(context.sampleRate, samples=>{
-          hearRecording(wavBase64(downsample(samples, context.sampleRate, RATE), Math.min(RATE, context.sampleRate)));
-        }, onAutoSpeaking);
+        const wav = data=>wavBase64(downsample(data, context.sampleRate, RATE), Math.min(RATE, context.sampleRate));
+        seg = createSegmenter(context.sampleRate, {
+          onSpeaking:onAutoSpeaking,
+          onSpec(data, quietMs){
+            if(Date.now()<autoSpecOffUntil) return false;
+            autoSpec = startRec(wav(data), quietMs);
+            return true;
+          },
+          onSpecCancel(){ if(autoSpec) autoSpec.ctl.abort(); autoSpec = null; },
+          onCommit(){ const rec = autoSpec; autoSpec = null; if(rec) commitRec(rec); },
+          onSegment(data, quietMs){ commitRec(startRec(wav(data), quietMs)); }
+        });
         const push = data=>{ if(mine===session && !paused && seg) seg.push(data); };
         const source = context.createMediaStreamSource(media);
         if(context.audioWorklet){
@@ -2892,7 +3069,12 @@ let autoQueue = [];
 let autoDrainTimer = null;
 let autoResumeTimer = null;
 let autoSession = 0;
-let autoOrder = Promise.resolve();
+let autoRecs = [];
+let autoSpec = null;
+let autoSpecOffUntil = 0;
+let autoMuteGen = 0;
+let autoMeasure = 0;
+let autoLastMs = 0;
 let autoWake = null;
 let spokenLately = [];
 
@@ -2912,7 +3094,7 @@ function renderAuto(){
   else if(ttsActive) text = '읽는 중에는 듣지 않습니다. ⏹를 누르면 바로 듣습니다';
   else if(autoHearing) text = '듣고 있습니다…';
   else if(autoBusy>0) text = '통역하는 중…';
-  else text = '한 사람씩 말하고 잠깐 쉬면 통역합니다';
+  else text = '한 사람씩 말하고 잠깐 쉬면 통역합니다'+(autoLastMs ? ' · '+(autoLastMs/1000).toFixed(1)+'초' : '');
   document.getElementById('micHint').textContent = text;
 }
 function onAutoSpeaking(on){
@@ -2933,46 +3115,122 @@ function isEcho(heard){
   const h = strip(heard);
   if(h.length<6) return false;
   const now = Date.now();
-  return spokenLately.some(item=>{
-    if(now-item.at>=20000) return false;
-    const s = strip(item.text);
-    return s===h || (s.includes(h) && h.length>=s.length*0.6);
-  });
+  const recent = spokenLately.filter(item=>now-item.at<20000).map(item=>strip(item.text));
+  const same = s=>s===h || (s.includes(h) && h.length>=s.length*0.6);
+  return recent.some(same) || recent.some((s,i)=>i>0 && same(recent[i-1]+s));
 }
-function hearRecording(wav){
-  const l = langObj(state.lang);
-  const session = autoSession;
+/* 한 번 말한 소리(rec)의 통역을 시작합니다. 말이 끝난 것이 확실해진 뒤(commitRec)에만 화면에 보여 줍니다. */
+function startRec(wav, quietMs){
+  const rec = {l:langObj(state.lang), session:autoSession, ctl:new AbortController(), text:'', error:'', finished:false, committed:false, views:[], muteGen:autoMuteGen, voiceEnd:Date.now()-quietMs};
+  const update = ()=>{ if(rec.committed) pumpRecs(); };
+  interpretAudio(wav, rec.l, rec.ctl.signal, out=>{ rec.text = out; update(); }).then(out=>{
+    rec.text = out;
+    try{ rec.turns = parseTurns(out); }catch(e){ rec.turns = null; rec.error = autoErrorText(e); }
+  }, e=>{
+    if(rec.ctl.signal.aborted) return;
+    if(e && e.status===429) autoSpecOffUntil = Date.now()+60000;
+    rec.error = autoErrorText(e);
+  }).then(()=>{
+    rec.finished = true;
+    update();
+  });
+  return rec;
+}
+function commitRec(rec){
+  rec.committed = true;
+  rec.muteGen = autoMuteGen;
+  autoRecs.push(rec);
   autoBusy++;
   renderAuto();
-  const answer = interpretAudio(wav, l).then(turns=>({turns:turns, error:''}), e=>({turns:[], error:autoErrorText(e)}));
-  autoOrder = autoOrder.then(async ()=>{
-    const res = await answer;
-    autoBusy--;
-    const live = autoOn && session===autoSession;
-    if(live) autoError = res.error;
-    if(state.lang===l.code){
-      res.turns.forEach(turn=>{
-        if(isEcho(turn.heard)) return;
-        const ko = turn.who==='ko';
-        const tts = ko ? l.tts : 'ko-KR';
-        addBubble(ko?'me':'them', turn.heard, true);
-        const btn = fillSpeakBubble(addBubble(ko?'them':'me', '…', false), turn.translation, tts);
-        if(live && hasTtsVoice(tts)!==false) autoQueue.push({text:turn.translation, lang:tts, btn:btn});
-      });
-    }
-    renderAuto();
-    drainAuto();
-  }).catch(()=>{});
+  pumpRecs();
 }
-/* 누가 말하는 중이면 최대 6초 기다렸다가 읽습니다. */
+/* 말한 순서대로 보여 줍니다. */
+function pumpRecs(){
+  while(autoRecs.length){
+    const rec = autoRecs[0];
+    showRec(rec);
+    if(!rec.finished) break;
+    autoRecs.shift();
+    autoBusy--;
+    if(autoOn && rec.session===autoSession) autoError = rec.error;
+  }
+  renderAuto();
+  drainAuto();
+}
+/* 문장이 끝난 곳까지의 길이. 아직 문장이 끝나지 않았으면 0 */
+function sentenceEnd(text){
+  const re = /[.!?؟۔।](?=\s)|[。！？]/g;
+  let end = 0, m;
+  while((m = re.exec(text))){
+    const at = m.index+1;
+    if(byteLength(text.slice(0, at))>=18) end = at;
+  }
+  return end;
+}
+function showRec(rec){
+  if(state.lang!==rec.l.code) return;
+  const live = autoOn && rec.session===autoSession && rec.muteGen===autoMuteGen;
+  const turns = rec.finished && rec.turns ? rec.turns.map(turn=>Object.assign({done:true}, turn)) : partialTurns(rec.text);
+  turns.forEach((turn,i)=>{
+    let v = rec.views[i];
+    if(!v){
+      v = rec.views[i] = {skip:isEcho(turn.heard), said:0, text:'', ended:false};
+      if(v.skip) return;
+      const ko = turn.who==='ko';
+      v.tts = ko ? rec.l.tts : 'ko-KR';
+      addBubble(ko?'me':'them', turn.heard, true);
+      const slot = addBubble(ko?'them':'me', '…', false);
+      v.btn = fillSpeakBubble(slot, turn.translation, v.tts);
+      v.body = slot.firstChild;
+      v.btn.onclick = ()=>speak(v.text, v.tts, v.btn);
+    }
+    if(v.skip || v.ended) return;
+    if(turn.translation!==v.text){
+      v.text = turn.translation;
+      v.body.textContent = v.text;
+      const wrap = document.getElementById('transcriptWrap');
+      wrap.scrollTop = wrap.scrollHeight;
+    }
+    v.ended = turn.done;
+    /* 답이 중간에 끊기면 다 온 번역처럼 보이지 않게 표시하고, 남은 글은 읽지 않습니다. */
+    if(rec.finished && !turn.done){
+      v.ended = true;
+      v.body.textContent = v.text+' … (끊김)';
+      return;
+    }
+    const upto = turn.done ? v.text.length : v.said+sentenceEnd(v.text.slice(v.said));
+    const piece = v.text.slice(v.said, upto).trim();
+    v.said = upto;
+    if(live && piece && hasTtsVoice(v.tts)!==false){
+      autoQueue.push({text:piece, lang:v.tts, btn:v.btn, voiceEnd:rec.views.some(x=>x.timed) ? 0 : rec.voiceEnd});
+      v.timed = true;
+    }
+  });
+}
+/* 누가 말하는 중이면 최대 2초 기다렸다가 읽습니다. */
+/* 읽기 시작까지 걸린 시간 */
+function autoSpeechHeard(){
+  if(!autoOn || !autoMeasure) return;
+  autoLastMs = Math.max(0, Date.now()-autoMeasure);
+  autoMeasure = 0;
+}
+/* 인터넷을 거치는 음성보다 기기에 있는 음성이 빨라서, 기본 음성이 원격이면 기기 음성을 고릅니다. */
+function localVoice(langCode){
+  const prefix = String(langCode||'').toLowerCase().split('-')[0];
+  const list = voiceList().filter(v=>String(v.lang||'').toLowerCase().startsWith(prefix));
+  const main = list.find(v=>v.default) || list[0];
+  if(!main || main.localService) return null;
+  return list.find(v=>v.localService) || null;
+}
 function drainAuto(){
   clearTimeout(autoDrainTimer);
   if(!autoOn || ttsActive || !autoQueue.length) return;
-  if(autoMic.speaking() && Date.now()-autoHearingSince<6000){
-    autoDrainTimer = setTimeout(drainAuto, 300);
+  if(autoMic.speaking() && Date.now()-autoHearingSince<2000){
+    autoDrainTimer = setTimeout(drainAuto, 150);
     return;
   }
   const item = autoQueue.shift();
+  autoMeasure = item.voiceEnd;
   speak(item.text, item.lang, item.btn);
 }
 function autoSpeechStarted(text){
@@ -2992,7 +3250,7 @@ function autoSpeechEnded(){
   autoResumeTimer = setTimeout(()=>{
     if(autoOn && !ttsActive) autoMic.resume();
     renderAuto();
-  }, 500);
+  }, 300);
   renderAuto();
 }
 async function autoKeepAwake(){
@@ -3010,6 +3268,7 @@ function stopAuto(message){
   clearTimeout(autoDrainTimer);
   clearTimeout(autoResumeTimer);
   autoMic.stop();
+  if(autoSpec){ autoSpec.ctl.abort(); autoSpec = null; }
   autoOn = false;
   autoSession++;
   autoHearing = false;
@@ -3042,8 +3301,10 @@ function toggleAuto(){
   }
   autoOn = true;
   autoSession++;
+  autoLastMs = 0;
   const session = autoSession;
   showTrFail('');
+  geminiWarm();
   renderAuto();
   autoMic.start().catch(e=>{
     if(session!==autoSession) return;
