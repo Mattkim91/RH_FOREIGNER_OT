@@ -242,7 +242,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v1.9</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v2.0</span></div>
       </div>
     </div>
     <div class="section-title">지금 계신(또는 안내할) 치료실을 선택해주세요 · Select the room</div>
@@ -254,7 +254,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v1.9</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v2.0</span></div>
       </div>
     </div>
     <div class="back-row" style="padding-top:0;">
@@ -361,7 +361,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>⚙️ 설정</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v1.9</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v2.0</span></div>
       </div>
     </div>
     <div class="set-row" style="flex-direction:column;align-items:stretch;gap:6px;">
@@ -451,7 +451,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="release-sheet" role="dialog" aria-modal="true" aria-labelledby="updateTitle" style="max-width:380px;">
       <div style="text-align:center;margin-bottom:12px;">
         <div style="font-size:2rem;">🎉</div>
-        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v1.9 업데이트</div>
+        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v2.0 업데이트</div>
         <div style="font-size:0.82rem;color:var(--ink-soft);line-height:1.55;margin-top:6px;">앱이 업데이트되었어요.<br>주요 변경사항을 확인해보세요.</div>
       </div>
       <ul class="release-list" id="updateLatest" style="margin-bottom:16px;"></ul>
@@ -467,8 +467,13 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 /* =========================================================
    1. 언어 정의 · Language definitions
    ========================================================= */
-const APP_VERSION = 'v1.9';
+const APP_VERSION = 'v2.0';
 const CHANGELOG = [
+  {version:'v2.0', date:'2026.11.26', items:[
+    '동시통역이 실시간 통역 방식으로 바뀌었습니다. 말하는 동안 통역을 준비해, 잠깐 쉬면 바로 번역된 목소리가 나옵니다.',
+    '통역 목소리는 Gemini가 만들어서 휴대폰에 그 언어 음성이 없어도 들립니다.',
+    '실시간 통역에 연결되지 않으면 이전 방식으로 통역합니다.'
+  ]},
   {version:'v1.9', date:'2026.11.26', items:[
     '동시통역 반응이 빨라졌습니다. 말이 끝나기 전에 미리 통역을 준비하고, 번역이 오는 대로 보여 주고 읽습니다.',
     '동시통역이 시끄러운 곳에서 말이 끝난 것을 더 잘 알아챕니다.',
@@ -3075,6 +3080,7 @@ let autoSpecOffUntil = 0;
 let autoMuteGen = 0;
 let autoMeasure = 0;
 let autoLastMs = 0;
+let autoPlayCtx = null;
 let autoWake = null;
 let spokenLately = [];
 
@@ -3088,9 +3094,15 @@ function renderAuto(){
   mic.classList.toggle('listening', autoOn);
   mic.setAttribute('aria-label', autoOn ? '동시통역 멈추기' : '동시통역 시작');
   let text;
+  const livePlaying = liveOn && live && live.play && live.nextAt>live.play.currentTime;
+  const liveWaiting = liveOn && live && live.turns.some(x=>x.verdict!=='no' && (x.chunks.length || !x.done));
   if(autoError) text = autoError;
   else if(!geminiKey()) text = '동시통역은 Gemini 키가 필요합니다. 누르면 설정으로 갑니다.';
   else if(!autoOn) text = `누르면 한국어와 ${l.name}를 구분해 통역하고 읽어 줍니다`;
+  else if(!liveOn && !liveBroken && autoOn) text = '연결하는 중…';
+  else if(livePlaying) text = '통역을 들려주는 중입니다. ⏹를 누르면 바로 듣습니다';
+  else if(liveOn && autoHearing) text = '듣고 있습니다…';
+  else if(liveWaiting) text = '통역하는 중…';
   else if(ttsActive) text = '읽는 중에는 듣지 않습니다. ⏹를 누르면 바로 듣습니다';
   else if(autoHearing) text = '듣고 있습니다…';
   else if(autoBusy>0) text = '통역하는 중…';
@@ -3268,6 +3280,8 @@ function stopAuto(message){
   clearTimeout(autoDrainTimer);
   clearTimeout(autoResumeTimer);
   autoMic.stop();
+  stopLive();
+  if(autoPlayCtx){ autoPlayCtx.close().catch(()=>{}); autoPlayCtx = null; }
   if(autoSpec){ autoSpec.ctl.abort(); autoSpec = null; }
   autoOn = false;
   autoSession++;
@@ -3306,10 +3320,20 @@ function toggleAuto(){
   showTrFail('');
   geminiWarm();
   renderAuto();
-  autoMic.start().catch(e=>{
-    if(session!==autoSession) return;
-    stopAuto(e && e.name==='NotAllowedError' ? STT_HINTS['not-allowed'] : '마이크를 열지 못했습니다. 다시 눌러 주세요.');
-  });
+  const micFail = e=>stopAuto(e && e.name==='NotAllowedError' ? STT_HINTS['not-allowed'] : '마이크를 열지 못했습니다. 다시 눌러 주세요.');
+  if(liveBroken || !window.WebSocket){
+    liveBroken = true;
+    autoMic.start().catch(e=>{ if(session===autoSession) micFail(e); });
+  }else{
+    /* 재생은 누른 순간에 준비해야 막히지 않습니다. */
+    try{ autoPlayCtx = new (window.AudioContext || window.webkitAudioContext)(); autoPlayCtx.resume().catch(()=>{}); }catch(e){ autoPlayCtx = null; }
+    startLive().then(()=>renderAuto(), e=>{
+      if(session!==autoSession) return;
+      if(e && e.name) { micFail(e); return; }
+      stopLive();
+      liveFallback(e && e.kind || 'other');
+    });
+  }
   autoKeepAwake();
 }
 document.addEventListener('visibilitychange', ()=>{
@@ -3359,6 +3383,387 @@ document.getElementById('geminiRemove').onclick = ()=>{
   geminiStatus('이 기기에서 키를 지웠습니다.');
   renderGeminiRow();
 };
+
+/* =========================================================
+   7-3. 빠른 동시통역 (Gemini Live 실시간 통역) · Live interpreter
+   ---------------------------------------------------------
+   말하는 동안 소리를 0.1초 단위로 보내고, 번역된 음성을 받아 바로 재생합니다.
+   연결 두 개를 엽니다. 하나는 한국어로, 하나는 상대 언어로 통역합니다.
+   이미 그 언어인 말에는 모델이 소리를 내지 않아서 언어를 저절로 구분합니다.
+   말하는 사람이 0.45초 쉬면 바로 재생하고, 재생하는 동안에는 마이크 소리를 보내지 않습니다.
+   연결이 안 되면 위의 방식(7-2)으로 통역합니다.
+   ========================================================= */
+const LIVE_MODEL = 'models/gemini-3.5-live-translate-preview';
+const LIVE_URL = 'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=';
+const LIVE_PAUSE_MS = 450;      // 이만큼 조용하면 번역 음성을 재생합니다. 더 짧으면 숨 쉬는 사이에 말이 잘립니다
+const LIVE_SEND_HOLD_MS = 1500; // 이만큼 조용하면 소리 보내기를 멈춥니다
+const LIVE_RESUME_MS = 250;     // 재생이 끝나고 이만큼 뒤에 다시 듣습니다
+let liveOn = false;
+let liveBroken = false;
+let live = null;
+
+function liveLangCode(code){ return ({tl:'fil', zh:'zh-Hans'})[code] || code; }
+function hasHangul(s){ return /[가-힣]/.test(s||''); }
+function hasLetters(s){ return /\p{L}/u.test(s||''); }
+function pcmBase64(int16){
+  const bytes = new Uint8Array(int16.buffer, int16.byteOffset, int16.byteLength);
+  let bin = '';
+  for(let i=0;i<bytes.length;i+=0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i+0x8000));
+  return btoa(bin);
+}
+function base64Pcm(b64){
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return new Int16Array(bytes.buffer, 0, bytes.length>>1);
+}
+function liveFailText(reason){
+  const r = String(reason||'');
+  if(/API key|API_KEY|PERMISSION_DENIED|unregistered/i.test(r)) return 'bad-key';
+  if(/quota|RESOURCE_EXHAUSTED|rate limit|429/i.test(r)) return 'quota';
+  return 'other';
+}
+
+/* 연결 하나: role 'visitor'는 한국어를 상대 언어로, 'ko'는 상대 언어를 한국어로 통역합니다. */
+function openLiveSession(role, targetCode, withVad){
+  return new Promise((resolve, reject)=>{
+    let ws;
+    try{ ws = new WebSocket(LIVE_URL+encodeURIComponent(geminiKey())); }catch(e){ reject({kind:'other'}); return; }
+    const s = {role:role, ws:ws, ready:false, turn:null, closedByUs:false};
+    const fail = kind=>{ clearTimeout(timer); if(!s.ready){ try{ ws.close(); }catch(e){} reject({kind:kind}); } };
+    const timer = setTimeout(()=>fail('other'), 7000);
+    ws.onopen = ()=>{
+      const setup = {
+        model:LIVE_MODEL,
+        inputAudioTranscription:{},
+        outputAudioTranscription:{},
+        generationConfig:{responseModalities:['AUDIO'], translationConfig:{targetLanguageCode:targetCode, echoTargetLanguage:false}}
+      };
+      if(withVad) setup.realtimeInputConfig = {automaticActivityDetection:{endOfSpeechSensitivity:'END_SENSITIVITY_HIGH', silenceDurationMs:500}};
+      ws.send(JSON.stringify({setup:setup}));
+    };
+    ws.onmessage = async e=>{
+      let msg;
+      try{ msg = JSON.parse(typeof e.data==='string' ? e.data : await e.data.text()); }catch(err){ return; }
+      if(msg.setupComplete && !s.ready){
+        s.ready = true;
+        clearTimeout(timer);
+        resolve(s);
+        return;
+      }
+      if(s.ready) liveMessage(s, msg);
+    };
+    ws.onerror = ()=>{};
+    ws.onclose = e=>{
+      if(!s.ready){ fail(liveFailText(e.reason)); return; }
+      s.ready = false;
+      if(!s.closedByUs) liveLost(s, liveFailText(e.reason));
+    };
+  });
+}
+
+async function startLive(){
+  const l = langObj(state.lang);
+  const session = autoSession;
+  const targets = [['visitor', liveLangCode(l.code)], ['ko', 'ko']];
+  let sessions;
+  try{
+    sessions = await Promise.all(targets.map(t=>openLiveSession(t[0], t[1], true)));
+  }catch(first){
+    if(first.kind==='bad-key') throw first;
+    sessions = await Promise.all(targets.map(t=>openLiveSession(t[0], t[1], false)));
+  }
+  if(!autoOn || session!==autoSession){ sessions.forEach(s=>{ s.closedByUs = true; s.ws.close(); }); return false; }
+  live = {l:l, sessions:sessions, turns:[], vad:{floor:0.004, lastVoice:0, sending:false, ring:[]}, mic:null, ctx:null, play:null,
+          nextAt:0, sources:[], gateUntil:0, endSent:false, pump:null, lastMs:0, waitingSince:0};
+  await liveStartAudio();
+  live.pump = setInterval(livePump, 50);
+  liveOn = true;
+  return true;
+}
+function stopLive(){
+  if(!live) return;
+  const L = live;
+  live = null;
+  liveOn = false;
+  clearInterval(L.pump);
+  L.sessions.forEach(s=>{ s.closedByUs = true; try{ s.ws.close(); }catch(e){} });
+  L.sources.forEach(src=>{ try{ src.stop(); }catch(e){} });
+  if(L.mic) L.mic.getTracks().forEach(t=>{ t.onended = null; t.stop(); });
+  if(L.ctx) L.ctx.close().catch(()=>{});
+  if(L.play) L.play.close().catch(()=>{});
+  setAudioSession('auto');
+  L.turns.forEach(t=>liveFinishTurn(t, true));
+}
+/* 연결이 끊기면 한 번 다시 연결하고, 안 되면 이전 방식으로 넘어갑니다. */
+async function liveLost(s, kind){
+  if(!live || !live.sessions.includes(s)) return;
+  const L = live;
+  if(kind!=='bad-key'){
+    try{
+      const fresh = await openLiveSession(s.role, s.role==='ko' ? 'ko' : liveLangCode(L.l.code), false);
+      if(live===L){
+        L.sessions[L.sessions.indexOf(s)] = fresh;
+        s.closedByUs = true;
+        try{ s.ws.close(); }catch(e){}
+        return;
+      }
+      fresh.closedByUs = true; fresh.ws.close();
+      return;
+    }catch(e){ kind = e.kind || kind; }
+  }
+  if(live!==L) return;
+  stopLive();
+  liveFallback(kind);
+}
+function liveFallback(kind){
+  liveBroken = true;
+  if(kind==='bad-key'){ stopAuto('Gemini 키가 올바르지 않습니다. 설정에서 확인해 주세요.'); return; }
+  autoError = '빠른 통역에 연결하지 못해 기본 방식으로 통역합니다.';
+  autoMic.start().catch(e=>{
+    stopAuto(e && e.name==='NotAllowedError' ? STT_HINTS['not-allowed'] : '마이크를 열지 못했습니다. 다시 눌러 주세요.');
+  });
+  renderAuto();
+}
+
+async function liveStartAudio(){
+  const L = live;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  L.play = autoPlayCtx || new AC();
+  autoPlayCtx = null;
+  L.play.resume().catch(()=>{});
+  setAudioSession('play-and-record');
+  const media = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true, autoGainControl:true, channelCount:1}});
+  if(live!==L){ media.getTracks().forEach(t=>t.stop()); return; }
+  L.mic = media;
+  media.getTracks().forEach(t=>{ t.onended = ()=>{ if(live===L) stopAuto('마이크가 꺼졌습니다. 다시 눌러 주세요.'); }; });
+  const ctx = L.ctx = new AC();
+  ctx.resume().catch(()=>{});
+  const rate = ctx.sampleRate;
+  const frameSize = Math.round(rate*0.03);
+  let rest = new Float32Array(0);
+  let out = [];
+  const onAudio = data=>{
+    if(live!==L) return;
+    const all = joinFrames([rest, data]);
+    let at = 0;
+    for(; at+frameSize<=all.length; at+=frameSize){
+      const frame = all.slice(at, at+frameSize);
+      const pcm = downsample(frame, rate, 16000);
+      liveFrame(L, frame, pcm, out);
+    }
+    rest = all.slice(at);
+    if(out.length>=1600){
+      const chunk = new Int16Array(out.splice(0, 1600).map(v=>Math.max(-32768, Math.min(32767, Math.round(v*32767)))));
+      liveSendChunk(L, chunk);
+    }
+  };
+  const source = ctx.createMediaStreamSource(media);
+  if(ctx.audioWorklet){
+    const url = URL.createObjectURL(new Blob([PCM_WORKLET], {type:'text/javascript'}));
+    try{ await ctx.audioWorklet.addModule(url); }finally{ URL.revokeObjectURL(url); }
+    const node = new AudioWorkletNode(ctx, 'pcm');
+    node.port.onmessage = e=>onAudio(e.data);
+    source.connect(node).connect(ctx.destination);
+  }else{
+    const node = ctx.createScriptProcessor(2048,1,1);
+    node.onaudioprocess = e=>onAudio(e.inputBuffer.getChannelData(0).slice(0));
+    source.connect(node);
+    node.connect(ctx.destination);
+  }
+}
+function liveGated(L){
+  return ttsActive || L.nextAt>L.play.currentTime || Date.now()<L.gateUntil;
+}
+/* 30ms마다: 말소리가 있는지 보고, 보낼 소리를 모읍니다. */
+function liveFrame(L, frame, pcm, out){
+  const v = L.vad;
+  if(liveGated(L)){
+    v.ring = [];
+    if(v.sending && !L.endSent) liveEndStream(L);
+    return;
+  }
+  let sum = 0;
+  for(const x of frame) sum += x*x;
+  const level = Math.sqrt(sum/frame.length);
+  const loud = level > Math.max(0.01, v.floor*3);
+  if(!loud) v.floor += (level-v.floor)*(level<v.floor ? 0.1 : 0.01);
+  const now = Date.now();
+  if(loud){
+    if(!v.lastVoice || now-v.lastVoice>LIVE_PAUSE_MS) v.voiceStart = now;
+    v.lastVoice = now;
+    if(!v.sending){
+      v.sending = true;
+      L.endSent = false;
+      v.ring.forEach(p=>out.push(...p));
+      v.ring = [];
+      autoHearing = true;
+      autoHearingSince = now;
+      autoError = '';
+      renderAuto();
+    }
+  }
+  if(v.sending){
+    pcm.forEach(x=>out.push(x));
+    if(now-v.lastVoice>LIVE_SEND_HOLD_MS) liveEndStream(L);
+  }else{
+    v.ring.push(Array.from(pcm));
+    if(v.ring.length>10) v.ring.shift();
+  }
+  const hearing = v.sending && now-v.lastVoice<LIVE_PAUSE_MS;
+  if(hearing!==autoHearing){ autoHearing = hearing; renderAuto(); }
+}
+function liveSendChunk(L, chunk){
+  const msg = JSON.stringify({realtimeInput:{audio:{data:pcmBase64(chunk), mimeType:'audio/pcm;rate=16000'}}});
+  L.sessions.forEach(s=>{ if(s.ready && s.ws.readyState===1) s.ws.send(msg); });
+}
+function liveEndStream(L){
+  L.vad.sending = false;
+  L.endSent = true;
+  const msg = JSON.stringify({realtimeInput:{audioStreamEnd:true}});
+  L.sessions.forEach(s=>{ if(s.ready && s.ws.readyState===1) s.ws.send(msg); });
+}
+
+/* 서버 메시지 */
+function liveMessage(s, msg){
+  const L = live;
+  if(!L) return;
+  if(msg.goAway){ liveLost(s, 'other'); return; }
+  const c = msg.serverContent;
+  if(!c) return;
+  const turnOf = ()=>{
+    if(!s.turn){
+      s.turn = {role:s.role, heard:'', text:'', chunks:[], done:false, muted:autoMuteGen, verdict:'', born:Date.now(), voiceEnd:0};
+      L.turns.push(s.turn);
+    }
+    return s.turn;
+  };
+  if(c.inputTranscription && c.inputTranscription.text) turnOf().heard += c.inputTranscription.text;
+  if(c.outputTranscription && c.outputTranscription.text) turnOf().text += c.outputTranscription.text;
+  if(c.modelTurn && c.modelTurn.parts){
+    c.modelTurn.parts.forEach(p=>{
+      if(p.inlineData && p.inlineData.data && /audio/.test(p.inlineData.mimeType||'audio')){
+        const m = /rate=(\d+)/.exec(p.inlineData.mimeType||'');
+        turnOf().chunks.push({pcm:base64Pcm(p.inlineData.data), rate:m ? Number(m[1]) : 24000});
+      }
+    });
+  }
+  if(c.interrupted && s.turn) s.turn.chunks = [];
+  if(c.turnComplete && s.turn){ s.turn.done = true; s.turn = null; }
+  livePump();
+}
+/* 이 통역을 보여 주고 재생할지: 한국어를 들은 연결은 상대 언어로, 그 밖의 말을 들은 연결은 한국어로만 냅니다. */
+function liveVerdict(t){
+  if(t.verdict) return t.verdict;
+  const known = hasLetters(t.heard);
+  if(t.role==='visitor'){
+    if(known) t.verdict = hasHangul(t.heard) ? 'yes' : 'no';
+    else if(t.done || Date.now()-t.born>1500) t.verdict = hasHangul(t.text) ? 'no' : 'yes';
+  }else{
+    if(known) t.verdict = hasHangul(t.heard) ? 'no' : 'yes';
+    else if(t.done || Date.now()-t.born>800) t.verdict = 'yes';
+  }
+  return t.verdict;
+}
+function livePump(){
+  const L = live;
+  if(!L || !L.play) return;
+  const now = Date.now();
+  const v = L.vad;
+  const paused = !v.lastVoice || now-v.lastVoice>=LIVE_PAUSE_MS || !v.sending;
+  const playing = L.nextAt>L.play.currentTime;
+  L.turns.forEach(t=>{
+    const verdict = liveVerdict(t);
+    if(verdict==='no'){ t.chunks = []; return; }
+    if(verdict!=='yes') return;
+    liveShowTurn(L, t);
+    if(t.muted!==autoMuteGen){ t.chunks = []; return; }
+    if(!t.chunks.length || !(paused || playing)) return;
+    if(!t.voiceEnd) t.voiceEnd = v.lastVoice || now;
+    while(t.chunks.length) liveSchedule(L, t, t.chunks.shift());
+  });
+  L.turns = L.turns.filter(t=>{
+    if(t.done && !t.chunks.length && (t.verdict==='no' || t.verdict==='yes')){ liveFinishTurn(t, false); return false; }
+    return true;
+  });
+  const busy = L.nextAt>L.play.currentTime;
+  if(busy!==L.wasBusy){
+    L.wasBusy = busy;
+    if(!busy){
+      L.gateUntil = Date.now()+LIVE_RESUME_MS;
+      document.querySelectorAll('.icon-btn.live-playing').forEach(resetLiveButton);
+    }
+    renderAuto();
+  }
+}
+function liveSchedule(L, t, chunk){
+  const ctx = L.play;
+  const buf = ctx.createBuffer(1, chunk.pcm.length, chunk.rate);
+  const ch = buf.getChannelData(0);
+  for(let i=0;i<chunk.pcm.length;i++) ch[i] = chunk.pcm[i]/32768;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  src.connect(ctx.destination);
+  const at = Math.max(ctx.currentTime+0.02, L.nextAt);
+  if(L.nextAt<=ctx.currentTime && t.voiceEnd>0){
+    autoLastMs = Math.max(0, Date.now()+(at-ctx.currentTime)*1000-t.voiceEnd);
+    t.voiceEnd = -1;
+  }
+  src.start(at);
+  L.nextAt = at+buf.duration;
+  L.sources.push(src);
+  src.onended = ()=>{ if(live===L) L.sources = L.sources.filter(x=>x!==src); };
+  if(t.btn) markLiveButton(t);
+}
+function liveStopPlayback(){
+  const L = live;
+  if(!L) return;
+  autoMuteGen++;
+  L.sources.forEach(src=>{ try{ src.stop(); }catch(e){} });
+  L.sources = [];
+  L.nextAt = 0;
+  L.turns.forEach(t=>{ t.chunks = []; });
+  L.gateUntil = Date.now()+LIVE_RESUME_MS;
+  document.querySelectorAll('.icon-btn.live-playing').forEach(resetLiveButton);
+  renderAuto();
+}
+function markLiveButton(t){
+  if(t.btn.classList.contains('live-playing')) return;
+  document.querySelectorAll('.icon-btn.live-playing').forEach(resetLiveButton);
+  t.btn.classList.add('live-playing', 'speaking');
+  t.btn.textContent = '⏹';
+  t.btn.setAttribute('aria-label', '중지');
+}
+function resetLiveButton(btn){
+  btn.classList.remove('live-playing', 'speaking');
+  btn.textContent = '🔊';
+  btn.setAttribute('aria-label', '재생');
+}
+function liveShowTurn(L, t){
+  if(!t.slot){
+    if(!t.heard && !t.text) return;
+    const ko = t.role==='visitor';
+    t.me = addBubble(ko?'me':'them', t.heard || '…', true);
+    t.slot = addBubble(ko?'them':'me', '…', false);
+    t.tts = ko ? L.l.tts : 'ko-KR';
+    t.btn = fillSpeakBubble(t.slot, t.text || '…', t.tts);
+    t.body = t.slot.firstChild;
+    t.btn.onclick = ()=>{
+      if(t.btn.classList.contains('live-playing')){ liveStopPlayback(); return; }
+      speak(t.text, t.tts, t.btn);
+    };
+  }
+  if(t.heard && t.me.textContent!==t.heard.trim()) t.me.textContent = t.heard.trim();
+  if(t.text && t.body.textContent!==t.text.trim()){
+    t.body.textContent = t.text.trim();
+    const wrap = document.getElementById('transcriptWrap');
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+}
+function liveFinishTurn(t, stopping){
+  if(!t.btn) return;
+  if(stopping || !live || !live.play || !(live.nextAt>live.play.currentTime)) resetLiveButton(t.btn);
+}
 
 /* =========================================================
    8. 투어 체크리스트 & 타이머 · Checklist & timer
