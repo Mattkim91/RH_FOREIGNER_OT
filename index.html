@@ -46,6 +46,15 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .topbar .sub{font-size:11.52px;color:var(--ink-soft);margin-top:1px;}
 .lang-chip{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:13.6px;font-weight:700;color:var(--primary-dark);}
 .lang-chip .flag{font-size:16.8px;}
+/* 모든 화면 위쪽: 치료실 이름 배지 + 동그란 국기 */
+.topbar > div:first-child{min-width:0;}
+.ctx-chips{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:8px;}
+.room-badge{display:flex;align-items:center;flex-shrink:0;background:var(--primary);color:#fff;border-radius:999px;padding:6px 11px;font-size:13px;font-weight:800;cursor:pointer;}
+.room-badge .room-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+.room-badge .room-ico{flex-shrink:0;}
+.lang-chip.flag-only{width:36px;height:36px;padding:0;border-radius:50%;justify-content:center;flex-shrink:0;cursor:pointer;}
+.lang-chip.flag-only .flag{font-size:20px;line-height:1;}
+.back-row.has-chips{justify-content:space-between;padding-right:46px;}
 
 /* ---------- Screens ---------- */
 .screen{flex:1;min-height:0;padding:0 16px 96px;overflow-y:auto;}
@@ -278,13 +287,10 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
   <section id="screen-home" class="screen hidden">
     <div class="topbar">
       <div>
-        <h1>재활치료실 가이드</h1>
-        <div class="sub">Visitor Guide</div>
+        <h1>🏠 홈</h1>
+        <div class="sub">Home</div>
       </div>
-      <div style="display:flex;gap:6px;">
-        <div class="lang-chip" id="roomChipHome" onclick="goTo('room')"></div>
-        <div class="lang-chip" id="langChipHome" onclick="goTo('lang')"></div>
-      </div>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
     <div class="hero">
       <h2 id="heroTitleKo">환영합니다 👋</h2>
@@ -297,8 +303,9 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 
   <!-- ================= TOPIC LIST ================= -->
   <section id="screen-topics" class="screen hidden">
-    <div class="back-row">
+    <div class="back-row has-chips">
       <button class="back-btn" onclick="goTo('home')">← 홈 · Home</button>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
     <div class="section-title" id="topicCatTitle"></div>
     <div id="topicList"></div>
@@ -306,8 +313,9 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 
   <!-- ================= CONTENT DETAIL ================= -->
   <section id="screen-detail" class="screen hidden">
-    <div class="back-row">
+    <div class="back-row has-chips">
       <button class="back-btn" id="detailBackBtn">← 목록 · List</button>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
     <div id="detailBody"></div>
   </section>
@@ -319,7 +327,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
         <h1>🎙️ 실시간 통역</h1>
         <div class="sub">Live Two-way Interpreter</div>
       </div>
-      <div class="lang-chip" id="langChipInterp" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
     <div id="transcriptWrap">
       <div class="section-title">대화 기록 · Conversation log</div>
@@ -348,11 +356,12 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 
   <!-- ================= CHECKLIST ================= -->
   <section id="screen-checklist" class="screen hidden">
-    <div class="topbar" style="padding-left:2px;padding-right:2px;">
+    <div class="topbar has-chip" style="padding-left:2px;">
       <div>
         <h1>✅ 투어 진행 체크</h1>
         <div class="sub">Tour Progress</div>
       </div>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
     <div class="timer-card">
       <div>
@@ -369,11 +378,12 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 
   <!-- ================= SETTINGS ================= -->
   <section id="screen-settings" class="screen hidden">
-    <div class="topbar" style="padding-left:2px;padding-right:2px;">
+    <div class="topbar has-chip" style="padding-left:2px;">
       <div>
         <h1>⚙️ 설정</h1>
         <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v2.2</span></div>
       </div>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
     <div class="set-row" style="flex-direction:column;align-items:stretch;gap:6px;">
       <label class="lbl2" for="trEmail">번역 사용량 늘리기용 이메일 (선택)</label>
@@ -482,7 +492,8 @@ const APP_VERSION = 'v2.2';
 const CHANGELOG = [
   {version:'v2.2', date:'2026.11.28', items:[
     '통역 화면의 모드 선택, 직접 입력, 음성입력 버튼을 화면 아래로 옮겼습니다. 대화 기록은 위에서부터 쌓입니다.',
-    '음성입력은 다시 누를 때까지 계속 듣습니다. 통역을 읽는 동안에는 잠시 쉬었다가 다시 듣습니다.'
+    '음성입력은 다시 누를 때까지 계속 듣습니다. 통역을 읽는 동안에는 잠시 쉬었다가 다시 듣습니다.',
+    '모든 화면 위쪽에 지금 치료실 이름과 언어 국기가 보입니다. 누르면 바꿀 수 있습니다.'
   ]},
   {version:'v2.1', date:'2026.11.28', items:[
     '한쪽 방향 통역도 빨라졌습니다. Gemini 키가 있으면 Gemini로 번역해 더 빠르고 자연스럽습니다.',
@@ -2087,10 +2098,15 @@ ROOMS.forEach(r=>{
   };
   roomGrid.appendChild(div);
 });
+/* 위쪽 배지에 쓰는 짧은 치료실 이름 */
+const ROOM_SHORT = {exercise:'운동', ot:'작업', speech:'언어', thermo:'열전기', lymphedema:'림프', neuro:'뇌신경', pulmonary:'호흡', cardiac:'심장', pediatric:'소아', function_test:'임상', ultrasound:'초음파'};
 function renderRoomChip(){
   const r = roomObj(state.room);
-  document.getElementById('roomChipHome').innerHTML = `<span class="flag">${r.icon}</span>`;
-  document.getElementById('roomChipHome').title = r.ko + ' · ' + r.en;
+  document.querySelectorAll('.ctx-chips .room-badge').forEach(el=>{
+    el.innerHTML = `<span class="room-name">${ROOM_SHORT[r.id] || r.ko}</span>`;
+    el.title = r.ko + ' · ' + r.en;
+    el.setAttribute('aria-label', '치료실 변경 · ' + r.ko);
+  });
 }
 let roomRenderGen = 0;
 async function renderRoomIntroCard(){
@@ -2156,9 +2172,11 @@ LANGS.forEach(l=>{
 });
 function renderLangChips(){
   const l = langObj(state.lang);
-  const html = `<span class="flag">${l.flag}</span><span>${l.name}</span>`;
-  document.getElementById('langChipHome').innerHTML = html;
-  document.getElementById('langChipInterp').innerHTML = html;
+  document.querySelectorAll('.ctx-chips .flag-only').forEach(el=>{
+    el.innerHTML = `<span class="flag">${l.flag}</span>`;
+    el.title = l.name + ' · ' + l.native;
+    el.setAttribute('aria-label', '언어 변경 · ' + l.name);
+  });
 }
 
 /* ---------- Home / category grid ---------- */
@@ -4227,9 +4245,7 @@ document.getElementById('updateBanner').addEventListener('click', (e)=>{
     if(row.querySelector('button,input')) return;
     armClick(row);
   });
-  armClick(document.getElementById('roomChipHome'), '치료실 변경');
-  armClick(document.getElementById('langChipHome'), '언어 변경');
-  armClick(document.getElementById('langChipInterp'), '언어 변경');
+  document.querySelectorAll('.ctx-chips [role="button"]').forEach(el=>armClick(el));
   updateVoiceUI();
   if(state.room && state.lang){
     renderRoomChip();
