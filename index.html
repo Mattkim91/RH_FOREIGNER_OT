@@ -46,6 +46,15 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .topbar .sub{font-size:11.52px;color:var(--ink-soft);margin-top:1px;}
 .lang-chip{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:13.6px;font-weight:700;color:var(--primary-dark);}
 .lang-chip .flag{font-size:16.8px;}
+/* 모든 화면 위쪽: 치료실 이름 배지 + 동그란 국기 */
+.topbar > div:first-child{min-width:0;}
+.ctx-chips{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:8px;}
+.room-badge{display:flex;align-items:center;flex-shrink:0;background:var(--primary);color:#fff;border-radius:999px;padding:6px 11px;font-size:13px;font-weight:800;cursor:pointer;}
+.room-badge .room-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+.room-badge .room-ico{flex-shrink:0;}
+.lang-chip.flag-only{width:36px;height:36px;padding:0;border-radius:50%;justify-content:center;flex-shrink:0;cursor:pointer;}
+.lang-chip.flag-only .flag{font-size:20px;line-height:1;}
+.back-row.has-chips{justify-content:space-between;padding-right:46px;}
 
 /* ---------- Screens ---------- */
 .screen{flex:1;min-height:0;padding:0 16px 96px;overflow-y:auto;}
@@ -115,30 +124,37 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .bigview.rtl .big-text{direction:rtl;text-align:right;}
 
 /* ---------- Interpreter ---------- */
-.interp-toggle{display:flex;background:var(--card);border-radius:14px;padding:4px;border:1px solid var(--line);margin:8px 0 16px;}
+.interp-toggle{display:flex;background:var(--card);border-radius:14px;padding:4px;border:1px solid var(--line);margin:0 0 6px;}
 .interp-toggle button{flex:1;border:none;background:transparent;padding:10px;border-radius:10px;font-weight:800;font-size:13.6px;color:var(--ink-soft);cursor:pointer;}
 .interp-toggle button{padding:10px 4px;word-break:keep-all;}
 .interp-toggle #dirAuto{flex:0 0 27%;}
 .interp-toggle button.active{background:var(--primary);color:#fff;}
-.mic-wrap{display:flex;flex-direction:column;align-items:center;padding:26px 0 10px;}
-.mic-btn{width:96px;height:96px;border-radius:50%;border:none;background:var(--primary);color:#fff;font-size:33.6px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 18px rgba(14,110,92,.3);position:relative;}
+.mic-wrap{display:flex;flex-direction:column;align-items:stretch;padding:6px 0 0;}
+.mic-btn{width:100%;height:48px;border-radius:14px;border:none;background:var(--primary);color:#fff;font-size:17px;font-weight:800;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 4px 14px rgba(14,110,92,.25);position:relative;}
+.mic-btn .mic-ico{font-size:22px;line-height:1;}
 .mic-btn:disabled{background:#B9C5C1;box-shadow:none;cursor:not-allowed;filter:none;}
 .mic-btn.listening{background:var(--danger);animation:micpulse 1.2s infinite;}
-@keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(193,68,60,.45)}70%{box-shadow:0 0 0 22px rgba(193,68,60,0)}100%{box-shadow:0 0 0 0 rgba(193,68,60,0)}}
-.mic-hint{margin-top:12px;text-align:center;font-size:13.12px;color:var(--ink-soft);font-weight:600;}
-.type-fallback{display:flex;gap:8px;margin-top:14px;}
+@keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(193,68,60,.45)}70%{box-shadow:0 0 0 8px rgba(193,68,60,0)}100%{box-shadow:0 0 0 0 rgba(193,68,60,0)}}
+.mic-hint{margin:0 0 6px;text-align:center;font-size:12.5px;line-height:1.35;color:var(--ink-soft);font-weight:600;}
+.type-fallback{display:flex;gap:8px;margin-top:0;}
 .type-fallback input{flex:1 1 0;min-width:0;width:0;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-size:16px;font-family:inherit;}
 .type-fallback button{flex-shrink:0;white-space:nowrap;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:0 16px;font-weight:700;cursor:pointer;}
 .transcript{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
 #screen-interp{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0;min-height:0;}
-#transcriptWrap{flex:1;min-height:0;overflow-y:auto;padding-bottom:96px;-webkit-overflow-scrolling:touch;}
+#transcriptWrap{flex:1;min-height:0;overflow-y:auto;padding-bottom:12px;-webkit-overflow-scrolling:touch;}
+/* 통역 조작은 화면 아래, 하단 탭 바로 위에 둡니다. */
+#interpDock{flex-shrink:0;padding:6px 0 calc(82px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg);}
+#interpDock .banner{margin:0 0 6px;}
+#interpDock .interp-toggle button{padding:6px 4px;font-size:12.8px;line-height:1.25;}
+#interpDock .type-fallback input{padding:9px 12px;}
 .topbar.has-chip{padding-right:68px;}
 #screen-interp .banner{font-size:12.48px;}
 .auto-note{margin:0 0 10px;font-size:0.8rem;line-height:1.5;color:var(--ink-soft);}
 .auto-note[hidden]{display:none !important;}
-.privacy-note{margin:8px 0 0;font-size:12px;line-height:1.45;color:#7A5417;}
-#app.kb-open .mic-wrap{padding:8px 0 4px;}
-#app.kb-open .mic-btn{width:64px;height:64px;font-size:24px;}
+.privacy-note{margin:0 2px 8px;font-size:12px;line-height:1.45;color:#7A5417;}
+#app.kb-open .mic-wrap{padding:6px 0 0;}
+#app.kb-open .mic-btn{height:44px;font-size:15px;}
+#app.kb-open .mic-hint,#app.kb-open .interp-toggle{display:none;}
 .bubble{padding:12px 14px;border-radius:14px;max-width:88%;font-size:0.92rem;line-height:1.5;}
 .bubble.me{align-self:flex-end;background:var(--primary);color:#fff;border-bottom-right-radius:4px;}
 .bubble.them{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px;}
@@ -232,6 +248,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
   .tabbar{padding:4px 6px calc(4px + env(safe-area-inset-bottom));}
   .tab-btn{padding:4px 0;font-size:0.62rem;}
   .screen{padding-bottom:70px;}
+  #interpDock{padding-bottom:calc(56px + env(safe-area-inset-bottom));}
 }
 </style>
 </head>
@@ -243,7 +260,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v2.1</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v2.2</span></div>
       </div>
     </div>
     <div class="section-title">지금 계신(또는 안내할) 치료실을 선택해주세요 · Select the room</div>
@@ -255,7 +272,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v2.1</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v2.2</span></div>
       </div>
     </div>
     <div class="back-row" style="padding-top:0;">
@@ -270,13 +287,10 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
   <section id="screen-home" class="screen hidden">
     <div class="topbar">
       <div>
-        <h1>재활치료실 가이드</h1>
-        <div class="sub">Visitor Guide</div>
+        <h1>🏠 홈</h1>
+        <div class="sub">Home</div>
       </div>
-      <div style="display:flex;gap:6px;">
-        <div class="lang-chip" id="roomChipHome" onclick="goTo('room')"></div>
-        <div class="lang-chip" id="langChipHome" onclick="goTo('lang')"></div>
-      </div>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
     <div class="hero">
       <h2 id="heroTitleKo">환영합니다 👋</h2>
@@ -289,8 +303,9 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 
   <!-- ================= TOPIC LIST ================= -->
   <section id="screen-topics" class="screen hidden">
-    <div class="back-row">
+    <div class="back-row has-chips">
       <button class="back-btn" onclick="goTo('home')">← 홈 · Home</button>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
     <div class="section-title" id="topicCatTitle"></div>
     <div id="topicList"></div>
@@ -298,8 +313,9 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 
   <!-- ================= CONTENT DETAIL ================= -->
   <section id="screen-detail" class="screen hidden">
-    <div class="back-row">
+    <div class="back-row has-chips">
       <button class="back-btn" id="detailBackBtn">← 목록 · List</button>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
     <div id="detailBody"></div>
   </section>
@@ -311,38 +327,41 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
         <h1>🎙️ 실시간 통역</h1>
         <div class="sub">Live Two-way Interpreter</div>
       </div>
-      <div class="lang-chip" id="langChipInterp" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
-    <div class="interp-toggle">
-      <button id="dirKoToTarget" class="active">🇰🇷 제가 말해요 → 상대 언어</button>
-      <button id="dirTargetToKo">🌍 상대방이 말해요 → 한국어</button>
-      <button id="dirAuto">🔄 동시통역</button>
-    </div>
-    <div class="mic-wrap">
-      <button class="mic-btn" id="micBtn" aria-label="음성 인식">🎤</button>
-      <div class="mic-hint" id="micHint">버튼을 누르고 말씀하세요 · Tap and speak</div>
-    </div>
-    <div class="type-fallback">
-      <input id="typeInput" placeholder="음성인식이 안 될 때 직접 입력하세요">
-      <button id="typeSendBtn">번역</button>
-    </div>
-    <p class="privacy-note">환자 개인정보(이름·등록번호 등)는 말하거나 입력하지 마세요.</p>
-    <div id="voiceWarning"></div>
-    <div id="trFailBanner"></div>
     <div id="transcriptWrap">
       <div class="section-title">대화 기록 · Conversation log</div>
+      <p class="privacy-note">환자 개인정보(이름·등록번호 등)는 말하거나 입력하지 마세요.</p>
       <p class="auto-note" id="autoNote" hidden>동시통역은 말한 소리를 Google Gemini로 보내 통역합니다. 무료 키로 보낸 내용은 Google 제품 개선에 쓰일 수 있으니 상대에게 먼저 알려 주세요. 이 화면을 나가면 마이크가 꺼집니다.</p>
       <div class="transcript" id="transcript"></div>
+    </div>
+    <div id="interpDock">
+      <div id="voiceWarning"></div>
+      <div id="trFailBanner"></div>
+      <div class="mic-hint" id="micHint">음성입력을 누르고 말씀하세요</div>
+      <div class="interp-toggle">
+        <button id="dirKoToTarget" class="active">🇰🇷 제가 말해요 → 상대 언어</button>
+        <button id="dirTargetToKo">🌍 상대방이 말해요 → 한국어</button>
+        <button id="dirAuto">🔄 동시통역</button>
+      </div>
+      <div class="type-fallback">
+        <input id="typeInput" placeholder="음성인식이 안 될 때 직접 입력하세요">
+        <button id="typeSendBtn">번역</button>
+      </div>
+      <div class="mic-wrap">
+        <button class="mic-btn" id="micBtn" aria-label="음성입력"><span class="mic-ico" aria-hidden="true">🎤</span><span>음성입력</span></button>
+      </div>
     </div>
   </section>
 
   <!-- ================= CHECKLIST ================= -->
   <section id="screen-checklist" class="screen hidden">
-    <div class="topbar" style="padding-left:2px;padding-right:2px;">
+    <div class="topbar has-chip" style="padding-left:2px;">
       <div>
         <h1>✅ 투어 진행 체크</h1>
         <div class="sub">Tour Progress</div>
       </div>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
     <div class="timer-card">
       <div>
@@ -359,11 +378,12 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 
   <!-- ================= SETTINGS ================= -->
   <section id="screen-settings" class="screen hidden">
-    <div class="topbar" style="padding-left:2px;padding-right:2px;">
+    <div class="topbar has-chip" style="padding-left:2px;">
       <div>
         <h1>⚙️ 설정</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v2.1</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v2.2</span></div>
       </div>
+      <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
     <div class="set-row" style="flex-direction:column;align-items:stretch;gap:6px;">
       <label class="lbl2" for="trEmail">번역 사용량 늘리기용 이메일 (선택)</label>
@@ -452,7 +472,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="release-sheet" role="dialog" aria-modal="true" aria-labelledby="updateTitle" style="max-width:380px;">
       <div style="text-align:center;margin-bottom:12px;">
         <div style="font-size:2rem;">🎉</div>
-        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v2.1 업데이트</div>
+        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v2.2 업데이트</div>
         <div style="font-size:0.82rem;color:var(--ink-soft);line-height:1.55;margin-top:6px;">앱이 업데이트되었어요.<br>주요 변경사항을 확인해보세요.</div>
       </div>
       <ul class="release-list" id="updateLatest" style="margin-bottom:16px;"></ul>
@@ -468,8 +488,13 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 /* =========================================================
    1. 언어 정의 · Language definitions
    ========================================================= */
-const APP_VERSION = 'v2.1';
+const APP_VERSION = 'v2.2';
 const CHANGELOG = [
+  {version:'v2.2', date:'2026.11.28', items:[
+    '통역 화면의 모드 선택, 직접 입력, 음성입력 버튼을 화면 아래로 옮겼습니다. 대화 기록은 위에서부터 쌓입니다.',
+    '음성입력은 다시 누를 때까지 계속 듣습니다. 통역을 읽는 동안에는 잠시 쉬었다가 다시 듣습니다.',
+    '모든 화면 위쪽에 지금 치료실 이름과 언어 국기가 보입니다. 누르면 바꿀 수 있습니다.'
+  ]},
   {version:'v2.1', date:'2026.11.28', items:[
     '한쪽 방향 통역도 빨라졌습니다. Gemini 키가 있으면 Gemini로 번역해 더 빠르고 자연스럽습니다.',
     '말하는 동안 들은 말이 화면에 바로 나타납니다.'
@@ -1935,7 +1960,7 @@ function hideBig(){ document.getElementById('bigview').classList.add('hidden'); 
 
 function goTo(screen, opts){
   opts = opts || {};
-  if(screen!=='interp') stopAuto();
+  if(screen!=='interp'){ stopAuto(); stopOneway(true); }
   stopSpeech();
   const changed = !!(currentScreen && currentScreen!==screen);
   if(!opts.isBack && !opts.noHist && changed){
@@ -2073,10 +2098,15 @@ ROOMS.forEach(r=>{
   };
   roomGrid.appendChild(div);
 });
+/* 위쪽 배지에 쓰는 짧은 치료실 이름 */
+const ROOM_SHORT = {exercise:'운동', ot:'작업', speech:'언어', thermo:'열전기', lymphedema:'림프', neuro:'뇌신경', pulmonary:'호흡', cardiac:'심장', pediatric:'소아', function_test:'임상', ultrasound:'초음파'};
 function renderRoomChip(){
   const r = roomObj(state.room);
-  document.getElementById('roomChipHome').innerHTML = `<span class="flag">${r.icon}</span>`;
-  document.getElementById('roomChipHome').title = r.ko + ' · ' + r.en;
+  document.querySelectorAll('.ctx-chips .room-badge').forEach(el=>{
+    el.innerHTML = `<span class="room-name">${ROOM_SHORT[r.id] || r.ko}</span>`;
+    el.title = r.ko + ' · ' + r.en;
+    el.setAttribute('aria-label', '치료실 변경 · ' + r.ko);
+  });
 }
 let roomRenderGen = 0;
 async function renderRoomIntroCard(){
@@ -2142,9 +2172,11 @@ LANGS.forEach(l=>{
 });
 function renderLangChips(){
   const l = langObj(state.lang);
-  const html = `<span class="flag">${l.flag}</span><span>${l.name}</span>`;
-  document.getElementById('langChipHome').innerHTML = html;
-  document.getElementById('langChipInterp').innerHTML = html;
+  document.querySelectorAll('.ctx-chips .flag-only').forEach(el=>{
+    el.innerHTML = `<span class="flag">${l.flag}</span>`;
+    el.title = l.name + ' · ' + l.native;
+    el.setAttribute('aria-label', '언어 변경 · ' + l.name);
+  });
 }
 
 /* ---------- Home / category grid ---------- */
@@ -2464,7 +2496,7 @@ const dirAutoBtn = document.getElementById('dirAuto');
 function setInterpDir(dir){
   if(dir===state.interpDir) return;
   stopAuto();
-  if(dir==='auto' && recognizer){ try{ recognizer.abort(); }catch(e){} }
+  stopOneway(true);
   autoError = '';
   if(dir==='auto' || state.interpDir==='auto'){
     micBtn.classList.remove('listening');
@@ -2504,6 +2536,8 @@ function updateVoiceUI(){
   if(hint){
     if(!micOk){
       hint.textContent = '음성 인식을 쓸 수 없습니다. 아래 칸에 직접 입력하세요.';
+    }else if(!auto && onewayOn){
+      hint.textContent = onewayWaiting ? '통역을 읽고 나면 다시 듣습니다 · 누르면 멈춤' : '듣고 있습니다 · 다시 누르면 멈춥니다';
     }else if(state.interpDir==='ko2target'){
       hint.textContent = `한국어로 말씀하세요 → ${l.name}로 통역됩니다`;
     }else{
@@ -2561,45 +2595,62 @@ function showSttHint(msg){
   if(!warn) return;
   warn.innerHTML = msg ? `<div class="banner">${msg}</div>` : '';
 }
-micBtn.addEventListener('click', ()=>{
-  if(state.interpDir==='auto'){ toggleAuto(); return; }
-  if(!sttAvailable()){
-    updateVoiceUI();
-    return;
+/* 단방향: 음성입력을 다시 누를 때까지 계속 듣습니다.
+   한 문장이 끝나면 통역하고, 통역을 다 읽은 뒤 다시 듣습니다(휴대폰 소리를 다시 듣지 않게). */
+var onewayOn = false;
+var onewayWaiting = false;
+var onewayGen = 0;
+var onewayQuick = 0;
+function onewayUI(){
+  if(state.interpDir==='auto') return;
+  micBtn.classList.toggle('listening', onewayOn);
+  micBtn.setAttribute('aria-label', onewayOn ? '음성입력 멈추기' : '음성입력');
+  updateVoiceUI();
+}
+function stopOneway(hard){
+  const was = onewayOn;
+  onewayOn = false;
+  onewayWaiting = false;
+  onewayGen++;
+  if(recognizer){
+    if(hard) recognizer.dropped = true;
+    try{ hard ? recognizer.abort() : recognizer.stop(); }catch(e){}
   }
-  if(recognizing){ recognizer && recognizer.stop(); return; }
-  stopSpeech();
-  if(geminiKey()) geminiWarm();
-  recognizer = new SpeechRecognitionAPI();
-  recognizer.lang = currentSttLang();
-  recognizer.interimResults = true;
-  recognizer.maxAlternatives = 1;
+  if(was) onewayUI();
+}
+function onewayQuiet(gen){
+  return new Promise(resolve=>{
+    const until = Date.now()+60000;
+    const check = ()=>{
+      const busy = ttsActive || (window.speechSynthesis && window.speechSynthesis.speaking);
+      if(!busy || gen!==onewayGen || Date.now()>until) resolve();
+      else setTimeout(check, 150);
+    };
+    check();
+  });
+}
+function onewayListen(gen){
+  if(!onewayOn || gen!==onewayGen) return;
+  if(!sttAvailable()){ stopOneway(true); return; }
+  onewayWaiting = false;
+  onewayUI();
+  const rec = new SpeechRecognitionAPI();
+  recognizer = rec;
+  rec.lang = currentSttLang();
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
   /* 말하는 동안 들은 글자를 흐린 말풍선에 보여 주고, 끝나면 그 말풍선을 그대로 씁니다. */
-  let heard = '', heardSlot = null, handed = false;
+  let heard = '', heardSlot = null, handed = false, pending = null, failed = '';
+  const startedAt = Date.now();
   const handOver = text=>{
     if(handed) return;
     handed = true;
     text = (text||'').trim();
-    if(text) handleInterpretation(text, heardSlot);
+    if(text && !rec.dropped) pending = handleInterpretation(text, heardSlot).catch(()=>{});
     else if(heardSlot) heardSlot.remove();
   };
-  recognizer.onstart = ()=>{ recognizing=true; micBtn.classList.add('listening'); };
-  recognizer.onend = ()=>{
-    recognizing=false; micBtn.classList.remove('listening');
-    handOver(heard);
-  };
-  recognizer.onerror = (e)=>{
-    recognizing=false; micBtn.classList.remove('listening');
-    const code = e.error || '';
-    if(code==='language-not-supported' || code==='service-not-allowed'){
-      sttUnsupported[recognizer.lang] = true;
-      updateVoiceUI();
-    }
-    const hint = STT_HINTS[code];
-    if(hint) showSttHint(hint);
-    else if(code && code!=='aborted') showSttHint('음성 인식을 시작하지 못했습니다. 아래 칸에 직접 입력해 주세요.');
-  };
-  recognizer.onresult = (e)=>{
+  rec.onstart = ()=>{ recognizing = true; };
+  rec.onresult = (e)=>{
     let said = '', final = true;
     for(let i=0;i<e.results.length;i++){
       said += e.results[i][0].transcript;
@@ -2616,7 +2667,45 @@ micBtn.addEventListener('click', ()=>{
     const wrap = document.getElementById('transcriptWrap');
     if(wrap) wrap.scrollTop = wrap.scrollHeight;
   };
-  recognizer.start();
+  rec.onerror = (e)=>{
+    const code = e.error || '';
+    if(code==='no-speech' || code==='aborted') return;
+    if(code==='language-not-supported' || code==='service-not-allowed') sttUnsupported[rec.lang] = true;
+    failed = STT_HINTS[code] || '음성 인식을 시작하지 못했습니다. 아래 칸에 직접 입력해 주세요.';
+  };
+  rec.onend = async ()=>{
+    recognizing = false;
+    if(recognizer===rec) recognizer = null;
+    handOver(heard);
+    if(!onewayOn || gen!==onewayGen) return;
+    if(failed){ stopOneway(true); showSttHint(failed); return; }
+    if(!heard && Date.now()-startedAt<400){
+      if(++onewayQuick>=5){ stopOneway(true); showSttHint('음성 인식이 계속 멈춥니다. 다시 누르거나 아래 칸에 직접 입력해 주세요.'); return; }
+    }else onewayQuick = 0;
+    if(pending){
+      onewayWaiting = true;
+      onewayUI();
+      await pending;
+      await onewayQuiet(gen);
+    }
+    setTimeout(()=>onewayListen(gen), pending ? 300 : 0);
+  };
+  try{ rec.start(); }
+  catch(e){ stopOneway(true); showSttHint('음성 인식을 시작하지 못했습니다. 아래 칸에 직접 입력해 주세요.'); }
+}
+micBtn.addEventListener('click', ()=>{
+  if(state.interpDir==='auto'){ toggleAuto(); return; }
+  if(onewayOn){ stopOneway(false); return; }
+  if(!sttAvailable()){
+    updateVoiceUI();
+    return;
+  }
+  stopSpeech();
+  showSttHint('');
+  if(geminiKey()) geminiWarm();
+  onewayOn = true;
+  onewayQuick = 0;
+  onewayListen(++onewayGen);
 });
 
 function showTrFail(notice){
@@ -3415,9 +3504,12 @@ function toggleAuto(){
   autoKeepAwake();
 }
 document.addEventListener('visibilitychange', ()=>{
-  if(document.hidden) stopAuto('화면을 나가서 동시통역을 멈췄습니다. 다시 눌러 주세요.');
+  if(document.hidden){
+    stopAuto('화면을 나가서 동시통역을 멈췄습니다. 다시 눌러 주세요.');
+    stopOneway(true);
+  }
 });
-window.addEventListener('pagehide', ()=>stopAuto());
+window.addEventListener('pagehide', ()=>{ stopAuto(); stopOneway(true); });
 
 /* ---------- Gemini 키 설정 ---------- */
 function geminiStatus(msg){ document.getElementById('geminiStatus').textContent = msg; }
@@ -4153,9 +4245,7 @@ document.getElementById('updateBanner').addEventListener('click', (e)=>{
     if(row.querySelector('button,input')) return;
     armClick(row);
   });
-  armClick(document.getElementById('roomChipHome'), '치료실 변경');
-  armClick(document.getElementById('langChipHome'), '언어 변경');
-  armClick(document.getElementById('langChipInterp'), '언어 변경');
+  document.querySelectorAll('.ctx-chips [role="button"]').forEach(el=>armClick(el));
   updateVoiceUI();
   if(state.room && state.lang){
     renderRoomChip();
