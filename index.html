@@ -135,7 +135,10 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .mic-btn:disabled{background:#B9C5C1;box-shadow:none;cursor:not-allowed;filter:none;}
 .mic-btn.listening{background:var(--danger);animation:micpulse 1.2s infinite;}
 @keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(193,68,60,.45)}70%{box-shadow:0 0 0 8px rgba(193,68,60,0)}100%{box-shadow:0 0 0 0 rgba(193,68,60,0)}}
-.mic-hint{margin:0 0 6px;text-align:center;font-size:12.5px;line-height:1.35;color:var(--ink-soft);font-weight:600;}
+.mic-hint{margin:0;flex:1;min-width:0;text-align:left;font-size:12.5px;line-height:1.35;color:var(--ink-soft);font-weight:600;}
+.dock-top{display:flex;align-items:center;gap:8px;margin:0 0 6px;}
+.auto-read{display:flex;align-items:center;gap:5px;flex-shrink:0;white-space:nowrap;font-size:12.5px;font-weight:800;color:var(--primary-dark);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 10px 4px 8px;cursor:pointer;}
+.auto-read input{width:16px;height:16px;margin:0;accent-color:var(--primary);}
 .type-fallback{display:flex;gap:8px;margin-top:0;}
 .type-fallback input{flex:1 1 0;min-width:0;width:0;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-size:16px;font-family:inherit;}
 .type-fallback button{flex-shrink:0;white-space:nowrap;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:0 16px;font-weight:700;cursor:pointer;}
@@ -154,7 +157,7 @@ body{font-size:calc(16px * var(--font-size-scale));}
 .privacy-note{margin:0 2px 8px;font-size:12px;line-height:1.45;color:#7A5417;}
 #app.kb-open .mic-wrap{padding:6px 0 0;}
 #app.kb-open .mic-btn{height:44px;font-size:15px;}
-#app.kb-open .mic-hint,#app.kb-open .interp-toggle{display:none;}
+#app.kb-open .dock-top,#app.kb-open .interp-toggle{display:none;}
 .bubble{padding:12px 14px;border-radius:14px;max-width:88%;font-size:0.92rem;line-height:1.5;}
 .bubble.me{align-self:flex-end;background:var(--primary);color:#fff;border-bottom-right-radius:4px;}
 .bubble.them{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px;}
@@ -260,7 +263,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v2.2</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill" id="appVersion">v2.3</span></div>
       </div>
     </div>
     <div class="section-title">지금 계신(또는 안내할) 치료실을 선택해주세요 · Select the room</div>
@@ -272,7 +275,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar" style="padding-left:2px;padding-right:2px;">
       <div>
         <h1>🌿 재활치료실 연수자 가이드</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v2.2</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Rehabilitation Center Visitor Guide <span class="ver-pill">v2.3</span></div>
       </div>
     </div>
     <div class="back-row" style="padding-top:0;">
@@ -338,7 +341,10 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div id="interpDock">
       <div id="voiceWarning"></div>
       <div id="trFailBanner"></div>
-      <div class="mic-hint" id="micHint">음성입력을 누르고 말씀하세요</div>
+      <div class="dock-top">
+        <div class="mic-hint" id="micHint">음성입력을 누르고 말씀하세요</div>
+        <label class="auto-read"><input type="checkbox" id="autoReadChk" checked> 자동 읽기</label>
+      </div>
       <div class="interp-toggle">
         <button id="dirKoToTarget" class="active">🇰🇷 제가 말해요 → 상대 언어</button>
         <button id="dirTargetToKo">🌍 상대방이 말해요 → 한국어</button>
@@ -381,7 +387,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="topbar has-chip" style="padding-left:2px;">
       <div>
         <h1>⚙️ 설정</h1>
-        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v2.2</span></div>
+        <div class="sub" style="display:flex;align-items:center;gap:6px;">Settings <span class="ver-pill">v2.3</span></div>
       </div>
       <div class="ctx-chips"><div class="room-badge" role="button" tabindex="0" aria-label="치료실 변경" onclick="goTo('room')"></div><div class="lang-chip flag-only" role="button" tabindex="0" aria-label="언어 변경" onclick="goTo('lang')"></div></div>
     </div>
@@ -472,7 +478,7 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
     <div class="release-sheet" role="dialog" aria-modal="true" aria-labelledby="updateTitle" style="max-width:380px;">
       <div style="text-align:center;margin-bottom:12px;">
         <div style="font-size:2rem;">🎉</div>
-        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v2.2 업데이트</div>
+        <div id="updateTitle" style="font-size:1.05rem;font-weight:800;color:var(--primary-dark);margin-top:4px;">v2.3 업데이트</div>
         <div style="font-size:0.82rem;color:var(--ink-soft);line-height:1.55;margin-top:6px;">앱이 업데이트되었어요.<br>주요 변경사항을 확인해보세요.</div>
       </div>
       <ul class="release-list" id="updateLatest" style="margin-bottom:16px;"></ul>
@@ -488,8 +494,11 @@ button:focus-visible, .lang-card:focus-visible, .cat-card:focus-visible,
 /* =========================================================
    1. 언어 정의 · Language definitions
    ========================================================= */
-const APP_VERSION = 'v2.2';
+const APP_VERSION = 'v2.3';
 const CHANGELOG = [
+  {version:'v2.3', date:'2026.11.28', items:[
+    '통역 화면에 ‘자동 읽기’가 생겼습니다. 끄면 통역을 소리로 읽지 않고, 🔊를 눌렀을 때만 읽습니다. 모드마다 따로 기억합니다.'
+  ]},
   {version:'v2.2', date:'2026.11.28', items:[
     '통역 화면의 모드 선택, 직접 입력, 음성입력 버튼을 화면 아래로 옮겼습니다. 대화 기록은 위에서부터 쌓입니다.',
     '음성입력은 다시 누를 때까지 계속 듣습니다. 통역을 읽는 동안에는 잠시 쉬었다가 다시 듣습니다.',
@@ -2490,6 +2499,29 @@ if('speechSynthesis' in window){
 /* =========================================================
    7. 실시간 통역 (STT + 번역 + TTS) · Live interpreter
    ========================================================= */
+/* 자동 읽기: 통역이 나오면 바로 소리로 읽을지, 🔊를 눌러야 읽을지. 모드마다 이 기기에 기억합니다. */
+const AUTO_READ_KEY = 'guide_auto_read';
+const AUTO_READ_DEFAULT = {ko2target:true, target2ko:false, auto:true};
+function autoReadAll(){
+  let saved = {};
+  try{ saved = JSON.parse(localStorage.getItem(AUTO_READ_KEY) || '{}') || {}; }catch(e){}
+  return Object.assign({}, AUTO_READ_DEFAULT, saved);
+}
+function autoRead(mode){ return !!autoReadAll()[mode || state.interpDir]; }
+function renderAutoRead(){
+  const chk = document.getElementById('autoReadChk');
+  if(chk) chk.checked = autoRead(state.interpDir);
+}
+document.getElementById('autoReadChk').addEventListener('change', e=>{
+  const all = autoReadAll();
+  all[state.interpDir] = e.target.checked;
+  try{ localStorage.setItem(AUTO_READ_KEY, JSON.stringify(all)); }catch(err){}
+  if(!e.target.checked){
+    if(state.interpDir==='auto'){ autoQueue = []; if(live) liveStopPlayback(); }
+    if(ttsActive) stopSpeech();
+  }
+});
+renderAutoRead();
 const dirKoBtn = document.getElementById('dirKoToTarget');
 const dirTgBtn = document.getElementById('dirTargetToKo');
 const dirAutoBtn = document.getElementById('dirAuto');
@@ -2507,6 +2539,7 @@ function setInterpDir(dir){
   dirTgBtn.classList.toggle('active', dir==='target2ko');
   dirAutoBtn.classList.toggle('active', dir==='auto');
   document.getElementById('autoNote').hidden = dir!=='auto';
+  renderAutoRead();
   updateVoiceUI();
 }
 dirKoBtn.onclick = ()=>setInterpDir('ko2target');
@@ -2769,14 +2802,14 @@ async function handleInterpretation(saidText, heardSlot){
     const tr = await onewayTranslate(saidText, l, dir, slot);
     const btn = fillSpeakBubble(slot, tr.text, l.tts);
     if(tr.origin==='fallback') showTrFail(tr.notice);
-    else { showTrFail(''); speak(tr.text, l.tts, btn); }
+    else { showTrFail(''); if(autoRead()) speak(tr.text, l.tts, btn); }
   }else{
     placeOriginal('them', saidText, heardSlot);
     const slot = addBubble('me', '…', false);
     const tr = await onewayTranslate(saidText, l, dir, slot);
-    fillSpeakBubble(slot, tr.text, 'ko-KR');
+    const btn = fillSpeakBubble(slot, tr.text, 'ko-KR');
     if(tr.origin==='fallback') showTrFail(tr.notice);
-    else showTrFail('');
+    else { showTrFail(''); if(autoRead()) speak(tr.text, 'ko-KR', btn); }
   }
 }
 function fillSpeakBubble(slot, text, langCode){
@@ -3380,7 +3413,7 @@ function showRec(rec){
     const upto = turn.done ? v.text.length : v.said+sentenceEnd(v.text.slice(v.said));
     const piece = v.text.slice(v.said, upto).trim();
     v.said = upto;
-    if(live && piece && hasTtsVoice(v.tts)!==false){
+    if(live && piece && hasTtsVoice(v.tts)!==false && autoRead('auto')){
       autoQueue.push({text:piece, lang:v.tts, btn:v.btn, voiceEnd:rec.views.some(x=>x.timed) ? 0 : rec.voiceEnd});
       v.timed = true;
     }
@@ -3847,7 +3880,7 @@ function livePump(){
     if(verdict==='no'){ t.chunks = []; return; }
     if(verdict!=='yes') return;
     liveShowTurn(L, t);
-    if(t.muted!==autoMuteGen){ t.chunks = []; return; }
+    if(t.muted!==autoMuteGen || !autoRead('auto')){ t.chunks = []; return; }
     if(!t.chunks.length || !(paused || playing)) return;
     if(!t.voiceEnd) t.voiceEnd = v.lastVoice || now;
     while(t.chunks.length) liveSchedule(L, t, t.chunks.shift());
